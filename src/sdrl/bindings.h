@@ -30,13 +30,13 @@ struct sdrl_binding {
 };
 
 struct sdrl_environment {
-	u_char bitflags;
+	int bitflags;
 	struct sdrl_binding *head;
 	struct sdrl_binding *tail;
 	struct sdrl_environment *parent;
 };
 
-struct sdrl_environment *sdrl_create_environment(u_char, struct sdrl_environment *);
+struct sdrl_environment *sdrl_create_environment(int, struct sdrl_environment *);
 int sdrl_destroy_environment(struct sdrl_environment *);
 
 int sdrl_bind_type(struct sdrl_environment *, char *, struct sdrl_type *);

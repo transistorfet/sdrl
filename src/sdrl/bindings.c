@@ -19,7 +19,7 @@ static struct sdrl_binding *bindings_find(struct sdrl_environment *, char *, int
 /**
  * Allocate an environment for binding values to names.
  */
-struct sdrl_environment *sdrl_create_environment(u_char bitflags, struct sdrl_environment *parent)
+struct sdrl_environment *sdrl_create_environment(int bitflags, struct sdrl_environment *parent)
 {
 	struct sdrl_environment *env;
 

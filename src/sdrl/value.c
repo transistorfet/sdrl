@@ -22,6 +22,9 @@ struct sdrl_value *sdrl_make_value(struct sdrl_type *type, sdrl_data_t data, int
 
 	if (!type)
 		return(NULL);
+	if (sdrl_base_type_m(type) == SDRL_BT_STRING)
+		size++;
+
 	if (!(value = (struct sdrl_value *) malloc(sizeof(struct sdrl_value) + size)))
 		return(NULL);
 
@@ -51,6 +54,8 @@ struct sdrl_value *sdrl_duplicate_value(struct sdrl_value *value)
 		if (!(tmp = (struct sdrl_value *) malloc(sizeof(struct sdrl_value) + value->size)))
 			return(NULL);
 		memcpy(tmp, value, sizeof(struct sdrl_value) + value->size);
+		if (tmp->size)
+			tmp->data = (sdrl_data_t) (char *) ((size_t) tmp + sizeof(struct sdrl_value));
 		if (!head)
 			head = tmp;
 		else
@@ -105,6 +110,34 @@ struct sdrl_value *sdrl_pop_value(struct sdrl_value **array)
 		value = cur->next;
 		cur->next = NULL;
 	}
+	return(value);
+}
+
+/**
+ * Add the value to the front of the array.
+ */
+int sdrl_unshift_value(struct sdrl_value **array, struct sdrl_value *value)
+{
+	if (!array)
+		return(ERR_NOT_FOUND);
+	value->next = *array;
+	*array = value;
+	return(0);
+}
+
+/**
+ * Removes the first value from the linked-list of values and returns it.
+ */
+struct sdrl_value *sdrl_shift_value(struct sdrl_value **array)
+{
+	struct sdrl_value *value;
+
+	if (!array)
+		return(NULL);
+	if (!(value = *array))
+		return(NULL);
+	*array = value->next;
+	value->next = NULL;
 	return(value);
 }
 

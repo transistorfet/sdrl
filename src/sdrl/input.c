@@ -71,13 +71,16 @@ int sdrl_add_string(struct sdrl_input *input, char *str, int size)
 	char *cpy_str;
 	struct sdrl_source *source;
 
+	if (!size)
+		size = strlen(str);
 	if (!(cpy_str = (char *) malloc(size + 1)))
 		return(ERR_OUT_OF_MEMORY);
 	if (!(source = (struct sdrl_source *) malloc(sizeof(struct sdrl_source)))) {
 		free(cpy_str);
 		return(ERR_OUT_OF_MEMORY);
 	}
-	strncpy(cpy_str, str, size + 1);
+	strncpy(cpy_str, str, size);
+	cpy_str[size] = '\0';
 	source->type = SDRL_IT_STRING;
 	source->i = 0;
 	source->ptr.str = cpy_str;
@@ -101,15 +104,17 @@ char sdrl_get_char(struct sdrl_input *input)
 		}
 		else if (ret == ' ' || ret == '\n' || ret == '\t') {
 			while (ret = sdrl_get_raw_char(input)) {
-				if (ret != ' ' && ret != '\n' && ret != '\t') {
+				if (ret != ' ' && ret != '\n' && ret != '\t' && ret != '\r') {
 					input->peek = ret;
-					ret = ' ';
 					break;
 				}
 			}
 		}
 		else
+{
+//printf("%c", ret);
 			return(ret);
+}
 		if (!ret)
 			input_free_source(input);
 	}
@@ -122,7 +127,7 @@ char sdrl_get_char(struct sdrl_input *input)
  */
 char sdrl_get_raw_char(struct sdrl_input *input)
 {
-	char ch;
+	char ch = 0;
 
 	if (input->peek) {
 		ch = input->peek;
@@ -130,8 +135,11 @@ char sdrl_get_raw_char(struct sdrl_input *input)
 	}
 	else if (input->stack->type == SDRL_IT_STRING)
 		ch = input->stack->ptr.str[input->stack->i++];
-	else
+	else if ((input->stack->type == SDRL_IT_FILE) && (!feof(input->stack->ptr.fptr))) {
 		ch = fgetc(input->stack->ptr.fptr);
+		if (ch == -1)
+			ch = '\n';
+	}
 	return(ch);
 }
 

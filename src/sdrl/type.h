@@ -12,10 +12,15 @@
 
 #define SDRL_VARIABLE_SIZE	-1
 
-#define SDRL_TBF_EVAL_EXPRS	0x0001
-#define SDRL_TBF_EVAL_ARGS	0x0000
+#define SDRL_BT_NUMBER		0x01
+#define SDRL_BT_STRING		0x02
+#define SDRL_BT_POINTER		0x03
 
-#define sdrl_type_eval_params_m(type)	(type->bitflags & SDRL_TBF_EVAL_EXPRS)
+#define SDRL_TBF_BASE_TYPE	0x0003
+#define SDRL_TBF_PASS_EXPRS	0x0004
+
+#define sdrl_base_type_m(type)		(type->bitflags & SDRL_TBF_BASE_TYPE)
+#define sdrl_type_pass_exprs_m(type)	(type->bitflags & SDRL_TBF_PASS_EXPRS)
 
 struct sdrl_machine;
 
