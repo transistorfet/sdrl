@@ -1,0 +1,288 @@
+
+src/core/bindings.c:
+	struct sdrl_environment *sdrl_create_environmen t(int bitflags, struct sdrl_environment *parent)
+		 * Allocate an environment for binding values to names.
+
+	int sdrl_destroy_environmen t(struct sdrl_environment *env)
+		 * Free resources allocated by the environment including all bindings.
+
+	int sdrl_bind_typ e(struct sdrl_environment *env, char *name, struct sdrl_type *type)
+		 * Add a binding of name to type to environment.
+
+	int sdrl_bind_valu e(struct sdrl_environment *env, char *name, struct sdrl_value *value)
+		 * Add a binding of name to value to environment.
+
+	int sdrl_rebind_valu e(struct sdrl_environment *env, char *name, struct sdrl_value *value)
+		 * Replace the binding's value with value or create the binding if it doesn't exist.
+		 * (Types cannot be replaced).
+
+	int sdrl_remove_bindin g(struct sdrl_environment *env, char *name)
+		 * Remove the value binding, name.  (Types cannot be removed).
+
+	struct sdrl_type *sdrl_find_typ e(struct sdrl_environment *env, char *name)
+		 * Find the type bound to name in env or its parents.
+
+	struct sdrl_value *sdrl_find_valu e(struct sdrl_environment *env, char *name)
+		 * Find the value bound to name in env or its parents.
+
+	struct sdrl_value *sdrl_find_local_valu e(struct sdrl_environment *env, char *name)
+		 * Find the value bound to name in env only.
+
+	static int bindings_ad d(struct sdrl_environment *env, char *name, int type, sdrl_bind_t data)
+		 * Add a binding of name to a type or value to environment.
+
+	static struct sdrl_binding *bindings_fin d(struct sdrl_environment *env, char *name, int type, int levels)
+		 * Returns binding of name in environment or one of environments parents
+		 * searching up to levels (0 to search all).
+
+
+
+src/core/expr.c:
+	struct sdrl_expr *sdrl_make_call_exp r(struct sdrl_expr *call, struct sdrl_expr *next)
+		 * Return a newly allocated call expression using a make'd expr, expr.
+
+	struct sdrl_expr *sdrl_make_string_exp r(char *str, struct sdrl_expr *next)
+		 * Return a newly allocated string expression using a malloc'd string, str.
+
+	struct sdrl_expr *sdrl_make_number_exp r(number_t number, struct sdrl_expr *next)
+		 * Return a newly allocated number expression
+
+	int sdrl_destroy_exp r(struct sdrl_expr *expr)
+		 * Free all memory associated with the sdrl_expr
+
+
+
+src/core/input.c:
+	struct sdrl_input *sdrl_create_inpu t(void)
+		 * Create an initially empty input stack.
+
+	int sdrl_destroy_inpu t(struct sdrl_input *input)
+		 * Free the resources used by the input stack.
+
+	int sdrl_add_fil e(struct sdrl_input *input, char *filename)
+		 * Add a file to the top of the input stack.
+
+	int sdrl_add_strin g(struct sdrl_input *input, char *str, int size)
+		 * Add a copy of the string to the top of the input stack.
+
+	char sdrl_get_cha r(struct sdrl_input *input)
+		 * Returns the next char read from the input stream ignoring comments and spaces
+
+	char sdrl_get_raw_cha r(struct sdrl_input *input)
+		 * Get the next char from the input stream.
+
+	char sdrl_peek_cha r(struct sdrl_input *input)
+		 * Returns the next character to be read from input (only one char ahead).
+
+	static int input_free_sourc e(struct sdrl_input *input)
+		 * Free the current input source on the input stack
+
+
+
+src/core/machine.c:
+	struct sdrl_machine *sdrl_create_machin e(void)
+		 * Create a machine for executing code
+
+	int sdrl_destroy_machin e(struct sdrl_machine *mach)
+		 * Free the resources allocated to mach
+
+	int sdrl_evaluate_expr_lis t(struct sdrl_machine *mach, struct sdrl_expr *expr)
+		 * Evaluate all the exprs in the list, expr.
+
+	int sdrl_evaluate_exp r(struct sdrl_machine *mach, struct sdrl_expr *expr)
+		 * Evaluate recursively the single sdrl_expr and either return 0 with the result
+		 * stored in sdrl_machine.ret or return an error code.
+
+	int sdrl_evaluate_cal l(struct sdrl_machine *mach, char *name, struct sdrl_expr *exprs)
+		 * Resolve name and evaluate as a function.
+
+	int sdrl_evaluate_valu e(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_expr *exprs)
+		 * Evaluate expression as a function call
+
+	int sdrl_evaluate_param s(struct sdrl_machine *mach, struct sdrl_expr *exprs, struct sdrl_value **args)
+		 * Evaluate all the exprs and build a list of the corresponding return values.
+
+	static int sdrl_evaluate_expr_typ e(struct sdrl_machine *mach, struct sdrl_expr *expr, struct sdrl_value *params)
+		 * Evaluate function for the cmdptr type.
+
+	static int sdrl_evaluate_form_typ e(struct sdrl_machine *mach, int (*func)(struct sdrl_machine *, struct sdrl_expr *), struct sdrl_expr *params)
+		 * Evaluate function for the form type.
+
+	static int sdrl_evaluate_builtin_typ e(struct sdrl_machine *mach, int (*func)(struct sdrl_machine *, struct sdrl_value *), struct sdrl_value *args)
+		 * Evaluate function for the builtin type.
+
+
+
+src/core/parse.c:
+	struct sdrl_expr *sdrl_parse_fil e(char *filename)
+		 * Parse the input file and return the expression tree
+
+	struct sdrl_expr *sdrl_parse_strin g(char *str, int size)
+		 * Parse the input string and return the expression tree
+
+	struct sdrl_expr *sdrl_parse_inpu t(struct sdrl_input *input)
+		 * Parse the input stream until EOF and return the expression tree
+
+	struct sdrl_expr *sdrl_parse_exp r(struct sdrl_input *input)
+		 * Parse a single expression.
+
+	int sdrl_add_parse_rul e(char *name, char *pattern, struct sdrl_expr *expr)
+		 * Add a parse rule.
+
+	static number_t parse_get_numbe r(struct sdrl_input *input)
+		 * Returns the number that was read from input.
+
+	static char parse_escape_cha r(char ch)
+		 * Returns the character that corresponds to the escape code ch.
+
+	static int parse_is_digi t(char ch)
+		 * Returns 1 if ch is a valid digit character, 0 otherwise.
+
+	static int parse_is_numbe r(char ch)
+		 * Returns 1 if ch is a valid number character, 0 otherwise.
+
+	static int parse_is_nam e(char ch)
+		 * Returns 1 if ch is a valid name character, 0 otherwise.
+
+
+
+src/core/type.c:
+	struct sdrl_type *sdrl_make_typ e(int size, int bitflags, sdrl_evaluate_t evaluate, sdrl_duplicate_t duplicate, sdrl_destroy_t destroy)
+		 * Make a new generic sdrl type.
+
+	int sdrl_destroy_typ e(struct sdrl_type *type)
+		 * Frees resources used by type.
+
+
+
+src/core/value.c:
+	struct sdrl_value *sdrl_make_valu e(struct sdrl_type *type, sdrl_data_t data, int size, struct sdrl_value *next)
+		 * Allocate and initialize an sdrl_value to a generic-typed data value.
+
+	struct sdrl_value *sdrl_duplicate_valu e(struct sdrl_value *value)
+		 * Duplicate the value by direct memory copy.  Doesn't copy deep structure
+
+	int sdrl_push_valu e(struct sdrl_value **array, struct sdrl_value *value)
+		 * Adds the value to the linked-list of values.
+
+	struct sdrl_value *sdrl_pop_valu e(struct sdrl_value **array)
+		 * Removes the last value from the linked-list of values and returns it.
+
+	int sdrl_unshift_valu e(struct sdrl_value **array, struct sdrl_value *value)
+		 * Add the value to the front of the array.
+
+	struct sdrl_value *sdrl_shift_valu e(struct sdrl_value **array)
+		 * Removes the first value from the linked-list of values and returns it.
+
+	int sdrl_destroy_valu e(struct sdrl_value *value)
+		 * Frees memory of value and all of values links.  (Garbage Collection to see if value should *actually* be freed?)
+
+	int sdrl_value_coun t(struct sdrl_value *array)
+		 * Returns the number of elements in the linked-list of values.
+
+
+
+src/lib/prims.c:
+	int prim_initializ e(struct sdrl_machine *mach)
+		 * Add all the functions to the environment of machine
+
+	int prim_cod e(struct sdrl_machine *mach, struct sdrl_expr *expr)
+		 * code(<expr>, ...)
+		 * Return a value of type expr containing the code passed to it.
+
+	int prim_se t(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * set(<name>, <value>)
+		 * Bind value to name.  Returns a duplicate of value.
+
+	int prim_i f(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * if(<value>, <expr-value> [, <expr-value>])
+		 * Evaluates the first expr-value if value is not 0, the second otherwise.
+
+	int prim_lis t(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * list(<value>, ...)
+		 * Returns a value of type list containing the list of parameters.
+
+	int prim_unlis t(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * unlist(<list>)
+		 * Returns the values in a list.
+
+	int prim_resolv e(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * $(<name>)
+		 * Returns a copy of the value bound to the given name.
+
+	int prim_arra y(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * @(<value>, ...)
+		 * Returns the values passed to it (as a single list).
+
+	int prim_hea d(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * head(<value>, ...)
+		 * Returns the first value passed to it.
+
+	int prim_tai l(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * tail(<value>, ...)
+		 * Returns the all of the values passed to it following the first value.
+
+	int prim_nul l(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * null(<value>, ...)
+		 * Returns the number -1 if value passed is null; the number 0 if otherwise.
+
+	int prim_ad d(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * +(<number>, ...)
+		 * Returns a number of the sum of the list of number-values passes.
+
+	int prim_subtrac t(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * -(<number>, ...)
+		 * Returns a number of the difference of the list of number-values passes.
+
+	int prim_multipl y(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * *(<number>, ...)
+		 * Returns a number of the product of the list of number-values passes.
+
+	int prim_divid e(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * /(<number>, ...)
+		 * Returns a number of the quotient of the list of number-values passes.
+
+	int prim_equal s(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * =(<value>, ...)
+		 * Returns 1 if all number values are equal to eachother, 0 otherwise.
+
+	int prim_not_equal s(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * !=(<value>, ...)
+		 * Returns 1 if number value is not equal to eachother, 0 otherwise.
+
+	int prim_less_tha n(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * <(<value>, ...)
+		 * Returns 1 if number value are less than eachother, 0 otherwise.
+
+	int prim_greater_tha n(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * >(<value>, ...)
+		 * Returns 1 if number value are greater than eachother, 0 otherwise.
+
+	int prim_less_than_equal s(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * <=(<value>, ...)
+		 * Returns 1 if number value are less than or equal to eachother, 0 otherwise.
+
+	int prim_greater_than_equal s(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * >=(<value>, ...)
+		 * Returns 1 if number value are greater than or equal to eachother, 0 otherwise.
+
+	int prim_an d(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * and(<value>, ...)
+		 * Returns 1 if all number values are 1, 0 otherwise.
+
+	int prim_o r(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * or(<value>, ...)
+		 * Returns 1 if any of the number values are 1, 0 otherwise.
+
+	int prim_no t(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * not(<value>)
+		 * Returns 1 if all number value is 0, 0 otherwise.
+
+	int prim_prin t(struct sdrl_machine *mach, struct sdrl_value *value)
+		 * print(<value>, ...)
+		 * Prints out each of the values in the list and returns the list.
+
+	static int prim_set_lis t(struct sdrl_machine *mach, struct sdrl_value *names, struct sdrl_value *values)
+		 * Bind each element in the list values with its corresponding name in the list names.
+
+
