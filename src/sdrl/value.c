@@ -54,8 +54,12 @@ struct sdrl_value *sdrl_duplicate_value(struct sdrl_value *value)
 		if (!(tmp = (struct sdrl_value *) malloc(sizeof(struct sdrl_value) + value->size)))
 			return(NULL);
 		memcpy(tmp, value, sizeof(struct sdrl_value) + value->size);
-		if (tmp->size)
+		if (tmp->type->duplicate)
+			tmp->data.ptr = tmp->type->duplicate(value->data.ptr);
+		else if (tmp->size)
 			tmp->data = (sdrl_data_t) (char *) ((size_t) tmp + sizeof(struct sdrl_value));
+			
+
 		if (!head)
 			head = tmp;
 		else
@@ -151,12 +155,14 @@ int sdrl_destroy_value(struct sdrl_value *value)
 	while (value) {
 		// TODO check garbage collection
 		if (value->binds)
-			continue;
-		if (value->type->destroy)
-			value->type->destroy(value->data.ptr);
-		tmp = value->next;
-		free(value);
-		value = tmp;
+			value = value->next;
+		else {
+			if (value->type->destroy)
+				value->type->destroy(value->data.ptr);
+			tmp = value->next;
+			free(value);
+			value = tmp;
+		}
 	}
 
 	return(0);
