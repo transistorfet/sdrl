@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "expr.h"
 #include "types.h"
@@ -33,11 +34,14 @@ struct sdrl_expr *sdrl_make_name_expr(char *name, struct sdrl_expr *next)
 {
 	struct sdrl_expr *expr;
 
-	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr))))
+	if (!name || name[0] == '\0')
+		return(NULL);
+	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr) + strlen(name) + 1)))
 		return(NULL);
 
 	expr->type = SDRL_ET_NAME;
-	expr->data.name = name;
+	expr->data.name = (char *) ((size_t) expr + sizeof(struct sdrl_expr));
+	strcpy(expr->data.name, name);
 	expr->next = next;
 	return(expr);
 }
@@ -68,8 +72,6 @@ int sdrl_destroy_expr(struct sdrl_expr *expr)
 	while (expr) {
 		if (expr->type == SDRL_ET_CALL)
 			sdrl_destroy_expr(expr->data.expr);
-		else if (expr->type == SDRL_ET_NAME)
-			free(expr->data.name);
 		tmp = expr->next;
 		free(expr);
 		expr = tmp;
