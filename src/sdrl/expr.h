@@ -27,9 +27,7 @@ struct sdrl_expr {
 struct sdrl_expr *sdrl_make_call_expr(struct sdrl_expr *, struct sdrl_expr *);
 struct sdrl_expr *sdrl_make_name_expr(char *, struct sdrl_expr *);
 struct sdrl_expr *sdrl_make_number_expr(number_t, struct sdrl_expr *);
-int destroy_sdrl_expr(struct sdrl_expr *);
-
-int sdrl_print_expr(struct sdrl_expr *, int);
+int sdrl_destroy_expr(struct sdrl_expr *);
 
 #endif
 

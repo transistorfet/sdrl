@@ -5,7 +5,6 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h>
 
 #include "expr.h"
 #include "types.h"
@@ -62,13 +61,13 @@ struct sdrl_expr *sdrl_make_number_expr(number_t number, struct sdrl_expr *next)
 /**
  * Free all memory associated with the sdrl_expr
  */
-int destroy_sdrl_expr(struct sdrl_expr *expr)
+int sdrl_destroy_expr(struct sdrl_expr *expr)
 {
 	struct sdrl_expr *tmp;
 
 	while (expr) {
 		if (expr->type == SDRL_ET_CALL)
-			destroy_sdrl_expr(expr->data.expr);
+			sdrl_destroy_expr(expr->data.expr);
 		else if (expr->type == SDRL_ET_NAME)
 			free(expr->data.name);
 		tmp = expr->next;
@@ -79,32 +78,5 @@ int destroy_sdrl_expr(struct sdrl_expr *expr)
 	return(0);
 }
 
-int sdrl_print_expr(struct sdrl_expr *expr, int tabs)
-{
-	int i;
 
-	do {
-		for (i = 0;i < tabs;i++)
-			printf("  ");
-		if (!expr)
-			printf("null");
-		else if (expr->type == SDRL_ET_NUMBER)
-			printf("%f", expr->data.number);
-		else if (expr->type == SDRL_ET_NAME)
-			printf("%s", expr->data.name);
-		else if (expr->type == SDRL_ET_CALL) {
-			if (expr->data.expr && (expr->data.expr->type == SDRL_ET_NAME)) {
-				printf("call:%s(\n", expr->data.expr->data.name);
-				sdrl_print_expr(expr->data.expr->next, tabs + 1);
-				printf(")");
-			}
-			else
-				return(-1);
-		}
-		printf("\n");
-		expr = expr->next;
-	} while (expr);
-
-	return(0);
-}
 

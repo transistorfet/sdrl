@@ -4,91 +4,146 @@
  * Description:	Parser
  */
 
-
 #include <stdlib.h>
-#include <string.h>
 
-#include "io.h"
-#include "sdrl.h"
-#include "value.h"
-#include "prims.h"
-#include "bindings.h"
+#include "expr.h"
+#include "input.h"
+#include "parse.h"
 #include "types.h"
 
-#define MAX_BUFFER		1024
+#define PARSE_MAX_BUFFER		1024
 
-struct sdrl_exp *parse_get_expression(struct sdrl_machine *mach)
+
+static int parse_is_digit(char);
+static int parse_is_number(char);
+static int parse_is_name(char);
+static number_t parse_get_number(struct sdrl_input *);
+static char *parse_get_name(struct sdrl_input *);
+
+/**
+ * Parse the input file and return the expression tree
+ */
+struct sdrl_expr *sdrl_parse_file(char *filename)
 {
+	struct sdrl_expr *expr;
+	struct sdrl_input *input;
 
-}
-
-struct sdrl_exp *parse_make_call(char *name, struct sdrl_exp *params, struct sdrl_exp *next)
-{
-	struct sdrl_exp *exp;
-
-	if (!(exp = (struct sdrl_exp *) malloc(sizeof(struct sdrl_exp) + strlen(name))))
+	if (!(input = sdrl_create_input()))
 		return(NULL);
-
-	exp->name = (char *) ((usize_t) exp + sizeof(struct sdrl_exp));
-	strcpy(exp->name, name);
-	exp->type = SDRL_EXP_CALL;
-	exp->params = params;
-	exp->next = next;
-	return(exp);
-}
-
-struct sdrl_exp *parse_make_value(char *name, struct sdrl_exp *next)
-{
-	struct sdrl_exp *exp;
-
-	if (!(exp = (struct sdrl_exp *) malloc(sizeof(struct sdrl_exp) + strlen(name))))
+	if (sdrl_add_file(input, filename)) {
+		sdrl_destroy_input(input);
 		return(NULL);
+	}
 
-	exp->name = (char *) ((usize_t) exp + sizeof(struct sdrl_exp));
-	strcpy(exp->name, name);
-	exp->type = SDRL_EXP_VALUE;
-	exp->params = NULL;
-	exp->next = next;
-	return(exp);
+	expr = sdrl_parse_input(input);
+
+	sdrl_destroy_input(input);
+	return(expr);
 }
 
-static char sdrl_getinput(struct sdrl_machine *mach, char *buffer)
+/**
+ * Parse the input stream until EOF and return the expression tree
+ */
+struct sdrl_expr *sdrl_parse_input(struct sdrl_input *input)
 {
-	char sep;
-	int i = 0, j = 1;
+	char ch;
+	struct sdrl_expr *expr, *cur;
 
-	while ((buffer[0] = io_getchar(mach->input)) == ',') ;
-
-	if (buffer[0] == 0)
-		return(0);
-
-	if (buffer[0] == '\"') {
-		i++;
-		while ((buffer[i] = io_getrawchar(mach->input)) && (buffer[i] != '\"')) {
-			if (buffer[i] == '\\')
-				buffer[i] = value_getescape(io_getrawchar(mach->input));
-			if (++i >= MAX_BUFFER)
-				break;
-		}
+	ch = sdrl_peek_char(input);
+	if (!ch)
+		return(NULL);
+	else if (ch == ')')
+		return(NULL);
+	else if (ch == '(')
+		return(NULL);
+	else if (parse_is_digit(ch)) {
+		return(sdrl_make_number_expr(parse_get_number(input), NULL));
 	}
-	else if (buffer[0] == '{') {
-		while ((j) && (++i < MAX_BUFFER) && (buffer[i] = io_getrawchar(mach->input))) {
-			if (buffer[i] == '\\')
-				buffer[i] = value_getescape(io_getchar(mach->input));
-			else if (buffer[i] == '{')
-				j++;
-			else if (buffer[i] == '}')
-				j--;
+	else {
+		if (!(expr = sdrl_make_name_expr(parse_get_name(input), NULL)))
+			return(NULL);
+		ch = sdrl_peek_char(input);
+		if (ch == '(') {
+			sdrl_get_char(input);
+			expr->next = sdrl_parse_input(input);
+			if (sdrl_get_char(input) != ')')
+				return(NULL);
+			return(sdrl_make_call_expr(expr, sdrl_parse_input(input)));
 		}
+		else if (ch == ',') {
+			sdrl_get_char(input);
+			expr->next = sdrl_parse_input(input);
+			return(expr);
+		}
+		else
+			return(expr);
 	}
-	else
-		while ((++i < MAX_BUFFER) && (buffer[i] = io_getchar(mach->input)) && !(value_isseperator(buffer[i]))) ;
-	sep = buffer[i];
+}
+
+
+/*** Local Functions ***/
+
+/**
+ * Returns 1 if ch is a valid digit character, 0 otherwise.
+ */
+static int parse_is_digit(char ch)
+{
+	if ((ch >= 0x30) && (ch <= 0x39))
+		return(1);
+	return(0);
+}
+
+/**
+ * Returns 1 if ch is a valid number character, 0 otherwise.
+ */
+static int parse_is_number(char ch)
+{
+	if ((ch >= 0x30) && (ch <= 0x39) || (ch == '.') || (ch == '-'))
+		return(1);
+	return(0);
+}
+
+/**
+ * Returns 1 if ch is a valid name character, 0 otherwise.
+ */
+static int parse_is_name(char ch)
+{
+	return((ch != '(') && (ch != ')') && (ch != ','));
+}
+
+/**
+ * Returns the number that was read from input.
+ */
+static number_t parse_get_number(struct sdrl_input *input)
+{
+	char ch;
+	int i = 0;
+	char buffer[PARSE_MAX_BUFFER];
+
+	while ((ch = sdrl_peek_char(input)) && parse_is_number(ch))
+		buffer[i++] = sdrl_get_char(input);
+	buffer[i] = '\0';
+	return(atof(buffer));
+}
+
+/*
+ * Returns the name that was read from input.
+ */
+static char *parse_get_name(struct sdrl_input *input)
+{
+	char ch;
+	int i = 0;
+	char *str;
+	char buffer[PARSE_MAX_BUFFER];
+
+	while ((ch = sdrl_peek_char(input)) && parse_is_name(ch))
+		buffer[i++] = sdrl_get_char(input);
 	buffer[i] = '\0';
 
-	if (!(sep)) {
-		io_pushnull(mach->input);
-		sep = ',';
-	}
-	return(sep);
+	if (!(str = (char *) malloc(strlen(buffer))))
+		return(NULL);
+	strcpy(str, buffer);
+	return(str);
 }
+
+

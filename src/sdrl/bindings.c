@@ -12,11 +12,16 @@
 #include "bindings.h"
 #include "types.h"
 
-struct environment *create_environment(struct environment *parent, uubyte bitflags)
-{
-	struct environment *env;
+static struct sdrl_binding *bindings_find(struct sdrl_environment *, char *, int);
 
-	if (!(env = (struct environment *) malloc(sizeof(struct environment))))
+/**
+ * Allocate an environment for binding values to names.
+ */
+struct sdrl_environment *sdrl_create_environment(u_char bitflags, struct sdrl_environment *parent)
+{
+	struct sdrl_environment *env;
+
+	if (!(env = (struct sdrl_environment *) malloc(sizeof(struct sdrl_environment))))
 		return(NULL);
 
 	env->bitflags = bitflags;
@@ -26,14 +31,17 @@ struct environment *create_environment(struct environment *parent, uubyte bitfla
 	return(env);
 }
 
-int destroy_environment(struct environment *env)
+/**
+ * Free resources allocated by the environment including all bindings.
+ */
+int sdrl_destroy_environment(struct sdrl_environment *env)
 {
-	struct binding *cur, *next;
+	struct sdrl_binding *cur, *next;
 
 	cur = env->head;
 	while (cur) {
 		next = cur->next;
-		destroy_value(cur->val);
+		sdrl_destroy_value(cur->value);
 		free(cur);
 		cur = next;
 	}
@@ -41,39 +49,42 @@ int destroy_environment(struct environment *env)
 	return(0);
 }
 
-int add_binding(struct environment *env, char *name, struct value *val)
+/**
+ * Add a binding of name to value to environment.
+ */
+int sdrl_add_binding(struct sdrl_environment *env, char *name, struct sdrl_value *value)
 {
-	struct binding *tmp;
+	struct sdrl_binding *bind;
 
-	if ((!name))
+	if (!name || !value)
 		return(-1);
 
-	if (tmp = find_local_binding(env, name))
-		return(ERR_INUSE);
+	if (sdrl_find_local_binding(env, name))
+		return(ERR_IN_USE);
 
-	if (!(tmp = (struct binding *) malloc(sizeof(struct binding) + strlen(name) + 1)))
-		return(ERR_OUTOFMEMORY);
+	if (!(bind = (struct sdrl_binding *) malloc(sizeof(struct sdrl_binding) + strlen(name) + 1)))
+		return(ERR_OUT_OF_MEMORY);
 
-	tmp->name = (char *) ((usize_t) tmp + sizeof(struct binding));
-	strcpy(tmp->name, name);
-	if (val)
-		val->binds++;
-	tmp->val = val;
+	bind->name = (char *) ((size_t) bind + sizeof(struct sdrl_binding));
+	strcpy(bind->name, name);
+	bind->value = value;
 
-
-	tmp->next = NULL;
+	bind->next = NULL;
 	if (env->tail)
-		env->tail->next = tmp;
+		env->tail->next = bind;
 	else
-		env->head = tmp;
-	env->tail = tmp;
+		env->head = bind;
+	env->tail = bind;
 
 	return(0);
 }
 
-int remove_binding(struct environment *env, char *name)
+/**
+ * Remove the binding, name.
+ */
+int sdrl_remove_binding(struct sdrl_environment *env, char *name)
 {
-	struct binding *cur, *prev;
+	struct sdrl_binding *cur, *prev;
 
 	prev = NULL;
 	cur = env->head;
@@ -85,44 +96,66 @@ int remove_binding(struct environment *env, char *name)
 				env->head = cur->next;
 			if (cur == env->tail)
 				env->tail = prev;
-			if (cur->val) {
-				if (!(--cur->val->binds)) {
-					if (cur->val->type == VT_ENVIRONMENT)
-						destroy_environment((struct environment *) cur->val->data.val);
-					destroy_value(cur->val);
-				}
-			}
+			sdrl_destroy_value(cur->value);
 			free(cur);
 			return(0);
 		}
 		prev = cur;
 		cur = cur->next;
 	}
-	return(ERR_NOTFOUND);
+	return(ERR_NOT_FOUND);
 }
 
-int replace_binding(struct environment *env, char *name, struct value *val)
+/**
+ * Replace the binding's value with value or create the binding if it doesn't exist.
+ */
+int sdrl_replace_binding(struct sdrl_environment *env, char *name, struct sdrl_value *value)
 {
-	struct binding *tmp;
+	struct sdrl_binding *bind;
 
-	if (tmp = find_binding(env, name)) {
-		if (tmp->val) {
-			if (!(--tmp->val->binds)) {
-				if (tmp->val->type == VT_ENVIRONMENT)
-					destroy_environment((struct environment *) tmp->val->data.val);
-				destroy_value(tmp->val);
-			}
-		}
-		tmp->val = val;
+	if (!value)
+		return(-1);
+	if (bind = bindings_find(env, name, 0)) {
+		sdrl_destroy_value(bind->value);
+		bind->value = value;
 		return(0);
 	}
-	return(add_binding(env, name, val));
+	return(sdrl_add_binding(env, name, value));
 }
 
-struct binding *find_binding(struct environment *env, char *name)
+/**
+ * Find the value bound to name in env or its parents.
+ */
+struct sdrl_value *sdrl_find_binding(struct sdrl_environment *env, char *name)
 {
-	struct binding *cur;
-	struct environment *curenv;
+	struct sdrl_binding *bind;
+
+	if (bind = bindings_find(env, name, 0))
+		return(bind->value);
+	return(NULL);
+}
+
+/**
+ * Find the value bound to name in env only.
+ */
+struct sdrl_value *sdrl_find_local_binding(struct sdrl_environment *env, char *name)
+{
+	struct sdrl_binding *bind;
+
+	if (bind = bindings_find(env, name, 1))
+		return(bind->value);
+	return(NULL);
+}
+
+/*** Local Functions ***/
+
+/**
+ * Returns binding of name in environment or one of environments parents searching up to levels (0 to search all)
+ */
+static struct sdrl_binding *bindings_find(struct sdrl_environment *env, char *name, int levels)
+{
+	struct sdrl_binding *cur;
+	struct sdrl_environment *curenv;
 
 	curenv = env;
 	while (curenv) {
@@ -132,32 +165,13 @@ struct binding *find_binding(struct environment *env, char *name)
 				return(cur);
 			cur = cur->next;
 		}
+		if (--levels == 0)
+			return(NULL);
 		do {
 			curenv = curenv->parent;
-		} while ((curenv) && (curenv->bitflags & EBF_PRIVATE));
+		} while ((curenv) && (curenv->bitflags & SDRL_EBF_PRIVATE));
 	}
 	return(NULL);
 }
 
-struct binding *find_local_binding(struct environment *env, char *name)
-{
-	struct binding *cur;
-
-	cur = env->head;
-	while (cur) {
-		if (!strcmp(name, cur->name))
-			return(cur);
-		cur = cur->next;
-	}
-	return(NULL);
-}
-
-struct environment *find_environment(struct environment *env, char *name)
-{
-	struct binding *bind;
-
-	if (!(bind = find_binding(env, name)) || (bind->val->type != VT_ENVIRONMENT))
-		return(NULL);
-	return((struct environment *) bind->val->data.val);	
-}
 

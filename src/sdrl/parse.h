@@ -8,22 +8,12 @@
 #ifndef PARSE_H
 #define PARSE_H
 
-#include "sdrl.h"
+#include "expr.h"
+#include "input.h"
 #include "types.h"
 
-#define SDRL_EXP_CALL		0x01
-#define SDRL_EXP_VALUE		0x03
-
-struct sdrl_exp {
-	char *name;
-	int type;
-	struct sdrl_exp *params;
-	struct sdrl_exp *next;
-};
-
-struct sdrl_exp *parse_get_expression(struct sdrl_machine *);
-struct sdrl_exp *parse_make_call(char *, struct sdrl_exp *, struct sdrl_exp *);
-struct sdrl_exp *parse_make_value(char *, struct sdrl_exp *);
+struct sdrl_expr *sdrl_parse_file(char *);
+struct sdrl_expr *sdrl_parse_input(struct sdrl_input *);
 
 #endif
 

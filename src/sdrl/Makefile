@@ -1,6 +1,6 @@
 
 
-OBJ = sdrl.o prims.o bindings.o io.o value.o
+OBJ = sdrl.o prims.o bindings.o expr.o value.o parse.o io.o
 
 CC = gcc
 LINK = ld

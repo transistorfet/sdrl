@@ -8,28 +8,20 @@
 
 #include "error.h"
 
-#define _USE32
-
 #ifndef TRUE
 	#define FALSE		0
-	#define TRUE		1		/* !FALSE */
+	#define TRUE		1
 #endif
 
 #undef  NULL
 #define NULL			0
 
-	typedef unsigned char uubyte;
-	typedef unsigned short uuword;
-	typedef unsigned long uulong;
-	typedef unsigned long long uuquad;
+typedef unsigned char u_char;
+typedef unsigned short u_short;
+typedef unsigned long u_int;
+typedef unsigned long long u_long;
 
-	typedef signed char usbyte;
-	typedef signed short usword;
-	typedef signed long uslong;
-	typedef signed long long usquad;
-
-typedef uulong _u_size_t;
-typedef _u_size_t usize_t;
+typedef double number_t;
 
 #endif
 

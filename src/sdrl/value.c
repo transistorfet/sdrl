@@ -12,206 +12,124 @@
 #include "types.h"
 
 
-struct value *value_makevalue(uubyte type, struct value *val, struct value *next)
+/**
+ * Allocate and initialize an sdrl_value to a generic-typed data value.
+ */
+struct sdrl_value *sdrl_make_value(int type, sdrl_data_t data, int size, struct sdrl_value *next)
 {
-	struct value *tmp;
+	struct sdrl_value *value;
 
-	if (!(tmp = (struct value *) malloc(sizeof(struct value))))
+	if (!(value = (struct sdrl_value *) malloc(sizeof(struct sdrl_value))))
 		return(NULL);
-	tmp->type = type;
-	tmp->binds = 0;
-	tmp->size = sizeof(struct value);
-	tmp->data.val = val;
-	tmp->next = next;
+	value->type = type;
+	value->binds = 0;
+	value->data = data;
+	value->size = size;
+	value->next = next;
 
-	return(tmp);
+	return(value);
 }
 
-struct value *value_makestring(uubyte type, char *str, struct value *next)
+/**
+ * Duplicate the value by direct memory copy including deep structure (Garbage Collection tracking code?)
+ */
+struct sdrl_value *sdrl_duplicate_value(struct sdrl_value *value)
 {
-	int size;
-	struct value *tmp;
+	struct sdrl_value *tmp, *prev, *head = NULL;
 
-	size = sizeof(struct value) + strlen(str) + 1;
-	if (!(tmp = (struct value *) malloc(size)))
-		return(NULL);
-	tmp->type = type;
-	tmp->binds = 0;
-	tmp->size = size;
-	tmp->data.str = (char *) ((usize_t) tmp + sizeof(struct value));
-	strcpy(tmp->data.str, str);
-	tmp->next = next;
-
-	return(tmp);
-}
-
-struct value *value_makenumber(uubyte type, int num, struct value *next)
-{
-	struct value *tmp;
-
-	if (!(tmp = (struct value *) malloc(sizeof(struct value))))
-		return(NULL);
-	tmp->type = type;
-	tmp->binds = 0;
-	tmp->size = sizeof(struct value);
-	tmp->data.num = num;
-	tmp->next = next;
-
-	return(tmp);
-}
-
-struct value *duplicate_value(struct value *val)
-{
-	struct value *tmp, *prev, *head = NULL;
-
-	while (val) {
-		if (!(tmp = (struct value *) malloc(val->size)))
+	while (value) {
+		if (!(tmp = (struct sdrl_value *) malloc(value->size)))
 			return(NULL);
-		memcpy(tmp, val, val->size);
-		if (val->type == VT_VALUE)
-			tmp->data.val = duplicate_value(val->data.val);
+		memcpy(tmp, value, value->size);
+		if (value->type == SDRL_VT_VALUE)
+			tmp->data.value = sdrl_duplicate_value(value->data.value);
 		if (!head)
 			head = tmp;
 		else
 			prev->next = tmp;
 		prev = tmp;
-		val = val->next;
+		value = value->next;
 	}
 
 	return(head);
 }
 
-int destroy_value(struct value *val)
+/**
+ * Adds the value to the linked-list of values.
+ */
+int sdrl_push_value(struct sdrl_value **array, struct sdrl_value *value)
 {
-	struct value *tmp;
+	struct sdrl_value *cur;
 
-	while (val) {
-		tmp = val;
-		val = val->next;
-		if (tmp->type == VT_VALUE)
-			destroy_value(tmp->data.val);
-		free(tmp);
+	if (!array)
+		return(ERR_NOT_FOUND);
+	else if (!*array)
+		*array = value;
+	else {
+		cur = *array;
+		while (cur->next)
+			cur = cur->next;
+		cur->next = value;
 	}
 	return(0);
 }
 
-struct value *value_gethead(struct value *val, struct value **tail)
+/**
+ * Removes the last value from the linked-list of values and returns it.
+ */
+struct sdrl_value *sdrl_pop_value(struct sdrl_value **array)
 {
-	struct value *tmp;
+	struct sdrl_value *cur, *value;
 
-	if (tail)
-		*tail = NULL;
-	if (!(val))
+	if (!array)
 		return(NULL);
-	if (tail)
-		*tail = val->next;
-	else
-		destroy_value(val->next);
 
-	val->next = NULL;
-	if (val->type == VT_VALUE) {
-		tmp = val->data.val;
-		free(val);
-		return(tmp);
+	cur = *array;
+	if (!cur)
+		return(NULL);
+	else if (!cur->next) {
+		value = cur;
+		*array = NULL;
 	}
-	return(val);
+	else {
+		while (cur->next->next)
+			cur = cur->next;
+		value = cur->next;
+		cur->next = NULL;
+	}
+	return(value);
 }
 
-struct value *value_gettail(struct value *val)
+/**
+ * Frees memory of value and all of values links.  (Garbage Collection to see if value should *actually* be freed?)
+ */
+int sdrl_destroy_value(struct sdrl_value *value)
 {
-	struct value *tmp;
+	struct sdrl_value *tmp;
 
-	if (!(val))
-		return(NULL);
-	tmp = val->next;
-	val->next = NULL;
-	return(tmp);
+	while (value) {
+		tmp = value->next;
+		// TODO free value if it has been allocated elsewhere (value, evironment, expr, etc)
+		free(value);
+		value = tmp;
+	}
+
+	return(0);
 }
 
-struct value *value_destroyhead(struct value *val)
-{
-	struct value *tmp;
 
-	if (!(val))
-		return(NULL);
-	tmp = val->next;
-	val->next = NULL;
-	destroy_value(val);
-	return(tmp);
-}
-
-int value_count(struct value *val)
+/**
+ * Returns the number of elements in the linked-list of values.
+ */
+int sdrl_value_count(struct sdrl_value *array)
 {
 	int i = 0;
 
-	while (val) {
+	while (array) {
 		i++;
-		val = val->next;
+		array = array->next;
 	}
 	return(i);
 }
 
-char value_getescape(char ch)
-{
-	switch (ch) {
-		case 'n':
-			return('\n');
-		case 't':
-			return('\t');
-		case 'r':
-			return('\r');
-		case '0':
-			return('\0');
-		default:
-			return(ch);
-	}
-}
 
-int value_isvalue(char ch)
-{
-	if (((ch >= 0x30) && (ch <= 0x39)) || (ch == '\"') || (ch == '\'') || (ch == '\\') || (ch == '{'))
-		return(1);
-	return(0);
-}
-
-int value_isseperator(char ch)
-{
-	if ((ch == ',') || (ch == '(') || (ch == ')') || (ch == '\0'))
-		return(1);
-	return(0);
-}
-
-int value_iswhitespace(char ch)
-{
-	if ((ch == ' ') || (ch == '\t') || (ch == '\n') || (ch == '\r'))
-		return(1);
-	return(0);
-}
-
-int value_atoi(char *str, int base)
-{
-	int i = -1, ret = 0;
-
-	if (!str)
-		return(0);
-
-	while (str[++i] != '\0') {
-		ret *= base;
-		if ((str[i] = value_digit(str[i])) >= base)
-			return(ERR_OUTOFBOUNDS);
-		ret += str[i];
-	}
-
-	return(ret);
-}
-
-int value_digit(char ch)
-{
-	if ((ch >= 0x30) && (ch <= 0x39))
-		return(ch - 0x30);
-	else if ((ch >= 0x41) && (ch <= 0x5a))
-		return(ch - 0x37);
-	else if ((ch >= 0x61) && (ch <= 0x7a))
-		return(ch - 0x57);
-	return(0);
-}
