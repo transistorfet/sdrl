@@ -28,20 +28,20 @@ struct sdrl_expr *sdrl_make_call_expr(struct sdrl_expr *call, struct sdrl_expr *
 }
 
 /**
- * Return a newly allocated name expression using a malloc'd string, name.
+ * Return a newly allocated string expression using a malloc'd string, str.
  */
-struct sdrl_expr *sdrl_make_name_expr(char *name, struct sdrl_expr *next)
+struct sdrl_expr *sdrl_make_string_expr(char *str, struct sdrl_expr *next)
 {
 	struct sdrl_expr *expr;
 
-	if (!name)
+	if (!str)
 		return(NULL);
-	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr) + strlen(name) + 1)))
+	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr) + strlen(str) + 1)))
 		return(NULL);
 
-	expr->type = SDRL_ET_NAME;
-	expr->data.name = (char *) ((size_t) expr + sizeof(struct sdrl_expr));
-	strcpy(expr->data.name, name);
+	expr->type = SDRL_ET_STRING;
+	expr->data.str = (char *) ((size_t) expr + sizeof(struct sdrl_expr));
+	strcpy(expr->data.str, str);
 	expr->next = next;
 	return(expr);
 }

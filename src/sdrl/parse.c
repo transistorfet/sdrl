@@ -100,11 +100,11 @@ struct sdrl_expr *sdrl_parse_expr(struct sdrl_input *input)
 	}
 	else if (ch == '\"') {
 		sdrl_get_char(input);
-		if (!(expr = sdrl_make_name_expr(parse_get_string(input), NULL)))
+		if (!(expr = sdrl_make_string_expr(parse_get_string(input), NULL)))
 			return(NULL);
 	}
 	else {
-		if (!(expr = sdrl_make_name_expr(parse_get_name(input), NULL)))
+		if (!(expr = sdrl_make_string_expr(parse_get_name(input), NULL)))
 			return(NULL);
 		if (sdrl_peek_char(input) == '(') {
 			sdrl_get_char(input);

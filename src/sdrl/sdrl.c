@@ -88,12 +88,12 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 		return(0);
 	else if (expr->type == SDRL_ET_NUMBER)
 		mach->ret = sdrl_make_value(sdrl_find_type(mach->type_env, "number"), (sdrl_data_t) expr->data.number, 0, NULL);
-	else if (expr->type == SDRL_ET_NAME)
-		mach->ret = sdrl_make_value(sdrl_find_type(mach->type_env, "string"), (sdrl_data_t) expr->data.name, strlen(expr->data.name), NULL);
+	else if (expr->type == SDRL_ET_STRING)
+		mach->ret = sdrl_make_value(sdrl_find_type(mach->type_env, "string"), (sdrl_data_t) expr->data.str, strlen(expr->data.str), NULL);
 	else if (expr->type == SDRL_ET_CALL) {
-		if (expr->data.expr->type != SDRL_ET_NAME)
+		if (expr->data.expr->type != SDRL_ET_STRING)
 			return(ERR_INVALID_FUNCTION);
-		return(sdrl_evaluate_call(mach, expr->data.expr->data.name, expr->data.expr->next));
+		return(sdrl_evaluate_call(mach, expr->data.expr->data.str, expr->data.expr->next));
 	}
 	else
 		return(ERR_INVALID_AST_TYPE);
