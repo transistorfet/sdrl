@@ -1,0 +1,26 @@
+# High Level Language Name Redefines
+
+:('define,:)
+:('begin,%)
+:('list,@)
+:('if,?)
+
+:('and,&)
+:('or,|)
+:('not,!)
+
+:('eval,;)
+
+:('while,{%(
+	:(@('cond, 'code),$),
+	;*({
+		?(cond(),
+			{ code() },
+			{ .*(1) })
+	})
+)})
+
+
+
+
+

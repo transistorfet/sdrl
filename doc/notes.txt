@@ -1,0 +1,33 @@
+
+
+- floating point number support (?)
+- null check (!@) (?)
+- null datatype (for lists) (?)
+- ! and !! functionality for multiple params (?)
+
+
+
+
+
+
+
+	// what do you do if the binding is to a non-executable
+	// yet is being applied (value index for strings, arrays, environments, etc?)
+
+:('struct, @('x,'y,'z))
+:(struct, @(5,6,7))		# x, y, z would be those values
+
+:('struct, {:('name,$),@(append(name,'.x), append(name,'.y), append(name,'.z))}
+:(struct('vec), @(5,6,7))	# vec.x, vec.y, vec.z would be those values
+
+
+Possible Commands
+
+^ or **
+++
+--
+
+open
+close
+read
+write
