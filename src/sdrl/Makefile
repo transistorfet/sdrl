@@ -15,7 +15,7 @@ $(NAME): $(OBJ)
 	$(LINK) -o $(NAME) $(OBJ)
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(SDRL_CORE):
 	cd $(SDRL)/core;make
