@@ -1,0 +1,23 @@
+
+	* add ability to call C functions (used to be through VT_FUNCPTR)
+	* make io more robust
+	* make parse more robust
+	* change parser to parse (func args) syntax?
+	* add definable types to value?
+	* change ERR names
+	* Add quoted strings
+	* change SDRL_ET_NAME to SDRL_ET_STRING ???? (should they be the same/distinct)
+	* add _s struct notation? (probably not)
+
+	* should printing functions be included throughout code?  or perhaps in a special print module?
+	* do and test sdrl (uses parse, bingings and dependancies)
+	* do and test prims (uses sdrl and dependancies)
+
+	* Finish Conversion of types
+	* Add Special Binding flag that specifies whether to call the function with args or params
+	* make execution use a tail-recursion stack thingy
+	* make the parser parse syntactic sugary goodness
+	* make the parser modifiable by the code itself
+	* add cross-cutting language constructs (aspects?)
+
+

@@ -1,0 +1,9 @@
+
+current:	* Coverted code to compile file into an AST before executing
+		* Added expr.c for AST functions
+		*
+
+v0.1:		Initial Writing
+
+
+
