@@ -80,12 +80,12 @@ int sdrl_rebind_value(struct sdrl_environment *env, char *name, struct sdrl_valu
 
 	if (!name || !value)
 		return(-1);
-	if (bind = bindings_find(env, name, SDRL_BT_VALUE, 0)) {
+	if (bind = bindings_find(env, name, SDRL_BT_VALUE, 1)) {
 		sdrl_destroy_value(bind->data.value);
 		bind->data.value = value;
 		return(0);
 	}
-	return(sdrl_bind_value(env, name, value));
+	return(ERR_NOT_FOUND);
 }
 
 /**

@@ -5,8 +5,8 @@
  */
 
 
-#ifndef BINDINGS_H
-#define BINDINGS_H
+#ifndef _SDRL_BINDINGS_H
+#define _SDRL_BINDINGS_H
 
 #include "type.h"
 #include "value.h"
