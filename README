@@ -1,0 +1,28 @@
+
+SDRL Release 0.2
+
+See changelog.txt for details of changes.  (Note: this release is
+incomatible with SDRL Release 0.1)
+
+Compiling:
+	cd src/sdrl
+	make
+
+	There is no install.  Only one file (sdrl) is produced.
+	Copy this to somewhere in your path.
+
+Using SDRL in a project:
+	Include the file (src/core/)sdrl.h into your project and
+	when compiling, run make in core, compile any files in
+	lib/ and then link libsdrl.a and the compiled lib/ files
+	into your source project.  (In the next release I hope to
+	make this easier).  Look at src/sdrl/Makefile for hints.
+
+	Look in doc/ for the list of functions available to a
+	program and look through the prims.c library for details
+	on making your own C library functions.
+
+This package is copyrighted 2005 Sarina McFarland and licensed
+under the Artistic Licence (license.txt)
+
+
