@@ -1,7 +1,16 @@
 
-current:	* Coverted code to compile file into an AST before executing
+current:	* Converted all function names to sdrl_*
+		* Converted code to compile file into an AST before executing
 		* Added expr.c for AST functions
-		*
+		* Added type.c for advanced user-definable types (all types must be defined using it)
+		* Changed bindings/environments to bind types as well as values
+		* Removed the knowledge of special types from value
+		* integrated sdrl_make_* into a single generic sdrl_make_value function
+		* changed error names in error.h
+		* changed io.* to input.* (since it only handles input)
+		* changed default behaviour of a name to return the name instead of resolving the binding of that name
+		* removed the { } syntax from the parser
+
 
 v0.1:		Initial Writing
 

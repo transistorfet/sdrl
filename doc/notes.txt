@@ -1,4 +1,14 @@
 
+Log:
+ - the {} syntax was not only a pain in the ass but essentially just a special case
+   of code() that did not require the parameters to be passed unevaluated.  I removed
+   them and added the ability to call functions without evaluating the params.  It
+   goes against the goal of no special functions but it makes the parser simpler as
+   well as making it more lispy-like (which is somewhat good but it makes it more
+   ordinary and lisp-copyish.
+
+--------------------------------------------------------------------------
+
 
 - floating point number support (?)
 - null check (!@) (?)
@@ -33,4 +43,18 @@ read
 write
 
 
-:(name, 
+
+
+define(foo, code(
+	define(@(a, b), $)
+	if(==(a, b),
+		code(a),
+		code(+(a, b)))))
+
+
+(define, foo, (code,
+	(define, (@, a, b), $)
+	(if (==, a, b),
+		(code, a),
+		(code, (+, a, b)))))
+

@@ -1,19 +1,23 @@
 
-	* add ability to call C functions (used to be through VT_FUNCPTR)
-	* make io more robust
+	* make parser catch errors during a parse
+	* Should calling a value ( =(foo, 5), foo() ) allow params like an index or something?
+	* fix the u_char, etc conflicts
+	* add garbage collection
+	* is there a way to clean up the whole C function evaluation thing
+	* how do we do function parameters
+	* what about expr type in relation to destroy() (creating an expr value that is not a function or mach->code)
+	* add constant values (modifier to value or bitflags in type?)
+	* check to make sure mach->ret values are not being destroyed improperly, etc
+	* add binding reference count temporarily?
+	* change name of types.h?
+	* make input more robust
 	* make parse more robust
-	* change parser to parse (func args) syntax?
-	* add definable types to value?
-	* change ERR names
-	* Add quoted strings
+	* change parser to parse (func args) syntax? or (func,arg1,arg2,...)
+	* Add quoted strings to parser
 	* change SDRL_ET_NAME to SDRL_ET_STRING ???? (should they be the same/distinct)
-	* add _s struct notation? (probably not)
 
-	* should printing functions be included throughout code?  or perhaps in a special print module?
-	* do and test sdrl (uses parse, bingings and dependancies)
 	* do and test prims (uses sdrl and dependancies)
 
-	* Finish Conversion of types
 	* Add Special Binding flag that specifies whether to call the function with args or params
 	* make execution use a tail-recursion stack thingy
 	* make the parser parse syntactic sugary goodness
