@@ -5,12 +5,16 @@ OBJ = machine.o bindings.o expr.o value.o type.o parse.o input.o
 CC = gcc
 CFLAGS = -g -I.
 LINK = ld
+AR = ar
+ARFLAGS = rcu
+RANLIB = ranlib
 LIBS =
 
-NAME = sdrl.obj
+LIB_NAME = libsdrl.a
 
-$(NAME): $(OBJ)
-	$(LINK) $(LIBS) -r -o $(NAME) $(OBJ)
+$(LIB_NAME): $(OBJ)
+	$(AR) $(ARFLAGS) $@ $(OBJ)
+	$(RANLIB) $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
