@@ -5,8 +5,8 @@
  */
 
 
-#ifndef TYPE_H
-#define TYPE_H
+#ifndef _SDRL_TYPE_H
+#define _SDRL_TYPE_H
 
 #include "types.h"
 
@@ -25,16 +25,18 @@
 struct sdrl_machine;
 
 typedef int (*sdrl_evaluate_t)(struct sdrl_machine *, ...);
+typedef void *(*sdrl_duplicate_t)(void *);
 typedef int (*sdrl_destroy_t)(void *);
 
 struct sdrl_type {
 	int size;
 	int bitflags;
 	sdrl_evaluate_t evaluate;
+	sdrl_duplicate_t duplicate;
 	sdrl_destroy_t destroy;
 };
 
-struct sdrl_type *sdrl_make_type(int, int, sdrl_evaluate_t, sdrl_destroy_t);
+struct sdrl_type *sdrl_make_type(int, int, sdrl_evaluate_t, sdrl_duplicate_t, sdrl_destroy_t);
 int sdrl_destroy_type(struct sdrl_type *);
 
 #endif

@@ -13,7 +13,7 @@
 /**
  * Make a new generic sdrl type.
  */
-struct sdrl_type *sdrl_make_type(int size, int bitflags, sdrl_evaluate_t evaluate, sdrl_destroy_t destroy)
+struct sdrl_type *sdrl_make_type(int size, int bitflags, sdrl_evaluate_t evaluate, sdrl_duplicate_t duplicate, sdrl_destroy_t destroy)
 {
 	struct sdrl_type *type;
 
@@ -23,6 +23,7 @@ struct sdrl_type *sdrl_make_type(int size, int bitflags, sdrl_evaluate_t evaluat
 	type->size = size;
 	type->bitflags = bitflags;
 	type->evaluate = evaluate;
+	type->duplicate = duplicate;
 	type->destroy = destroy;
 
 	return(type);
