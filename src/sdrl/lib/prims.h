@@ -5,8 +5,8 @@
  */
 
 
-#ifndef PRIMS_H
-#define PRIMS_H
+#ifndef _SDRL_LIB_PRIMS_H
+#define _SDRL_LIB_PRIMS_H
 
 #include <sdrl.h>
 
@@ -25,6 +25,11 @@ int prim_multiply(struct sdrl_machine *, struct sdrl_value *);
 int prim_divide(struct sdrl_machine *, struct sdrl_value *);
 
 int prim_equals(struct sdrl_machine *, struct sdrl_value *);
+int prim_not_equals(struct sdrl_machine *, struct sdrl_value *);
+int prim_less_than(struct sdrl_machine *, struct sdrl_value *);
+int prim_greater_than(struct sdrl_machine *, struct sdrl_value *);
+int prim_less_than_equals(struct sdrl_machine *, struct sdrl_value *);
+int prim_greater_than_equals(struct sdrl_machine *, struct sdrl_value *);
 
 int prim_print(struct sdrl_machine *, struct sdrl_value *);
 

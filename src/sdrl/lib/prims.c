@@ -49,6 +49,11 @@ int prim_initialize(struct sdrl_machine *mach)
 	sdrl_bind_value(mach->env, "/", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_divide, 0, NULL));
 
 	sdrl_bind_value(mach->env, "=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_equals, 0, NULL));
+	sdrl_bind_value(mach->env, "!=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_not_equals, 0, NULL));
+	sdrl_bind_value(mach->env, "<", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_less_than, 0, NULL));
+	sdrl_bind_value(mach->env, ">", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_greater_than, 0, NULL));
+	sdrl_bind_value(mach->env, "<=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_less_than_equals, 0, NULL));
+	sdrl_bind_value(mach->env, ">=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_greater_than_equals, 0, NULL));
 
 	sdrl_bind_value(mach->env, "print", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_print, 0, NULL));
 	return(0);
@@ -217,7 +222,7 @@ int prim_divide(struct sdrl_machine *mach, struct sdrl_value *value)
 
 /**
  * =(<value>, ...)
- * Returns a number of the quotient of the list of number-values passes.
+ * Returns 1 if all number values are equal to eachother, 0 otherwise.
  */
 int prim_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 {
@@ -252,6 +257,123 @@ int prim_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 			result = 0;
 			break;
 		});
+
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * !=(<value>, ...)
+ * Returns 1 if number value is not equal to eachother, 0 otherwise.
+ */
+int prim_not_equals(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_value *cur;
+	struct sdrl_type *type;
+
+	traverse_value_m("number", value->next, 1,
+		if (cur->data.number == value->data.number) {
+			result = 0;
+			break;
+		});
+
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * <(<value>, ...)
+ * Returns 1 if number value are less than eachother, 0 otherwise.
+ */
+int prim_less_than(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_value *cur, *last;
+	struct sdrl_type *type;
+
+	last = value;
+	traverse_value_m("number", value->next, 1,
+		if (last->data.number >= cur->data.number ) {
+			result = 0;
+			break;
+		}
+		else
+			last = cur;);
+
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * >(<value>, ...)
+ * Returns 1 if number value are greater than eachother, 0 otherwise.
+ */
+int prim_greater_than(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_value *cur, *last;
+	struct sdrl_type *type;
+
+	last = value;
+	traverse_value_m("number", value->next, 1,
+		if (last->data.number <= cur->data.number ) {
+			result = 0;
+			break;
+		}
+		else
+			last = cur;);
+
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * <=(<value>, ...)
+ * Returns 1 if number value are less than or equal to eachother, 0 otherwise.
+ */
+int prim_less_than_equals(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_value *cur, *last;
+	struct sdrl_type *type;
+
+	last = value;
+	traverse_value_m("number", value->next, 1,
+		if (last->data.number > cur->data.number ) {
+			result = 0;
+			break;
+		}
+		else
+			last = cur;);
+
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * >=(<value>, ...)
+ * Returns 1 if number value are greater than or equal to eachother, 0 otherwise.
+ */
+int prim_greater_than_equals(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_value *cur, *last;
+	struct sdrl_type *type;
+
+	last = value;
+	traverse_value_m("number", value->next, 1,
+		if (last->data.number < cur->data.number ) {
+			result = 0;
+			break;
+		}
+		else
+			last = cur;);
 
 	sdrl_destroy_value(value);
 	return(ret);
@@ -307,12 +429,12 @@ static int prim_set_list(struct sdrl_machine *mach, struct sdrl_value *names, st
 			return(ERR_INVALID_TYPE);
 		if (cur_value) {
 			tmp = cur_value->next;
-			if (sdrl_bind_value(mach->env, cur_name->data.str, (cur_name->next) ? sdrl_shift_value(&cur_value) : cur_value))
+			if (sdrl_rebind_value(mach->env, cur_name->data.str, (cur_name->next) ? sdrl_shift_value(&cur_value) : cur_value))
 				return(ERR_OUT_OF_MEMORY);
 			cur_value = tmp;
 		}
 		else {
-			if (sdrl_bind_value(mach->env, cur_name->data.str, sdrl_make_value(string, (sdrl_data_t) "", 0, NULL)))
+			if (sdrl_rebind_value(mach->env, cur_name->data.str, sdrl_make_value(string, (sdrl_data_t) "", 0, NULL)))
 				return(ERR_OUT_OF_MEMORY);
 		}
 		cur_name = cur_name->next;
