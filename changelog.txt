@@ -5,12 +5,15 @@ current:	* Converted all function names to sdrl_*
 		* Added type.c for advanced user-definable types (all types must be defined using it)
 		* Changed bindings/environments to bind types as well as values
 		* Removed the knowledge of special types from value
-		* integrated sdrl_make_* into a single generic sdrl_make_value function
-		* changed error names in error.h
-		* changed io.* to input.* (since it only handles input)
-		* changed default behaviour of a name to return the name instead of resolving the binding of that name
-		* removed the { } syntax from the parser
-
+		* Integrated sdrl_make_* into a single generic sdrl_make_value function
+		* Changed error names in error.h
+		* Changed io.* to input.* (since it only handles input)
+		* Changed default behaviour of a name to return the name instead of resolving the binding of that name
+		* Removed the { } syntax from the parser
+		* Changed many primative form/builtin names (no longer entirely symbolic)
+		* Added scheme functions library
+		* Added pattern.c for pattern matching
+		* Changed types.h to globals.h
 
 v0.1:		Initial Writing
 
