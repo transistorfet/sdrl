@@ -1,8 +1,4 @@
 
-	* build documentation
-
------------------------------------------------------------------------------------------
-
 	* can we simplify the semantics of set?
 	* add line number/char tracking to expr/parser
 	* add binary file support to input
