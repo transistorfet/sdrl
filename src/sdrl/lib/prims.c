@@ -418,7 +418,7 @@ static int prim_set_list(struct sdrl_machine *mach, struct sdrl_value *names, st
 {
 	int ret = 0;
 	struct sdrl_type *string;
-	struct sdrl_value *cur_name, *cur_value, *tmp;
+	struct sdrl_value *cur_name, *cur_value, *tmp, *value;
 
 	if (!(string = sdrl_find_type(mach->type_env, "string")))
 		return(ERR_NOT_FOUND);
@@ -429,12 +429,13 @@ static int prim_set_list(struct sdrl_machine *mach, struct sdrl_value *names, st
 			return(ERR_INVALID_TYPE);
 		if (cur_value) {
 			tmp = cur_value->next;
-			if (sdrl_rebind_value(mach->env, cur_name->data.str, (cur_name->next) ? sdrl_shift_value(&cur_value) : cur_value))
-				return(ERR_OUT_OF_MEMORY);
+			value = (cur_name->next) ? sdrl_shift_value(&cur_value) : cur_value;
 			cur_value = tmp;
 		}
-		else {
-			if (sdrl_rebind_value(mach->env, cur_name->data.str, sdrl_make_value(string, (sdrl_data_t) "", 0, NULL)))
+		else
+			value = sdrl_make_value(string, (sdrl_data_t) "", 0, NULL);
+		if (sdrl_rebind_value(mach->env, cur_name->data.str, value)) {
+			if (sdrl_bind_value(mach->env, cur_name->data.str, value))
 				return(ERR_OUT_OF_MEMORY);
 		}
 		cur_name = cur_name->next;
