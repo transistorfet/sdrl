@@ -19,6 +19,11 @@ int prim_list(struct sdrl_machine *, struct sdrl_value *);
 int prim_if(struct sdrl_machine *, struct sdrl_value *);
 
 int prim_resolve(struct sdrl_machine *, struct sdrl_value *);
+int prim_array(struct sdrl_machine *, struct sdrl_value *);
+int prim_head(struct sdrl_machine *, struct sdrl_value *);
+int prim_tail(struct sdrl_machine *, struct sdrl_value *);
+int prim_null(struct sdrl_machine *, struct sdrl_value *);
+
 int prim_add(struct sdrl_machine *, struct sdrl_value *);
 int prim_subtract(struct sdrl_machine *, struct sdrl_value *);
 int prim_multiply(struct sdrl_machine *, struct sdrl_value *);
@@ -30,6 +35,10 @@ int prim_less_than(struct sdrl_machine *, struct sdrl_value *);
 int prim_greater_than(struct sdrl_machine *, struct sdrl_value *);
 int prim_less_than_equals(struct sdrl_machine *, struct sdrl_value *);
 int prim_greater_than_equals(struct sdrl_machine *, struct sdrl_value *);
+
+int prim_and(struct sdrl_machine *, struct sdrl_value *);
+int prim_or(struct sdrl_machine *, struct sdrl_value *);
+int prim_not(struct sdrl_machine *, struct sdrl_value *);
 
 int prim_print(struct sdrl_machine *, struct sdrl_value *);
 

@@ -43,6 +43,11 @@ int prim_initialize(struct sdrl_machine *mach)
 	sdrl_bind_value(mach->env, "if", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_if, 0, NULL));
 
 	sdrl_bind_value(mach->env, "$", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_resolve, 0, NULL));
+	sdrl_bind_value(mach->env, "@", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_array, 0, NULL));
+	sdrl_bind_value(mach->env, "head", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_head, 0, NULL));
+	sdrl_bind_value(mach->env, "tail", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_tail, 0, NULL));
+	sdrl_bind_value(mach->env, "null", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_null, 0, NULL));
+
 	sdrl_bind_value(mach->env, "+", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_add, 0, NULL));
 	sdrl_bind_value(mach->env, "-", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_subtract, 0, NULL));
 	sdrl_bind_value(mach->env, "*", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_multiply, 0, NULL));
@@ -54,6 +59,10 @@ int prim_initialize(struct sdrl_machine *mach)
 	sdrl_bind_value(mach->env, ">", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_greater_than, 0, NULL));
 	sdrl_bind_value(mach->env, "<=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_less_than_equals, 0, NULL));
 	sdrl_bind_value(mach->env, ">=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_greater_than_equals, 0, NULL));
+
+	sdrl_bind_value(mach->env, "and", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_and, 0, NULL));
+	sdrl_bind_value(mach->env, "or", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_or, 0, NULL));
+	sdrl_bind_value(mach->env, "not", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_not, 0, NULL));
 
 	sdrl_bind_value(mach->env, "print", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_print, 0, NULL));
 	return(0);
@@ -155,6 +164,58 @@ int prim_resolve(struct sdrl_machine *mach, struct sdrl_value *value)
 }
 
 /**
+ * @(<value>, ...)
+ * Returns the values passed to it (as a single list).
+ */
+int prim_array(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	mach->ret = value;
+	return(0);
+}
+
+/**
+ * head(<value>, ...)
+ * Returns the first value passed to it.
+ */
+int prim_head(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	if (value)
+		mach->ret = sdrl_shift_value(&value);
+	sdrl_destroy_value(value);
+	return(0);
+}
+
+/**
+ * tail(<value>, ...)
+ * Returns the all of the values passed to it following the first value.
+ */
+int prim_tail(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	struct sdrl_value *tmp = NULL;
+
+	if (value)
+		tmp = sdrl_shift_value(&value);
+	mach->ret = value;
+	sdrl_destroy_value(tmp);
+	return(0);
+}
+
+/**
+ * null(<value>, ...)
+ * Returns the number -1 if value passed is null; the number 0 if otherwise.
+ */
+int prim_null(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	if (!value)
+		mach->ret = sdrl_make_value(sdrl_find_type(mach->type_env, "number"), (sdrl_data_t) (number_t) -1, 0, NULL);
+	else
+		mach->ret = sdrl_make_value(sdrl_find_type(mach->type_env, "number"), (sdrl_data_t) (number_t) 0, 0, NULL);
+	sdrl_destroy_value(value);
+	return(0);
+}
+
+
+/**
  * +(<number>, ...)
  * Returns a number of the sum of the list of number-values passes.
  */
@@ -230,27 +291,6 @@ int prim_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 	number_t result = 1;
 	struct sdrl_value *cur;
 	struct sdrl_type *type;
-/*
-	struct sdrl_type *number;
-
-	if (!(number = sdrl_find_type(mach->type_env, "number")))
-		ret = ERR_NOT_FOUND;
-	else {
-		cur = value->next;
-		while (cur) {
-			if (cur->type != number) {
-				ret = ERR_INVALID_TYPE;
-				break;
-			}
-			if (cur->data.number != value->data.number) {
-				result = 0;
-				break;
-			}
-			cur = cur->next;
-		}
-		mach->ret = sdrl_make_value(number, (sdrl_data_t) result, 0, NULL);
-	}
-*/
 
 	traverse_value_m("number", value->next, 1,
 		if (cur->data.number != value->data.number) {
@@ -379,9 +419,76 @@ int prim_greater_than_equals(struct sdrl_machine *mach, struct sdrl_value *value
 	return(ret);
 }
 
+/**
+ * and(<value>, ...)
+ * Returns 1 if all number values are 1, 0 otherwise.
+ */
+int prim_and(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_value *cur;
+	struct sdrl_type *type;
+
+	traverse_value_m("number", value, 1,
+		if (!cur->data.number) {
+			result = 0;
+			break;
+		});
+
+	sdrl_destroy_value(value);
+	return(ret);
+}
 
 /**
- * print(<value, ...)
+ * or(<value>, ...)
+ * Returns 1 if any of the number values are 1, 0 otherwise.
+ */
+int prim_or(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_value *cur;
+	struct sdrl_type *type;
+
+	traverse_value_m("number", value, 0,
+		if (cur->data.number) {
+			result = 1;
+			break;
+		});
+
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * not(<value>)
+ * Returns 1 if all number value is 0, 0 otherwise.
+ */
+int prim_not(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_type *type;
+
+	if (!(type = sdrl_find_type(mach->type_env, "number")))
+		ret = ERR_NOT_FOUND;
+	else if (sdrl_value_count(value) != 1)
+		ret = ERR_INVALID_PARAMS;
+	else if (value->type != type)
+		ret = ERR_INVALID_TYPE;
+	else {
+		result = (value->data.number == 0);
+		mach->ret = sdrl_make_value(type, (sdrl_data_t) result, 0, NULL);
+	}
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+
+
+/**
+ * print(<value>, ...)
  * Prints out each of the values in the list and returns the list.
  */
 int prim_print(struct sdrl_machine *mach, struct sdrl_value *value)
