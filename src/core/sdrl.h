@@ -14,6 +14,7 @@
 #include "value.h"
 #include "parse.h"
 #include "bindings.h"
+#include "machine.h"
 #include "globals.h"
 
 #endif
