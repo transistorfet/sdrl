@@ -9,6 +9,24 @@
 #include <sdrl.h>
 #include "prims.h"
 
+#define traverse_value_m(type_name, value, init, line)					\
+	if (!(type = sdrl_find_type(mach->type_env, type_name)))			\
+		ret = ERR_NOT_FOUND;							\
+	else {										\
+		result = init;								\
+		cur = value;								\
+		while (cur) {								\
+			if (cur->type != type) {					\
+				ret = ERR_INVALID_TYPE;					\
+				break;							\
+			}								\
+			line;								\
+			cur = cur->next;						\
+		}									\
+		mach->ret = sdrl_make_value(type, (sdrl_data_t) result, 0, NULL);	\
+	}
+
+static int prim_set_list(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
 
 /**
  * Add all the functions to the environment of machine
@@ -20,12 +38,17 @@ int prim_initialize(struct sdrl_machine *mach)
 	builtin = sdrl_find_type(mach->type_env, "builtin");
 
 	sdrl_bind_value(mach->env, "code", sdrl_make_value(form, (sdrl_data_t) (void *) prim_code, 0, NULL));
-	sdrl_bind_value(mach->env, "define", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_define, 0, NULL));
-	sdrl_bind_value(mach->env, "resolve", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_resolve, 0, NULL));
+	sdrl_bind_value(mach->env, "set", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_set, 0, NULL));
+	sdrl_bind_value(mach->env, "list", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_list, 0, NULL));
+	sdrl_bind_value(mach->env, "if", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_if, 0, NULL));
+
+	sdrl_bind_value(mach->env, "$", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_resolve, 0, NULL));
 	sdrl_bind_value(mach->env, "+", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_add, 0, NULL));
 	sdrl_bind_value(mach->env, "-", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_subtract, 0, NULL));
 	sdrl_bind_value(mach->env, "*", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_multiply, 0, NULL));
 	sdrl_bind_value(mach->env, "/", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_divide, 0, NULL));
+
+	sdrl_bind_value(mach->env, "=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_equals, 0, NULL));
 
 	sdrl_bind_value(mach->env, "print", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_print, 0, NULL));
 	return(0);
@@ -42,778 +65,260 @@ int prim_code(struct sdrl_machine *mach, struct sdrl_expr *expr)
 }
 
 /**
- * define(<name>, <value>)
+ * set(<name>, <value>)
  * Bind value to name.  Returns a duplicate of value.
  */
-int prim_define(struct sdrl_machine *mach, struct sdrl_value *value)
+int prim_set(struct sdrl_machine *mach, struct sdrl_value *value)
 {
+	int i, ret = 0;
 	struct sdrl_value *name;
+	struct sdrl_type *string, *list;
 
-	if (value->type != sdrl_find_type(mach->type_env, "string"))
-		return(ERR_INVALID_TYPE);
-	name = sdrl_shift_value(&value);
-	sdrl_bind_value(mach->env, name->data.str, value);
-	mach->ret = sdrl_duplicate_value(value);
-	return(0);
+	if ((i = sdrl_value_count(value)) < 2)
+		ret = ERR_INVALID_PARAMS;
+	else if (!(list = sdrl_find_type(mach->type_env, "list")))
+		ret = ERR_NOT_FOUND;
+	else {
+		name = sdrl_shift_value(&value);
+		if (name->type == list)
+			ret = prim_set_list(mach, name->data.ptr, ((i == 2) && (value->type == list)) ? (struct sdrl_value *) value->data.ptr : value); 
+		else
+			ret = prim_set_list(mach, name, value); 
+		sdrl_destroy_value(name);
+	}
+	if (ret)
+		sdrl_destroy_value(value);
+	else
+		mach->ret = sdrl_duplicate_value(value);
+	return(ret);
 }
 
-int prim_resolve(struct sdrl_machine *mach, struct sdrl_value *value)
+/**
+ * list(<value>, ...)
+ * Returns a value of type list containing the list of parameters.
+ */
+int prim_list(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	struct sdrl_value *bind;
 
-	if (!value || (value->type != sdrl_find_type(mach->type_env, "string")))
-		return(ERR_INVALID_TYPE);
-	if (!(bind = sdrl_find_value(mach->env, value->data.str)))
-		return(ERR_NOT_FOUND);
-	mach->ret = sdrl_duplicate_value(bind);
+	mach->ret = sdrl_make_value(sdrl_find_type(mach->type_env, "list"), (sdrl_data_t) (void *) value, 0, NULL);
 	return(0);
 }
 
+/**
+ * if(<value>, <expr-value> [, <expr-value>])
+ * Evaluates the first expr-value if value is not 0, the second otherwise.
+ */
+int prim_if(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	struct sdrl_value *name;
+
+	if (!value || !value->next)
+		ret = ERR_INVALID_PARAMS;
+	else if (  ((sdrl_base_type_m(value->type) == SDRL_BT_NUMBER) && (!value->data.number))
+		|| ((sdrl_base_type_m(value->type) == SDRL_BT_STRING) && (!value->data.str || value->data.str[0] == '\0'))
+		|| ((sdrl_base_type_m(value->type) == SDRL_BT_POINTER) && (!value->data.ptr))) {
+		if (value->next->next)
+			ret = sdrl_evaluate_value(mach, value->next->next, NULL);
+	}
+	else {
+		ret = sdrl_evaluate_value(mach, value->next, NULL);
+	}
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+
+/**
+ * $(<name>)
+ * Returns a copy of the value bound to the given name.
+ */
+int prim_resolve(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	struct sdrl_value *bind;
+
+	if (!value || (value->type != sdrl_find_type(mach->type_env, "string")))
+		ret = ERR_INVALID_TYPE;
+	else if (!(bind = sdrl_find_value(mach->env, value->data.str)))
+		ret = ERR_NOT_FOUND;
+	else
+		mach->ret = sdrl_duplicate_value(bind);
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * +(<number>, ...)
+ * Returns a number of the sum of the list of number-values passes.
+ */
 int prim_add(struct sdrl_machine *mach, struct sdrl_value *value)
 {
+	int ret = 0;
 	number_t result = 0;
-	struct sdrl_type *number;
+	struct sdrl_value *cur;
+	struct sdrl_type *type;
 
-	if (!(number = sdrl_find_type(mach->type_env, "number")))
-		return(ERR_NOT_FOUND);
-
-	while (value) {
-		if (value->type != number)
-			return(ERR_INVALID_TYPE);
-		result += value->data.number;
-		value = value->next;
-	}
-	mach->ret = sdrl_make_value(number, (sdrl_data_t) result, 0, NULL);
-	return(0);
+	traverse_value_m("number", value, 0, result += cur->data.number);
+	sdrl_destroy_value(value);
+	return(ret);
 }
 
+/**
+ * -(<number>, ...)
+ * Returns a number of the difference of the list of number-values passes.
+ */
 int prim_subtract(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	number_t result;
-	struct sdrl_type *number;
+	int ret = 0;
+	number_t result = 0;
+	struct sdrl_value *cur;
+	struct sdrl_type *type;
 
-	if (!(number = sdrl_find_type(mach->type_env, "number")))
-		return(ERR_NOT_FOUND);
-
-	result = value->data.number;
-	value = value->next;
-	while (value) {
-		if (value->type != number)
-			return(ERR_INVALID_TYPE);
-		result -= value->data.number;
-		value = value->next;
-	}
-	mach->ret = sdrl_make_value(number, (sdrl_data_t) result, 0, NULL);
-	return(0);
+	if (value)
+		traverse_value_m("number", value->next, value->data.number, result -= cur->data.number);
+	sdrl_destroy_value(value);
+	return(ret);
 }
 
+/**
+ * *(<number>, ...)
+ * Returns a number of the product of the list of number-values passes.
+ */
 int prim_multiply(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	number_t result = 1;
-	struct sdrl_type *number;
+	int ret = 0;
+	number_t result = 0;
+	struct sdrl_value *cur;
+	struct sdrl_type *type;
 
-	if (!(number = sdrl_find_type(mach->type_env, "number")))
-		return(ERR_NOT_FOUND);
-
-	while (value) {
-		if (value->type != number)
-			return(ERR_INVALID_TYPE);
-		result *= value->data.number;
-		value = value->next;
-	}
-	mach->ret = sdrl_make_value(number, (sdrl_data_t) result, 0, NULL);
-	return(0);
+	traverse_value_m("number", value, 1, result *= cur->data.number);
+	sdrl_destroy_value(value);
+	return(ret);
 }
 
+/**
+ * /(<number>, ...)
+ * Returns a number of the quotient of the list of number-values passes.
+ */
 int prim_divide(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	number_t result;
+	int ret = 0;
+	number_t result = 0;
+	struct sdrl_value *cur;
+	struct sdrl_type *type;
+
+	if (value)
+		traverse_value_m("number", value->next, value->data.number, result /= cur->data.number);
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * =(<value>, ...)
+ * Returns a number of the quotient of the list of number-values passes.
+ */
+int prim_equals(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+	number_t result = 1;
+	struct sdrl_value *cur;
+	struct sdrl_type *type;
+/*
 	struct sdrl_type *number;
 
 	if (!(number = sdrl_find_type(mach->type_env, "number")))
-		return(ERR_NOT_FOUND);
-
-	result = value->data.number;
-	value = value->next;
-	while (value) {
-		if (value->type != number)
-			return(ERR_INVALID_TYPE);
-		result /= value->data.number;
-		value = value->next;
+		ret = ERR_NOT_FOUND;
+	else {
+		cur = value->next;
+		while (cur) {
+			if (cur->type != number) {
+				ret = ERR_INVALID_TYPE;
+				break;
+			}
+			if (cur->data.number != value->data.number) {
+				result = 0;
+				break;
+			}
+			cur = cur->next;
+		}
+		mach->ret = sdrl_make_value(number, (sdrl_data_t) result, 0, NULL);
 	}
-	mach->ret = sdrl_make_value(number, (sdrl_data_t) result, 0, NULL);
-	return(0);
+*/
+
+	traverse_value_m("number", value->next, 1,
+		if (cur->data.number != value->data.number) {
+			result = 0;
+			break;
+		});
+
+	sdrl_destroy_value(value);
+	return(ret);
 }
 
 
-
-
+/**
+ * print(<value, ...)
+ * Prints out each of the values in the list and returns the list.
+ */
 int prim_print(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	while (value) {
-		switch (sdrl_base_type_m(value->type)) {
+	struct sdrl_value *cur;
+
+	cur = value;
+	while (cur) {
+		switch (sdrl_base_type_m(cur->type)) {
 			case SDRL_BT_NUMBER:
-				printf("%f", value->data.number);
+				printf("%f", cur->data.number);
 				break;
 			case SDRL_BT_STRING:
-				printf("%s", value->data.str);
+				printf("%s", cur->data.str);
 				break;
 			case SDRL_BT_POINTER:
-				printf("%d", value->data.ptr);
+				printf("%d", cur->data.ptr);
 				break;
 			default:
 				break;
 		}
-		value = value->next;
-	}
-	mach->ret = NULL;
-	return(0);
-}
-
-/*
-#define MAX_STRING		512
-
-static int prim_bind_value(struct environment *, struct value *, struct value *, int (*)(struct environment *, char *, struct value *));
-
-int prim_initialize(struct environment *env)
-{
-	add_binding(env, "+", value_makevalue(VT_FUNCPTR, (struct value *) prim_add, NULL));
-	add_binding(env, "-", value_makevalue(VT_FUNCPTR, (struct value *) prim_subtract, NULL));
-	add_binding(env, "*", value_makevalue(VT_FUNCPTR, (struct value *) prim_multiply, NULL));
-	add_binding(env, "/", value_makevalue(VT_FUNCPTR, (struct value *) prim_divide, NULL));
-	add_binding(env, "&", value_makevalue(VT_FUNCPTR, (struct value *) prim_bitand, NULL));
-	add_binding(env, "|", value_makevalue(VT_FUNCPTR, (struct value *) prim_bitor, NULL));
-	add_binding(env, "!", value_makevalue(VT_FUNCPTR, (struct value *) prim_bitnot, NULL));
-	add_binding(env, "&&", value_makevalue(VT_FUNCPTR, (struct value *) prim_logicaland, NULL));
-	add_binding(env, "||", value_makevalue(VT_FUNCPTR, (struct value *) prim_logicalor, NULL));
-	add_binding(env, "!!", value_makevalue(VT_FUNCPTR, (struct value *) prim_logicalnot, NULL));
-	add_binding(env, "<", value_makevalue(VT_FUNCPTR, (struct value *) prim_lessthan, NULL));
-	add_binding(env, "<=", value_makevalue(VT_FUNCPTR, (struct value *) prim_lessthanequal, NULL));
-	add_binding(env, ">", value_makevalue(VT_FUNCPTR, (struct value *) prim_greaterthan, NULL));
-	add_binding(env, ">=", value_makevalue(VT_FUNCPTR, (struct value *) prim_greaterthanequal, NULL));
-	add_binding(env, "=", value_makevalue(VT_FUNCPTR, (struct value *) prim_equals, NULL));
-	add_binding(env, "~", value_makevalue(VT_FUNCPTR, (struct value *) prim_stringappend, NULL));
-	add_binding(env, "~@", value_makevalue(VT_FUNCPTR, (struct value *) prim_listappend, NULL));
-	add_binding(env, ".", value_makevalue(VT_FUNCPTR, (struct value *) prim_value, NULL));
-	add_binding(env, "@", value_makevalue(VT_FUNCPTR, (struct value *) prim_list, NULL));
-	add_binding(env, "%", value_makevalue(VT_FUNCPTR, (struct value *) prim_begin, NULL));
-	add_binding(env, ";", value_makevalue(VT_FUNCPTR, (struct value *) prim_evaluate, NULL));
-	add_binding(env, ";*", value_makevalue(VT_FUNCPTR, (struct value *) prim_evaluaterepeat, NULL));
-	add_binding(env, ".*", value_makevalue(VT_FUNCPTR, (struct value *) prim_stoprepeat, NULL));
-	add_binding(env, "?", value_makevalue(VT_FUNCPTR, (struct value *) prim_conditional, NULL));
-	add_binding(env, "?*", value_makevalue(VT_FUNCPTR, (struct value *) prim_multiconditional, NULL));
-	add_binding(env, ":$", value_makevalue(VT_FUNCPTR, (struct value *) prim_defineenvironment, NULL));
-	add_binding(env, ":", value_makevalue(VT_FUNCPTR, (struct value *) prim_define, NULL));
-	add_binding(env, ":=", value_makevalue(VT_FUNCPTR, (struct value *) prim_definereplace, NULL));
-
-	return(0);
-}
-
-
-int prim_add(struct sdrl_machine *mach)
-{
-	int i = 0;
-	struct value *cur;
-
-	cur = mach->opr;
-	while (cur) {
-		if (cur->type != VT_NUMBER)
-			return(ERR_INVALIDPARAMS);
-		i += cur->data.num;
 		cur = cur->next;
 	}
-	mach->ret = value_makenumber(VT_NUMBER, i, NULL);
+	mach->ret = value;
 	return(0);
 }
 
-int prim_subtract(struct sdrl_machine *mach)
-{
-	int i;
-	struct value *cur;
+/*** Local Functions ***/
 
-	if (!(mach->opr)) {
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		return(0);
-	}
-
-	if (mach->opr->type != VT_NUMBER)
-		return(ERR_INVALIDPARAMS);
-	i = mach->opr->data.num;
-	cur = mach->opr->next;
-	while (cur) {
-		if (cur->type != VT_NUMBER)
-			return(ERR_INVALIDPARAMS);
-		i -= cur->data.num;
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, i, NULL);
-	return(0);
-}
-
-int prim_multiply(struct sdrl_machine *mach)
-{
-	int i = 1;
-	struct value *cur;
-
-	if (!(mach->opr))
-		i = 0;
-
-	cur = mach->opr;
-	while (cur) {
-		if (cur->type != VT_NUMBER)
-			return(ERR_INVALIDPARAMS);
-		i *= cur->data.num;
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, i, NULL);
-	return(0);
-}
-
-int prim_divide(struct sdrl_machine *mach)
-{
-	int i;
-	struct value *cur;
-
-	if (!(mach->opr)) {
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		return(0);
-	}
-
-	if (mach->opr->type != VT_NUMBER)
-		return(ERR_INVALIDPARAMS);
-	i = mach->opr->data.num;
-	cur = mach->opr->next;
-	while (cur) {
-		if (cur->type != VT_NUMBER)
-			return(ERR_INVALIDPARAMS);
-		i /= cur->data.num;
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, i, NULL);
-	return(0);
-}
-
-int prim_bitand(struct sdrl_machine *mach)
-{
-	int i = -1;
-	struct value *cur;
-
-	if (!(mach->opr))
-		i = 0;
-
-	cur = mach->opr;
-	while (cur) {
-		if (cur->type != VT_NUMBER)
-			return(ERR_INVALIDPARAMS);
-		i &= cur->data.num;
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, i, NULL);
-	return(0);
-}
-
-int prim_bitor(struct sdrl_machine *mach)
-{
-	int i = 0;
-	struct value *cur;
-
-	cur = mach->opr;
-	while (cur) {
-		if (cur->type != VT_NUMBER)
-			return(ERR_INVALIDPARAMS);
-		i |= cur->data.num;
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, i, NULL);
-	return(0);
-}
-
-int prim_bitnot(struct sdrl_machine *mach)
-{
-	int i = 0;
-
-	if (value_count(mach->opr) != 1)
-		return(ERR_INVALIDPARAMS);
-	i = ~mach->opr->data.num;
-	mach->ret = value_makenumber(VT_NUMBER, i, NULL);
-	return(0);
-}
-
-int prim_logicaland(struct sdrl_machine *mach)
-{
-	struct value *cur;
-
-	cur = mach->opr;
-	while (cur) {
-		if (!(cur->data.num)) {
-			mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-			return(0);
-		}
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, 1, NULL);
-	return(0);
-}
-
-int prim_logicalor(struct sdrl_machine *mach)
-{
-	struct value *cur;
-
-	cur = mach->opr;
-	while (cur) {
-		if (cur->data.num) {
-			mach->ret = value_makenumber(VT_NUMBER, 1, NULL);
-			return(0);
-		}
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-	return(0);
-}
-
-int prim_logicalnot(struct sdrl_machine *mach)
-{
-	if (value_count(mach->opr) != 1)
-		return(ERR_INVALIDPARAMS);
-	if (mach->opr->data.num)
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-	else
-		mach->ret = value_makenumber(VT_NUMBER, 1, NULL);
-	return(0);
-}
-
-int prim_lessthan(struct sdrl_machine *mach)
-{
-	struct value *cur;
-
-	if (!(mach->opr)) {
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		return(0);
-	}
-
-	if (mach->opr->type != VT_NUMBER)
-		return(ERR_INVALIDTYPE);
-	cur = mach->opr;
-	while (cur && cur->next) {
-		if ((cur->next->type != VT_NUMBER))
-			return(ERR_INVALIDTYPE);
-		if (cur->data.num >= cur->next->data.num)
-			mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, 1, NULL);
-	return(0);
-}
-
-int prim_lessthanequal(struct sdrl_machine *mach)
-{
-	struct value *cur;
-
-	if (!(mach->opr)) {
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		return(0);
-	}
-
-	if (mach->opr->type != VT_NUMBER)
-		return(ERR_INVALIDTYPE);
-	cur = mach->opr;
-	while (cur && cur->next) {
-		if ((cur->next->type != VT_NUMBER))
-			return(ERR_INVALIDTYPE);
-		if (cur->data.num > cur->next->data.num)
-			mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, 1, NULL);
-	return(0);
-}
-
-int prim_greaterthan(struct sdrl_machine *mach)
-{
-	struct value *cur;
-
-	if (!(mach->opr)) {
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		return(0);
-	}
-
-	if (mach->opr->type != VT_NUMBER)
-		return(ERR_INVALIDTYPE);
-	cur = mach->opr;
-	while (cur && cur->next) {
-		if ((cur->next->type != VT_NUMBER))
-			return(ERR_INVALIDTYPE);
-		if (cur->data.num <= cur->next->data.num)
-			mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, 1, NULL);
-	return(0);
-}
-
-int prim_greaterthanequal(struct sdrl_machine *mach)
-{
-	struct value *cur;
-
-	if (!(mach->opr)) {
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		return(0);
-	}
-
-	if (mach->opr->type != VT_NUMBER)
-		return(ERR_INVALIDTYPE);
-	cur = mach->opr;
-	while (cur && cur->next) {
-		if ((cur->next->type != VT_NUMBER))
-			return(ERR_INVALIDTYPE);
-		if (cur->data.num < cur->next->data.num)
-			mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, 1, NULL);
-	return(0);
-}
-
-int prim_equals(struct sdrl_machine *mach)
-{
-	struct value *cur, *val;
-
-	if (!(mach->opr)) {
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-		return(0);
-	}
-
-	if (mach->opr->type != VT_NUMBER)
-		return(ERR_INVALIDTYPE);
-	val = mach->opr;
-	cur = val->next;
-	while (cur) {
-		if ((cur->type != VT_NUMBER))
-			return(ERR_INVALIDTYPE);
-		if (val->data.num != cur->data.num) {
-			mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-			return(0);
-		}
-		cur = cur->next;
-	}
-	mach->ret = value_makenumber(VT_NUMBER, 1, NULL);
-	return(0);
-}
-
-int prim_stringappend(struct sdrl_machine *mach)
-{
-	int i = 0, j;
-	uubyte type = VT_NUMBER;
-	char buffer[MAX_STRING];
-
-	if (mach->opr)
-		type = mach->opr->type;
-	while (mach->opr) {
-		if (!(mach->opr->type  & VT_STRING))
-			return(ERR_INVALIDPARAMS);
-		j = 0;
-		while ((mach->opr->data.str[j]) && (i < MAX_STRING))
-			buffer[i++] = mach->opr->data.str[j++];
-		mach->opr = value_destroyhead(mach->opr);
-	}
-	buffer[i] = '\0';
-	mach->ret = value_makestring(type, buffer, NULL);
-	return(0);
-}
-
-int prim_listappend(struct sdrl_machine *mach)
-{
-	struct value *list = NULL;
-
-	mach->ret = value_gethead(mach->opr, &mach->opr);
-	list = mach->ret;
-	while (mach->opr) {
-		while (list->next)
-			list = list->next;
-		list->next = value_gethead(mach->opr, &mach->opr);
-	}
-	return(0);
-}
-
-int prim_value(struct sdrl_machine *mach)
-{
-	int i = 0;
-	struct binding *bind;
-	struct value *val, *index;
-
-	if (!(mach->opr) || (value_count(mach->opr) > 2))
-		return(ERR_INVALIDPARAMS);
-
-	val = value_gethead(mach->opr, &mach->opr);
-	index = value_gethead(mach->opr, &mach->opr);
-
-	if (val->type == VT_SYMBOL) {
-		if (!(bind = find_binding(mach->env, val->data.str)) || !(bind->val)) {
-			destroy_value(val);
-			destroy_value(index);
-			return(ERR_NOTFOUND);
-		}
-		destroy_value(val);
-		val = duplicate_value(bind->val);
-	}
-
-	if ((val->next) && (index)) {
-		for (;i < index->data.num;i++) {
-			if (!(val = value_destroyhead(val))) {
-				destroy_value(index);
-				return(ERR_OUTOFBOUNDS);
-			}
-		}
-	}
-	else if (val->type == VT_ENVIRONMENT) {
-		if (index->type != VT_SYMBOL) {
-			destroy_value(val);
-			destroy_value(index);
-			return(ERR_INVALIDPARAMS);
-		}
-		else if (!(bind = find_binding((struct environment *) val->data.val, index->data.str))) {
-			destroy_value(val);
-			destroy_value(index);
-			return(ERR_NOTFOUND);
-		}
-		destroy_value(val);
-		val = duplicate_value(bind->val);
-	}
-	mach->ret = val;
-
-	return(0);
-}
-
-int prim_list(struct sdrl_machine *mach)
-{
-	mach->ret = mach->opr;
-	mach->opr = NULL;
-	return(0);
-}
-
-int prim_begin(struct sdrl_machine *mach)
-{
-	struct value *cur;
-
-	cur = mach->opr;
-	while (cur->next)
-		cur = value_destroyhead(cur);
-	mach->opr = NULL;
-	mach->ret = cur;
-	return(0);
-}
-
-int prim_evaluate(struct sdrl_machine *mach)
-{
-	int ret;
-	struct value *val;
-
-	if (!(mach->opr))
-		return(ERR_INVALIDPARAMS);
-	val = value_gethead(mach->opr, &mach->opr);
-	mach->opr = value_gethead(mach->opr, NULL);
-	ret = sdrl_function_call_value(mach, val, 0);
-	destroy_value(val);
-	return(ret);
-}
-
-int prim_evaluaterepeat(struct sdrl_machine *mach)
-{
-	int ret;
-	struct value *val;
-
-	if (!(mach->opr))
-		return(ERR_INVALIDPARAMS);
-	val = value_gethead(mach->opr, &mach->opr);
-	mach->opr = value_gethead(mach->opr, NULL);
-	ret = sdrl_function_call_value(mach, val, SEBF_REPEAT);
-	destroy_value(val);
-	return(ret);
-}
-
-int prim_stoprepeat(struct sdrl_machine *mach)
-{
-	int i = 0;
-	struct value *val;
-
-	if ((value_count(mach->opr) > 1) || ((mach->opr) && (mach->opr->type != VT_NUMBER)))
-		return(ERR_INVALIDPARAMS);
-	if (mach->opr)
-		i = mach->opr->data.num;
-	sdrl_changeflags(mach, i, SEBF_REPEAT, 0);
-	return(0);
-}
-
-int prim_conditional(struct sdrl_machine *mach)
+/**
+ * Bind each element in the list values with its corresponding name in the list names.
+ */
+static int prim_set_list(struct sdrl_machine *mach, struct sdrl_value *names, struct sdrl_value *values)
 {
 	int ret = 0;
-	struct value *val, *iftrue, *iffalse;
+	struct sdrl_type *string;
+	struct sdrl_value *cur_name, *cur_value, *tmp;
 
-	if (value_count(mach->opr) != 3)
-		return(ERR_INVALIDPARAMS);
-	val = mach->opr;
-	iftrue = value_gethead(value_gettail(val), &iffalse);
-	if (val->data.num)
-		ret = sdrl_evaluate_value(mach, iftrue, 0);
-	else
-		ret = sdrl_evaluate_value(mach, iffalse, 0);
-	destroy_value(iftrue);
-	destroy_value(iffalse);
-	return(ret);
-}
-
-int prim_multiconditional(struct sdrl_machine *mach)
-{
-	int result;
-	struct value *cur, *tail, *cond, *code;
-
-	if (!(mach->opr))
-		return(ERR_INVALIDPARAMS);
-
-	cur = value_gethead(mach->opr, &tail);
-	mach->opr = NULL;
-	while (cur) {
-		if (value_count(cur) != 2) {
-			destroy_value(cur);
-			destroy_value(tail);
-			return(ERR_INVALIDPARAMS);
-		}
-		cond = value_gethead(cur, &code);
-		result = sdrl_evaluate_value(mach, cond, 0);
-		destroy_value(cond);
-		if (result) {
-			destroy_value(code);
-			break;
-		}
-		if (mach->ret)
-			result = mach->ret->data.num;
-		else
-			result = 0;
-		destroy_value(mach->ret);
-		mach->ret = NULL;
-		if (result) {
-			result = sdrl_evaluate_value(mach, code, 0);
-			destroy_value(code);
-			break;
-		}
-		destroy_value(code);
-		cur = value_gethead(tail, &tail);
-	}
-
-	destroy_value(tail);
-	if (!(mach->ret))
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-	return(result);
-}
-
-int prim_defineenvironment(struct sdrl_machine *mach)
-{
-	if ((value_count(mach->opr) != 1) || (mach->opr->type != VT_SYMBOL))
-		return(ERR_INVALIDPARAMS);
-	mach->ret = value_makevalue(VT_ENVIRONMENT, (struct value *) create_environment(NULL, 0), NULL);
-	add_binding(mach->env, mach->opr->data.str, duplicate_value(mach->ret));
-	return(0);
-}
-
-int prim_define(struct sdrl_machine *mach)
-{
-	int i;
-	struct environment *env;
-	struct value *head, *tail;
-
-	if (!(mach->opr) || ((i = value_count(mach->opr)) > 3))
-		return(ERR_INVALIDPARAMS);
-	if ((mach->opr->type == VT_ENVIRONMENT))
-		env = (struct environment *) value_gethead(mach->opr, &(mach->opr))->data.val;
-	else if (i < 3)
-		env = mach->env;
-	else
-		return(ERR_INVALIDPARAMS);
-	if (mach->opr->next)
-		mach->ret = duplicate_value(mach->opr->next);
-	else
-		mach->ret = value_makenumber(VT_NUMBER, 0, NULL);
-	head = value_gethead(mach->opr, &tail);
-	tail = value_gethead(tail, NULL);
-	mach->opr = NULL;
-	prim_bind_value(env, head, tail, add_binding);
-	return(0);
-}
-
-int prim_definereplace(struct sdrl_machine *mach)
-{
-	int i;
-	struct environment *env;
-	struct value *head, *tail;
-
-	if (!(mach->opr) || ((i = value_count(mach->opr)) > 3))
-		return(ERR_INVALIDPARAMS);
-	if ((mach->opr->type == VT_ENVIRONMENT))
-		env = (struct environment *) value_gethead(mach->opr, &(mach->opr))->data.val;
-	else if (i == 2)
-		env = mach->env;
-	else
-		return(ERR_INVALIDPARAMS);
-	mach->ret = duplicate_value(mach->opr->next);
-	head = value_gethead(mach->opr, &tail);
-	tail = value_gethead(tail, NULL);
-	mach->opr = NULL;
-	prim_bind_value(env, head, tail, replace_binding);
-	return(0);
-}
-
-
-static int prim_bind_value(struct environment *env, struct value *sym, struct value *val, int (*func)(struct environment *, char *, struct value *))
-{
-	struct value *tmp, *head, *tail;
-
-	while ((sym) && (val)) {
-		if (sym->type == VT_SYMBOL) {
-			if (sym->next)
-				head = value_gethead(val, &val);
-			else
-				head = val;
-			if (func(env, sym->data.str, head)) {
-				destroy_value(sym);
-				destroy_value(val);
-				return(ERR_INUSE);
-			}
-			sym = value_destroyhead(sym);
-		}
-		else if (sym->type == VT_VALUE) {
-			head = value_gethead(sym, &sym);
-			tmp = value_gethead(val, &val);
-			prim_bind_value(env, head, tmp, func);
+	if (!(string = sdrl_find_type(mach->type_env, "string")))
+		return(ERR_NOT_FOUND);
+	cur_name = names;
+	cur_value = values;
+	while (cur_name) {
+		if (cur_name->type != string)
+			return(ERR_INVALID_TYPE);
+		if (cur_value) {
+			tmp = cur_value->next;
+			if (sdrl_bind_value(mach->env, cur_name->data.str, (cur_name->next) ? sdrl_shift_value(&cur_value) : cur_value))
+				return(ERR_OUT_OF_MEMORY);
+			cur_value = tmp;
 		}
 		else {
-			destroy_value(sym);
-			destroy_value(val);
-			return(ERR_INVALIDPARAMS);
+			if (sdrl_bind_value(mach->env, cur_name->data.str, sdrl_make_value(string, (sdrl_data_t) "", 0, NULL)))
+				return(ERR_OUT_OF_MEMORY);
 		}
+		cur_name = cur_name->next;
 	}
-
-	if (sym) {
-		while (sym) {
-			if (sym->type == VT_SYMBOL) {
-				if (func(env, sym->data.str, value_makevalue(VT_NUMBER, 0, NULL))) {
-					destroy_value(sym);
-					return(ERR_INUSE);
-				}
-				sym = value_destroyhead(sym);
-			}
-			else if (sym->type == VT_VALUE) {
-				head = value_gethead(sym, &sym);
-				prim_bind_value(env, head, NULL, func);
-			}
-			else {
-				destroy_value(sym);
-				return(ERR_INVALIDPARAMS);
-			}
-		}
-	}
-
-	return(0);	
+	return(0);
 }
-*/
+
 
 
