@@ -9,21 +9,31 @@
 #include <string.h>
 
 #include "value.h"
+#include "type.h"
 #include "types.h"
 
 
 /**
  * Allocate and initialize an sdrl_value to a generic-typed data value.
  */
-struct sdrl_value *sdrl_make_value(int type, sdrl_data_t data, int size, struct sdrl_value *next)
+struct sdrl_value *sdrl_make_value(struct sdrl_type *type, sdrl_data_t data, int size, struct sdrl_value *next)
 {
 	struct sdrl_value *value;
 
-	if (!(value = (struct sdrl_value *) malloc(sizeof(struct sdrl_value))))
+	if (!type)
 		return(NULL);
+	if (!(value = (struct sdrl_value *) malloc(sizeof(struct sdrl_value) + size)))
+		return(NULL);
+
+	if (size) {
+		value->data = (sdrl_data_t) (char *) ((size_t) value + sizeof(struct sdrl_value));
+		memcpy(value->data.ptr, data.ptr, size);
+	}
+	else
+		value->data = data;
+
 	value->type = type;
 	value->binds = 0;
-	value->data = data;
 	value->size = size;
 	value->next = next;
 
@@ -31,18 +41,16 @@ struct sdrl_value *sdrl_make_value(int type, sdrl_data_t data, int size, struct 
 }
 
 /**
- * Duplicate the value by direct memory copy including deep structure (Garbage Collection tracking code?)
+ * Duplicate the value by direct memory copy.  Doesn't copy deep structure
  */
 struct sdrl_value *sdrl_duplicate_value(struct sdrl_value *value)
 {
 	struct sdrl_value *tmp, *prev, *head = NULL;
 
 	while (value) {
-		if (!(tmp = (struct sdrl_value *) malloc(value->size)))
+		if (!(tmp = (struct sdrl_value *) malloc(sizeof(struct sdrl_value) + value->size)))
 			return(NULL);
-		memcpy(tmp, value, value->size);
-		if (value->type == SDRL_VT_VALUE)
-			tmp->data.value = sdrl_duplicate_value(value->data.value);
+		memcpy(tmp, value, sizeof(struct sdrl_value) + value->size);
 		if (!head)
 			head = tmp;
 		else
@@ -108,8 +116,12 @@ int sdrl_destroy_value(struct sdrl_value *value)
 	struct sdrl_value *tmp;
 
 	while (value) {
+		// TODO check garbage collection
+		if (value->binds)
+			continue;
+		if (value->type->destroy)
+			value->type->destroy(value->data.ptr);
 		tmp = value->next;
-		// TODO free value if it has been allocated elsewhere (value, evironment, expr, etc)
 		free(value);
 		value = tmp;
 	}
