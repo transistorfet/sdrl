@@ -35,11 +35,12 @@ struct sdrl_machine *sdrl_create_machine(void)
 	mach->env = sdrl_create_environment(0, NULL);
 	mach->code = NULL;
 
-	sdrl_bind_type(mach->type_env, "number", sdrl_make_type(0, SDRL_BT_NUMBER, NULL, NULL));
-	sdrl_bind_type(mach->type_env, "string", sdrl_make_type(SDRL_VARIABLE_SIZE, SDRL_BT_STRING, NULL, NULL));
-	sdrl_bind_type(mach->type_env, "expr", sdrl_make_type(0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_expr_type, NULL));
-	sdrl_bind_type(mach->type_env, "form", sdrl_make_type(0, SDRL_BT_POINTER | SDRL_TBF_PASS_EXPRS, (sdrl_evaluate_t) sdrl_evaluate_form_type, NULL));
-	sdrl_bind_type(mach->type_env, "builtin", sdrl_make_type(0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_builtin_type, NULL));
+	sdrl_bind_type(mach->type_env, "number", sdrl_make_type(0, SDRL_BT_NUMBER, NULL, NULL, NULL));
+	sdrl_bind_type(mach->type_env, "string", sdrl_make_type(SDRL_VARIABLE_SIZE, SDRL_BT_STRING, NULL, NULL, NULL));
+	sdrl_bind_type(mach->type_env, "list", sdrl_make_type(0, SDRL_BT_POINTER, NULL, (sdrl_duplicate_t) sdrl_duplicate_value, (sdrl_destroy_t) sdrl_destroy_value));
+	sdrl_bind_type(mach->type_env, "expr", sdrl_make_type(0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_expr_type, NULL, NULL));
+	sdrl_bind_type(mach->type_env, "form", sdrl_make_type(0, SDRL_BT_POINTER | SDRL_TBF_PASS_EXPRS, (sdrl_evaluate_t) sdrl_evaluate_form_type, NULL, NULL));
+	sdrl_bind_type(mach->type_env, "builtin", sdrl_make_type(0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_builtin_type, NULL, NULL));
 
 	return(mach);
 }
@@ -80,6 +81,9 @@ int sdrl_evaluate_expr_list(struct sdrl_machine *mach, struct sdrl_expr *expr)
  */
 int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 {
+	sdrl_destroy_value(mach->ret);
+	mach->ret = NULL;
+
 	if (!expr)
 		return(0);
 	else if (expr->type == SDRL_ET_NUMBER)
@@ -97,18 +101,24 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 }
 
 /**
- * Evaluate expression as a function call
+ * Resolve name and evaluate as a function.
  */
 int sdrl_evaluate_call(struct sdrl_machine *mach, char *name, struct sdrl_expr *exprs)
 {
-	int ret = 0;
-	struct sdrl_value *func, *args = NULL;
+	struct sdrl_value *func;
 
 	if (!(func = sdrl_find_value(mach->env, name)))
 		return(ERR_NOT_FOUND);
+	return(sdrl_evaluate_value(mach, func, exprs));
+}
 
-	sdrl_destroy_value(mach->ret);
-	mach->ret = NULL;
+/**
+ * Evaluate expression as a function call
+ */
+int sdrl_evaluate_value(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_expr *exprs)
+{
+	int ret = 0;
+	struct sdrl_value *args = NULL;
 
 	if (func->type->evaluate) {
 		if (sdrl_type_pass_exprs_m(func->type))
@@ -135,9 +145,6 @@ int sdrl_evaluate_params(struct sdrl_machine *mach, struct sdrl_expr *exprs, str
 {
 	int ret;
 	struct sdrl_expr *cur;
-
-	sdrl_destroy_value(mach->ret);
-	mach->ret = NULL;
 
 	cur = exprs;
 	while (cur) {

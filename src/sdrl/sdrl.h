@@ -5,8 +5,8 @@
  */
 
 
-#ifndef SDRL_H
-#define SDRL_H
+#ifndef _SDRL_H
+#define _SDRL_H
 
 #include "expr.h"
 #include "type.h"
@@ -30,6 +30,7 @@ int sdrl_destroy_machine(struct sdrl_machine *);
 int sdrl_evaluate_expr_list(struct sdrl_machine *, struct sdrl_expr *);
 int sdrl_evaluate_expr(struct sdrl_machine *, struct sdrl_expr *);
 int sdrl_evaluate_call(struct sdrl_machine *, char *, struct sdrl_expr *);
+int sdrl_evaluate_value(struct sdrl_machine *, struct sdrl_value *, struct sdrl_expr *);
 int sdrl_evaluate_params(struct sdrl_machine *, struct sdrl_expr *, struct sdrl_value **);
 
 #endif
