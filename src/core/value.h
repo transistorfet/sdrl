@@ -6,7 +6,7 @@
 
 
 #ifndef _SDRL_CORE_VALUE_H
-#define _SDRL_CODE_VALUE_H
+#define _SDRL_CORE_VALUE_H
 
 #include "type.h"
 #include "globals.h"
