@@ -1,7 +1,7 @@
 
 
 SDRL = ..
-SDRL_CORE = $(SDRL)/core/sdrl.obj
+SDRL_CORE = $(SDRL)/core/libsdrl.a
 SDRL_LIBS = $(SDRL)/lib/prims.o
 OBJ = main.o $(SDRL_CORE) $(SDRL_LIBS)
 
