@@ -39,8 +39,9 @@ int prim_initialize(struct sdrl_machine *mach)
 
 	sdrl_bind_value(mach->env, "code", sdrl_make_value(form, (sdrl_data_t) (void *) prim_code, 0, NULL));
 	sdrl_bind_value(mach->env, "set", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_set, 0, NULL));
-	sdrl_bind_value(mach->env, "list", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_list, 0, NULL));
 	sdrl_bind_value(mach->env, "if", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_if, 0, NULL));
+	sdrl_bind_value(mach->env, "list", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_list, 0, NULL));
+	sdrl_bind_value(mach->env, "unlist", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_unlist, 0, NULL));
 
 	sdrl_bind_value(mach->env, "$", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_resolve, 0, NULL));
 	sdrl_bind_value(mach->env, "@", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_array, 0, NULL));
@@ -108,18 +109,6 @@ int prim_set(struct sdrl_machine *mach, struct sdrl_value *value)
 }
 
 /**
- * list(<value>, ...)
- * Returns a value of type list containing the list of parameters.
- */
-int prim_list(struct sdrl_machine *mach, struct sdrl_value *value)
-{
-	struct sdrl_value *bind;
-
-	mach->ret = sdrl_make_value(sdrl_find_type(mach->type_env, "list"), (sdrl_data_t) (void *) value, 0, NULL);
-	return(0);
-}
-
-/**
  * if(<value>, <expr-value> [, <expr-value>])
  * Evaluates the first expr-value if value is not 0, the second otherwise.
  */
@@ -138,6 +127,34 @@ int prim_if(struct sdrl_machine *mach, struct sdrl_value *value)
 	}
 	else {
 		ret = sdrl_evaluate_value(mach, value->next, NULL);
+	}
+	sdrl_destroy_value(value);
+	return(ret);
+}
+
+/**
+ * list(<value>, ...)
+ * Returns a value of type list containing the list of parameters.
+ */
+int prim_list(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	mach->ret = sdrl_make_value(sdrl_find_type(mach->type_env, "list"), (sdrl_data_t) (void *) value, 0, NULL);
+	return(0);
+}
+
+/**
+ * unlist(<list>)
+ * Returns the values in a list.
+ */
+int prim_unlist(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	int ret = 0;
+
+	if ((sdrl_value_count(value) != 1) || (value->type != sdrl_find_type(mach->type_env, "list")))
+		ret = ERR_INVALID_PARAMS;
+	else {
+		mach->ret = (struct sdrl_value *) value->data.ptr;
+		value->data.ptr = NULL;
 	}
 	sdrl_destroy_value(value);
 	return(ret);

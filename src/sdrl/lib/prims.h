@@ -15,8 +15,9 @@ int prim_initialize(struct sdrl_machine *);
 int prim_code(struct sdrl_machine *, struct sdrl_expr *);
 
 int prim_set(struct sdrl_machine *, struct sdrl_value *);
-int prim_list(struct sdrl_machine *, struct sdrl_value *);
 int prim_if(struct sdrl_machine *, struct sdrl_value *);
+int prim_list(struct sdrl_machine *, struct sdrl_value *);
+int prim_unlist(struct sdrl_machine *, struct sdrl_value *);
 
 int prim_resolve(struct sdrl_machine *, struct sdrl_value *);
 int prim_array(struct sdrl_machine *, struct sdrl_value *);
