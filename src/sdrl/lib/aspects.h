@@ -5,8 +5,8 @@
  */
 
 
-#ifndef ASPECTS_H
-#define ASPECTS_H
+#ifndef _SDRL_LIB_ASPECTS_H
+#define _SDRL_LIB_ASPECTS_H
 
 #include <sdrl.h>
 

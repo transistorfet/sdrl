@@ -41,6 +41,15 @@ int aspects_initialize(struct sdrl_machine *mach)
 }
 
 /**
+ * aspect(<name, <pointcut>, <expr>)
+ * Return a value of type expr containing the code passed to it.
+ */
+int aspects_aspect(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	return(0);
+}
+
+/**
  * code(<expr>, ...)
  * Return a value of type expr containing the code passed to it.
  */
