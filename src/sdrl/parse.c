@@ -9,13 +9,15 @@
 #include "expr.h"
 #include "input.h"
 #include "parse.h"
-#include "types.h"
+#include "globals.h"
 
 #define PARSE_MAX_BUFFER		1024
 
 
 static number_t parse_get_number(struct sdrl_input *);
+static char *parse_get_string(struct sdrl_input *);
 static char *parse_get_name(struct sdrl_input *);
+static char parse_escape_char(char);
 static int parse_is_digit(char);
 static int parse_is_number(char);
 static int parse_is_name(char);
@@ -96,6 +98,11 @@ struct sdrl_expr *sdrl_parse_expr(struct sdrl_input *input)
 		if (!(expr = sdrl_make_number_expr(parse_get_number(input), NULL)))
 			return(NULL);
 	}
+	else if (ch == '\"') {
+		sdrl_get_char(input);
+		if (!(expr = sdrl_make_name_expr(parse_get_string(input), NULL)))
+			return(NULL);
+	}
 	else {
 		if (!(expr = sdrl_make_name_expr(parse_get_name(input), NULL)))
 			return(NULL);
@@ -111,6 +118,14 @@ struct sdrl_expr *sdrl_parse_expr(struct sdrl_input *input)
 	if (sdrl_peek_char(input) == ',')
 		sdrl_get_char(input);
 	return(expr);
+}
+
+/**
+ * Add a parse rule.
+ */
+int sdrl_add_parse_rule(char *name, char *pattern, struct sdrl_expr *expr)
+{
+
 }
 
 
@@ -131,6 +146,23 @@ static number_t parse_get_number(struct sdrl_input *input)
 }
 
 /*
+ * Returns the quoted string that was read from input.
+ */
+static char *parse_get_string(struct sdrl_input *input)
+{
+	char ch;
+	int i = 0;
+
+	while ((i < PARSE_MAX_BUFFER) && (ch = sdrl_get_raw_char(input)) && (ch != '\"')) {
+		if (ch == '\\')
+			ch = parse_escape_char(sdrl_get_raw_char(input));
+		parse_buffer[i++] = ch;
+	}
+	parse_buffer[i] = '\0';
+	return(parse_buffer);
+}
+
+/*
  * Returns the name that was read from input.
  */
 static char *parse_get_name(struct sdrl_input *input)
@@ -142,6 +174,21 @@ static char *parse_get_name(struct sdrl_input *input)
 		parse_buffer[i++] = sdrl_get_char(input);
 	parse_buffer[i] = '\0';
 	return(parse_buffer);
+}
+
+/**
+ * Returns the character that corresponds to the escape code ch.
+ */
+static char parse_escape_char(char ch)
+{
+	switch (ch) {
+		case 't':
+			return('\x09');
+		case 'n':
+			return('\x0a');
+		default:
+			return(ch);
+	}
 }
 
 /**

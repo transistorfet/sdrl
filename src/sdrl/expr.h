@@ -5,14 +5,14 @@
  */
 
 
-#ifndef EXPR_H
-#define EXPR_H
+#ifndef _SDRL_EXPR_H
+#define _SDRL_EXPR_H
 
-#include "types.h"
+#include "globals.h"
 
-#define SDRL_ET_CALL		0x01
+#define SDRL_ET_NUMBER		0x01
 #define SDRL_ET_NAME		0x02
-#define SDRL_ET_NUMBER		0x03
+#define SDRL_ET_CALL		0x03
 
 struct sdrl_expr {
 	int type;

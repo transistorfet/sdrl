@@ -9,7 +9,7 @@
 #define _SDRL_VALUE_H
 
 #include "type.h"
-#include "types.h"
+#include "globals.h"
 
 #define sdrl_void_c	(sdrl_data_t) (void *)
 #define sdrl_char_c	(sdrl_data_t) (char *)

@@ -14,7 +14,7 @@
 #include "value.h"
 #include "parse.h"
 #include "bindings.h"
-#include "types.h"
+#include "globals.h"
 
 
 struct sdrl_machine {

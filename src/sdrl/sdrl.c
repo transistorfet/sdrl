@@ -14,7 +14,7 @@
 #include "parse.h"
 #include "value.h"
 #include "bindings.h"
-#include "types.h"
+#include "globals.h"
 
 
 static int sdrl_evaluate_expr_type(struct sdrl_machine *, struct sdrl_expr *, struct sdrl_value *);

@@ -11,7 +11,7 @@
 #include "type.h"
 #include "value.h"
 #include "bindings.h"
-#include "types.h"
+#include "globals.h"
 
 static int bindings_add(struct sdrl_environment *, char *, int, sdrl_bind_t);
 static struct sdrl_binding *bindings_find(struct sdrl_environment *, char *, int, int);

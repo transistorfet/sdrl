@@ -8,7 +8,7 @@
 #ifndef _SDRL_TYPE_H
 #define _SDRL_TYPE_H
 
-#include "types.h"
+#include "globals.h"
 
 #define SDRL_VARIABLE_SIZE	-1
 

@@ -7,7 +7,7 @@
 #include <string.h>
 
 #include "type.h"
-#include "types.h"
+#include "globals.h"
 
 
 /**

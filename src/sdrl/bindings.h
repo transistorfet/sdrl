@@ -10,7 +10,7 @@
 
 #include "type.h"
 #include "value.h"
-#include "types.h"
+#include "globals.h"
 
 #define SDRL_BT_TYPE		0x01
 #define SDRL_BT_VALUE		0x02

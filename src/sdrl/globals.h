@@ -1,10 +1,10 @@
 /*
- * Types.h - Error Codes and Global Typedefs
+ * Globals.h - Error Codes and Global Typedefs
  */
 
 
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
 #define ERR_OUT_OF_MEMORY	-10
 #define ERR_NOT_FOUND		-11

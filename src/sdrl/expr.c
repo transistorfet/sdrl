@@ -8,7 +8,7 @@
 #include <string.h>
 
 #include "expr.h"
-#include "types.h"
+#include "globals.h"
 
 
 /**
@@ -34,7 +34,7 @@ struct sdrl_expr *sdrl_make_name_expr(char *name, struct sdrl_expr *next)
 {
 	struct sdrl_expr *expr;
 
-	if (!name || name[0] == '\0')
+	if (!name)
 		return(NULL);
 	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr) + strlen(name) + 1)))
 		return(NULL);

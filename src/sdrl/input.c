@@ -10,7 +10,7 @@
 #include <string.h>
 
 #include "input.h"
-#include "types.h"
+#include "globals.h"
 
 static int input_free_source(struct sdrl_input *);
 

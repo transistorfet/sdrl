@@ -5,11 +5,11 @@
  */
 
 
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef _SDRL_INPUT_H
+#define _SDRL_INPUT_H
 
 #include <stdio.h>
-#include "types.h"
+#include "globals.h"
 
 #define SDRL_IT_FILE		0x01
 #define SDRL_IT_STRING		0x02
