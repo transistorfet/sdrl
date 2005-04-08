@@ -1,6 +1,6 @@
 
 
-OBJ = machine.o bindings.o expr.o value.o type.o parse.o input.o
+OBJ = machine.o events.o bindings.o expr.o value.o type.o parse.o input.o
 
 CC = gcc
 CFLAGS = -g -I.
