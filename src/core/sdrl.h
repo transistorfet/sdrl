@@ -13,6 +13,7 @@
 #include "input.h"
 #include "value.h"
 #include "parse.h"
+#include "events.h"
 #include "bindings.h"
 #include "machine.h"
 #include "globals.h"
