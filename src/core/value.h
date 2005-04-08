@@ -28,6 +28,11 @@ struct sdrl_value {
 	struct sdrl_value *next;
 };
 
+#define sdrl_value_is_true_m(value) \
+	((sdrl_base_type_m(value->type) == SDRL_BT_NUMBER) && (!value->data.number)) \
+	|| ((sdrl_base_type_m(value->type) == SDRL_BT_STRING) && (!value->data.str || value->data.str[0] == '\0')) \
+	|| ((sdrl_base_type_m(value->type) == SDRL_BT_POINTER) && (!value->data.ptr))
+
 struct sdrl_value *sdrl_make_value(struct sdrl_type *, sdrl_data_t, int, struct sdrl_value *);
 struct sdrl_value *sdrl_duplicate_value(struct sdrl_value *);
 int sdrl_push_value(struct sdrl_value **, struct sdrl_value *);
