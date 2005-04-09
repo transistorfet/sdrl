@@ -10,7 +10,7 @@
 
 #include <sdrl.h>
 
-int prim_initialize(struct sdrl_machine *);
+int load_prims(struct sdrl_machine *);
 
 int prim_code(struct sdrl_machine *, struct sdrl_expr *);
 
