@@ -16,6 +16,7 @@
 
 struct sdrl_expr {
 	int type;
+	linenumber_t line;
 	union {
 		number_t number;
 		char *str;
@@ -24,9 +25,9 @@ struct sdrl_expr {
 	struct sdrl_expr *next;
 };
 
-struct sdrl_expr *sdrl_make_number_expr(number_t, struct sdrl_expr *);
-struct sdrl_expr *sdrl_make_string_expr(char *, struct sdrl_expr *);
-struct sdrl_expr *sdrl_make_call_expr(struct sdrl_expr *, struct sdrl_expr *);
+struct sdrl_expr *sdrl_make_number_expr(linenumber_t, number_t, struct sdrl_expr *);
+struct sdrl_expr *sdrl_make_string_expr(linenumber_t, char *, struct sdrl_expr *);
+struct sdrl_expr *sdrl_make_call_expr(linenumber_t, struct sdrl_expr *, struct sdrl_expr *);
 struct sdrl_expr *sdrl_duplicate_expr(struct sdrl_expr *);
 int sdrl_destroy_expr(struct sdrl_expr *);
 
