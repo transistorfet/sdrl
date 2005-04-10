@@ -3,8 +3,8 @@
  */
 
 
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#ifndef _SDRL_CORE_GLOBALS_H
+#define _SDRL_CORE_GLOBALS_H
 
 #define ERR_OUT_OF_MEMORY	-10
 #define ERR_NOT_FOUND		-11
@@ -26,6 +26,13 @@
 #define NULL			0
 
 typedef double number_t;
+
+struct sdrl_heap;
+struct sdrl_machine;
+
+typedef int (*sdrl_evaluate_t)(struct sdrl_machine *, ...);
+typedef void *(*sdrl_duplicate_t)(struct sdrl_heap *, void *);
+typedef int (*sdrl_destroy_t)(struct sdrl_heap *, void *);
 
 #endif
 
