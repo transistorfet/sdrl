@@ -12,17 +12,17 @@
 
 
 /**
- * Return a newly allocated call expression using a make'd expr, expr.
+ * Return a newly allocated number expression
  */
-struct sdrl_expr *sdrl_make_call_expr(struct sdrl_expr *call, struct sdrl_expr *next)
+struct sdrl_expr *sdrl_make_number_expr(number_t number, struct sdrl_expr *next)
 {
 	struct sdrl_expr *expr;
 
 	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr))))
 		return(NULL);
 
-	expr->type = SDRL_ET_CALL;
-	expr->data.expr = call;
+	expr->type = SDRL_ET_NUMBER;
+	expr->data.number = number;
 	expr->next = next;
 	return(expr);
 }
@@ -47,19 +47,36 @@ struct sdrl_expr *sdrl_make_string_expr(char *str, struct sdrl_expr *next)
 }
 
 /**
- * Return a newly allocated number expression
+ * Return a newly allocated call expression using a make'd expr, expr.
  */
-struct sdrl_expr *sdrl_make_number_expr(number_t number, struct sdrl_expr *next)
+struct sdrl_expr *sdrl_make_call_expr(struct sdrl_expr *call, struct sdrl_expr *next)
 {
 	struct sdrl_expr *expr;
 
 	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr))))
 		return(NULL);
 
-	expr->type = SDRL_ET_NUMBER;
-	expr->data.number = number;
+	expr->type = SDRL_ET_CALL;
+	expr->data.expr = call;
 	expr->next = next;
 	return(expr);
+}
+
+/**
+ * Create a duplicate of the expr.
+ */
+struct sdrl_expr *sdrl_duplicate_expr(struct sdrl_expr *expr)
+{
+	if (!expr)
+		return(NULL);
+	else if (expr->type == SDRL_ET_NUMBER)
+		return(sdrl_make_number_expr(expr->data.number, sdrl_duplicate_expr(expr->next)));
+	else if (expr->type == SDRL_ET_STRING)
+		return(sdrl_make_string_expr(expr->data.str, sdrl_duplicate_expr(expr->next)));
+	else if (expr->type == SDRL_ET_CALL)
+		return(sdrl_make_call_expr(sdrl_duplicate_expr(expr->data.expr), sdrl_duplicate_expr(expr->next)));
+	else
+		return(NULL);
 }
 
 /**

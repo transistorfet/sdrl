@@ -24,9 +24,10 @@ struct sdrl_expr {
 	struct sdrl_expr *next;
 };
 
-struct sdrl_expr *sdrl_make_call_expr(struct sdrl_expr *, struct sdrl_expr *);
-struct sdrl_expr *sdrl_make_string_expr(char *, struct sdrl_expr *);
 struct sdrl_expr *sdrl_make_number_expr(number_t, struct sdrl_expr *);
+struct sdrl_expr *sdrl_make_string_expr(char *, struct sdrl_expr *);
+struct sdrl_expr *sdrl_make_call_expr(struct sdrl_expr *, struct sdrl_expr *);
+struct sdrl_expr *sdrl_duplicate_expr(struct sdrl_expr *);
 int sdrl_destroy_expr(struct sdrl_expr *);
 
 #endif
