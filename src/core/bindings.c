@@ -9,14 +9,23 @@
 #include <string.h>
 
 #include "bindings.h"
+#include "heap.h"
 #include "globals.h"
+
+#define bindings_destroy_data_m(env, data)				\
+	if (env->destroy) {						\
+		if (env->heap)						\
+			env->destroy(env->heap, data);			\
+		else							\
+			((int (*)(void *)) env->destroy)(data);		\
+	}
 
 static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *, char *, int);
 
 /**
  * Allocate an environment for binding values to names.
  */
-struct sdrl_environment *sdrl_create_environment(int bitflags, int (*destroy)(void *))
+struct sdrl_environment *sdrl_create_environment(int bitflags, struct sdrl_heap *heap, sdrl_destroy_t destroy)
 {
 	struct sdrl_environment *env;
 
@@ -24,6 +33,7 @@ struct sdrl_environment *sdrl_create_environment(int bitflags, int (*destroy)(vo
 		return(NULL);
 
 	env->bitflags = bitflags;
+	env->heap = heap;
 	env->destroy = destroy;
 	env->head = NULL;
 	env->tail = NULL;
@@ -42,6 +52,7 @@ struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *parent
 		return(NULL);
 
 	env->bitflags = parent->bitflags;
+	env->heap = parent->heap;
 	env->destroy = parent->destroy;
 	env->head = NULL;
 	env->tail = NULL;
@@ -62,7 +73,7 @@ int sdrl_destroy_environment(struct sdrl_environment *env)
 	cur = env->head;
 	while (cur) {
 		next = cur->next;
-		env->destroy(cur->data);
+		bindings_destroy_data_m(env, cur->data);
 		free(cur);
 		cur = next;
 	}
@@ -107,7 +118,7 @@ int sdrl_replace_binding(struct sdrl_environment *env, char *name, void *data)
 	if (!name || !data || (env->bitflags & SDRL_BBF_NO_REPLACE))
 		return(-1);
 	if (bind = sdrl_get_bindings(env, name, 1)) {
-		env->destroy(bind->data);
+		bindings_destroy_data_m(env, bind->data);
 		bind->data = data;
 		return(0);
 	}
@@ -133,7 +144,7 @@ int sdrl_remove_binding(struct sdrl_environment *env, char *name)
 				env->head = cur->next;
 			if (cur == env->tail)
 				env->tail = prev;
-			env->destroy(cur->data);
+			bindings_destroy_data_m(env, cur->data);
 			free(cur);
 			return(0);
 		}

@@ -8,6 +8,7 @@
 #ifndef _SDRL_CORE_BINDINGS_H
 #define _SDRL_CORE_BINDINGS_H
 
+#include "heap.h"
 #include "globals.h"
 
 #define SDRL_BBF_NO_ADD			0x0001			/** No bindings can be added */
@@ -23,13 +24,14 @@ struct sdrl_binding {
 
 struct sdrl_environment {
 	int bitflags;
-	int (*destroy)(void *);
+	struct sdrl_heap *heap;
+	sdrl_destroy_t destroy;
 	struct sdrl_binding *head;
 	struct sdrl_binding *tail;
 	struct sdrl_environment *parent;
 };
 
-struct sdrl_environment *sdrl_create_environment(int, int (*)(void *));
+struct sdrl_environment *sdrl_create_environment(int, struct sdrl_heap *, sdrl_destroy_t);
 struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *);
 int sdrl_destroy_environment(struct sdrl_environment *);
 
