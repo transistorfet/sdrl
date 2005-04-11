@@ -49,13 +49,15 @@ int sdrl_add_file(struct sdrl_input *input, char *filename)
 	FILE *fptr;
 	struct sdrl_source *source;
 
-	if (!(fptr = fopen(filename, "r")))
+	if (!(fptr = fopen(filename, "rb")))
 		return(ERR_NOT_FOUND);
 	if (!(source = (struct sdrl_source *) malloc(sizeof(struct sdrl_source)))) {
 		fclose(fptr);
 		return(ERR_OUT_OF_MEMORY);
 	}
 	source->type = SDRL_IT_FILE;
+	source->line = 1;
+	source->col = 1;
 	source->i = 0;
 	source->ptr.fptr = fptr;
 	source->next = input->stack;
@@ -82,6 +84,8 @@ int sdrl_add_string(struct sdrl_input *input, char *str, int size)
 	strncpy(cpy_str, str, size);
 	cpy_str[size] = '\0';
 	source->type = SDRL_IT_STRING;
+	source->line = 1;
+	source->col = 1;
 	source->i = 0;
 	source->ptr.str = cpy_str;
 	source->next = input->stack;
@@ -102,7 +106,7 @@ char sdrl_get_char(struct sdrl_input *input)
 				if (ret == '\n')
 					break;
 		}
-		else if (ret == ' ' || ret == '\n' || ret == '\t') {
+		else if (ret == ' ' || ret == '\n' || ret == '\t' || ret == '\r') {
 			while (ret = sdrl_get_raw_char(input)) {
 				if (ret != ' ' && ret != '\n' && ret != '\t' && ret != '\r') {
 					input->peek = ret;
@@ -111,10 +115,7 @@ char sdrl_get_char(struct sdrl_input *input)
 			}
 		}
 		else
-{
-//printf("%c", ret);
 			return(ret);
-}
 		if (!ret)
 			input_free_source(input);
 	}
@@ -140,6 +141,12 @@ char sdrl_get_raw_char(struct sdrl_input *input)
 		if (ch == -1)
 			ch = '\n';
 	}
+
+	input->stack->col++;
+	if (ch == '\n') {
+		input->stack->col = 1;
+		input->stack->line++;
+	}
 	return(ch);
 }
 
@@ -151,6 +158,14 @@ char sdrl_peek_char(struct sdrl_input *input)
 	if (!input->peek)
 		input->peek = sdrl_get_char(input);
 	return(input->peek);
+}
+
+/**
+ * Return the current line/column number of the input stream.
+ */
+linenumber_t sdrl_get_linenumber(struct sdrl_input *input)
+{
+	return(sdrl_make_linenumber_m(input->stack->line, input->stack->col));
 }
 
 /*** Local Function ***/

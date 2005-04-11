@@ -16,6 +16,8 @@
 
 struct sdrl_source {
 	int type;
+	short line;
+	short col;
 	int i;
 	union {
 		char *str;
@@ -37,6 +39,8 @@ int sdrl_add_string(struct sdrl_input *, char *, int);
 char sdrl_get_char(struct sdrl_input *);
 char sdrl_get_raw_char(struct sdrl_input *);
 char sdrl_peek_char(struct sdrl_input *);
+
+linenumber_t sdrl_get_linenumber(struct sdrl_input *);
 
 #endif
 
