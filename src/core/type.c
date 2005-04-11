@@ -7,17 +7,18 @@
 #include <string.h>
 
 #include "type.h"
+#include "heap.h"
 #include "globals.h"
 
 
 /**
  * Make a new generic sdrl type.
  */
-struct sdrl_type *sdrl_make_type(int size, int bitflags, sdrl_evaluate_t evaluate, sdrl_duplicate_t duplicate, sdrl_destroy_t destroy)
+struct sdrl_type *sdrl_make_type(struct sdrl_heap *heap, int size, int bitflags, sdrl_evaluate_t evaluate, sdrl_duplicate_t duplicate, sdrl_destroy_t destroy)
 {
 	struct sdrl_type *type;
 
-	if (!(type = (struct sdrl_type *) malloc(sizeof(struct sdrl_type))))
+	if (!(type = (struct sdrl_type *) sdrl_heap_alloc(heap, sizeof(struct sdrl_type))))
 		return(NULL);
 
 	type->size = size;
@@ -32,9 +33,9 @@ struct sdrl_type *sdrl_make_type(int size, int bitflags, sdrl_evaluate_t evaluat
 /**
  * Frees resources used by type.
  */
-int sdrl_destroy_type(struct sdrl_type *type)
+int sdrl_destroy_type(struct sdrl_heap *heap, struct sdrl_type *type)
 {
-	free(type);
+	sdrl_heap_free(heap, type);
 	return(0);
 }
 

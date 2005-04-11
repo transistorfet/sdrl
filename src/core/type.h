@@ -8,6 +8,7 @@
 #ifndef _SDRL_CORE_TYPE_H
 #define _SDRL_CORE_TYPE_H
 
+#include "heap.h"
 #include "globals.h"
 
 #define SDRL_VARIABLE_SIZE	-1
@@ -22,12 +23,6 @@
 #define sdrl_base_type_m(type)		(type->bitflags & SDRL_TBF_BASE_TYPE)
 #define sdrl_type_pass_exprs_m(type)	(type->bitflags & SDRL_TBF_PASS_EXPRS)
 
-struct sdrl_machine;
-
-typedef int (*sdrl_evaluate_t)(struct sdrl_machine *, ...);
-typedef void *(*sdrl_duplicate_t)(void *);
-typedef int (*sdrl_destroy_t)(void *);
-
 struct sdrl_type {
 	int size;
 	int bitflags;
@@ -36,8 +31,8 @@ struct sdrl_type {
 	sdrl_destroy_t destroy;
 };
 
-struct sdrl_type *sdrl_make_type(int, int, sdrl_evaluate_t, sdrl_duplicate_t, sdrl_destroy_t);
-int sdrl_destroy_type(struct sdrl_type *);
+struct sdrl_type *sdrl_make_type(struct sdrl_heap *, int, int, sdrl_evaluate_t, sdrl_duplicate_t, sdrl_destroy_t);
+int sdrl_destroy_type(struct sdrl_heap *, struct sdrl_type *);
 
 #endif
 
