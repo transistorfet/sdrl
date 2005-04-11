@@ -10,13 +10,14 @@
 
 #include "value.h"
 #include "type.h"
+#include "heap.h"
 #include "globals.h"
 
 
 /**
  * Allocate and initialize an sdrl_value to a generic-typed data value.
  */
-struct sdrl_value *sdrl_make_value(struct sdrl_type *type, sdrl_data_t data, int size, struct sdrl_value *next)
+struct sdrl_value *sdrl_make_value(struct sdrl_heap *heap, struct sdrl_type *type, sdrl_data_t data, int size, struct sdrl_value *next)
 {
 	struct sdrl_value *value;
 
@@ -25,7 +26,7 @@ struct sdrl_value *sdrl_make_value(struct sdrl_type *type, sdrl_data_t data, int
 	if (sdrl_base_type_m(type) == SDRL_BT_STRING)
 		size++;
 
-	if (!(value = (struct sdrl_value *) malloc(sizeof(struct sdrl_value) + size)))
+	if (!(value = (struct sdrl_value *) sdrl_heap_alloc(heap, sizeof(struct sdrl_value) + size)))
 		return(NULL);
 
 	if (size) {
@@ -36,7 +37,7 @@ struct sdrl_value *sdrl_make_value(struct sdrl_type *type, sdrl_data_t data, int
 		value->data = data;
 
 	value->type = type;
-	value->binds = 0;
+	value->refs = 1;
 	value->size = size;
 	value->next = next;
 
@@ -46,20 +47,20 @@ struct sdrl_value *sdrl_make_value(struct sdrl_type *type, sdrl_data_t data, int
 /**
  * Duplicate the value by direct memory copy.  Doesn't copy deep structure
  */
-struct sdrl_value *sdrl_duplicate_value(struct sdrl_value *value)
+struct sdrl_value *sdrl_duplicate_value(struct sdrl_heap *heap, struct sdrl_value *value)
 {
 	struct sdrl_value *tmp, *prev, *head = NULL;
 
 	while (value) {
-		if (!(tmp = (struct sdrl_value *) malloc(sizeof(struct sdrl_value) + value->size)))
+		if (!(tmp = (struct sdrl_value *) sdrl_heap_alloc(heap, sizeof(struct sdrl_value) + value->size)))
 			return(NULL);
 		memcpy(tmp, value, sizeof(struct sdrl_value) + value->size);
 		if (tmp->type->duplicate)
-			tmp->data.ptr = tmp->type->duplicate(value->data.ptr);
+			tmp->data.ptr = tmp->type->duplicate(heap, value->data.ptr);
 		else if (tmp->size)
 			tmp->data = (sdrl_data_t) (char *) ((size_t) tmp + sizeof(struct sdrl_value));
-			
 
+		tmp->refs = 1;
 		if (!head)
 			head = tmp;
 		else
@@ -70,6 +71,27 @@ struct sdrl_value *sdrl_duplicate_value(struct sdrl_value *value)
 
 	return(head);
 }
+
+/**
+ * Frees memory of value and all of values links.
+ */
+int sdrl_destroy_value(struct sdrl_heap *heap, struct sdrl_value *value)
+{
+	struct sdrl_value *tmp;
+
+	while (value) {
+		if (--value->refs)
+			return(1);
+		if (value->type->destroy)
+			value->type->destroy(heap, value->data.ptr);
+		tmp = value->next;
+		sdrl_heap_free(heap, value);
+		value = tmp;
+	}
+
+	return(0);
+}
+
 
 /**
  * Adds the value to the linked-list of values.
@@ -143,29 +165,6 @@ struct sdrl_value *sdrl_shift_value(struct sdrl_value **array)
 	*array = value->next;
 	value->next = NULL;
 	return(value);
-}
-
-/**
- * Frees memory of value and all of values links.  (Garbage Collection to see if value should *actually* be freed?)
- */
-int sdrl_destroy_value(struct sdrl_value *value)
-{
-	struct sdrl_value *tmp;
-
-	while (value) {
-		// TODO check garbage collection
-		if (value->binds)
-			value = value->next;
-		else {
-			if (value->type->destroy)
-				value->type->destroy(value->data.ptr);
-			tmp = value->next;
-			free(value);
-			value = tmp;
-		}
-	}
-
-	return(0);
 }
 
 
