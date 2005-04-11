@@ -97,6 +97,22 @@ struct sdrl_event *sdrl_pop_event(struct sdrl_continuation *cont)
 	return(event);
 }
 
+/**
+ * Count the number of events on the continuation.
+ */
+int sdrl_count_events(struct sdrl_continuation *cont)
+{
+	int i = 0;
+	struct sdrl_event *cur;
+
+	cur = cont->top;
+	while (cur) {
+		i++;
+		cur = cur->next;
+	}
+	return(i);
+}
+
 /*
 
 sdrl_eval_expr:
