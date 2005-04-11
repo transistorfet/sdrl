@@ -95,23 +95,23 @@ struct sdrl_expr *sdrl_parse_expr(struct sdrl_input *input)
 	else if (ch == ')')
 		return(NULL);
 	else if (parse_is_digit(ch)) {
-		if (!(expr = sdrl_make_number_expr(parse_get_number(input), NULL)))
+		if (!(expr = sdrl_make_number_expr(sdrl_get_linenumber(input), parse_get_number(input), NULL)))
 			return(NULL);
 	}
 	else if (ch == '\"') {
 		sdrl_get_char(input);
-		if (!(expr = sdrl_make_string_expr(parse_get_string(input), NULL)))
+		if (!(expr = sdrl_make_string_expr(sdrl_get_linenumber(input), parse_get_string(input), NULL)))
 			return(NULL);
 	}
 	else {
-		if (!(expr = sdrl_make_string_expr(parse_get_name(input), NULL)))
+		if (!(expr = sdrl_make_string_expr(sdrl_get_linenumber(input), parse_get_name(input), NULL)))
 			return(NULL);
 		if (sdrl_peek_char(input) == '(') {
 			sdrl_get_char(input);
 			expr->next = sdrl_parse_input(input);
 			if (sdrl_get_char(input) != ')')
 				return(NULL);
-			expr = sdrl_make_call_expr(expr, NULL);
+			expr = sdrl_make_call_expr(sdrl_get_linenumber(input), expr, NULL);
 		}
 	}
 
@@ -119,15 +119,6 @@ struct sdrl_expr *sdrl_parse_expr(struct sdrl_input *input)
 		sdrl_get_char(input);
 	return(expr);
 }
-
-/**
- * Add a parse rule.
- */
-int sdrl_add_parse_rule(char *name, char *pattern, struct sdrl_expr *expr)
-{
-
-}
-
 
 /*** Local Functions ***/
 
