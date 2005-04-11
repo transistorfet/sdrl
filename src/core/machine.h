@@ -8,19 +8,19 @@
 #ifndef _SDRL_CORE_MACHINE_H
 #define _SDRL_CORE_MACHINE_H
 
+#include "heap.h"
 #include "expr.h"
 #include "value.h"
 #include "events.h"
 #include "bindings.h"
 #include "globals.h"
 
-
 struct sdrl_machine {
 	struct sdrl_value *ret;
+	struct sdrl_heap *heap;
 	struct sdrl_environment *type_env;
 	struct sdrl_environment *env;
 	struct sdrl_continuation *cont;
-	struct sdrl_expr *code;
 };
 
 struct sdrl_machine *sdrl_create_machine(void);

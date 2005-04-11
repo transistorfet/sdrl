@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "machine.h"
+#include "heap.h"
 #include "expr.h"
 #include "type.h"
 #include "parse.h"
@@ -32,22 +33,22 @@ struct sdrl_machine *sdrl_create_machine(void)
 	if (!(mach = (struct sdrl_machine *) malloc(sizeof(struct sdrl_machine))))
 		return(NULL);
 	mach->ret = NULL;
-	mach->type_env = sdrl_create_environment(SDRL_BBF_CONSTANT, (int (*)(void *)) sdrl_destroy_type);
-	mach->env = sdrl_create_environment(0, (int (*)(void *)) sdrl_destroy_value);
+	mach->heap = sdrl_create_heap(0, 0);
+	mach->type_env = sdrl_create_environment(SDRL_BBF_CONSTANT, mach->heap, (sdrl_destroy_t) sdrl_destroy_type);
+	mach->env = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value);
 	mach->cont = sdrl_create_continuation();
-	mach->code = NULL;
 
-	if (!mach->env || !mach->env || !mach->cont) {
+	if (!mach->env || !mach->type_env || !mach->cont) {
 		sdrl_destroy_machine(mach);
 		return(NULL);
 	}
 
-	sdrl_add_binding(mach->type_env, "number", sdrl_make_type(0, SDRL_BT_NUMBER, NULL, NULL, NULL));
-	sdrl_add_binding(mach->type_env, "string", sdrl_make_type(SDRL_VARIABLE_SIZE, SDRL_BT_STRING, NULL, NULL, NULL));
-	sdrl_add_binding(mach->type_env, "list", sdrl_make_type(0, SDRL_BT_POINTER, NULL, (sdrl_duplicate_t) sdrl_duplicate_value, (sdrl_destroy_t) sdrl_destroy_value));
-	sdrl_add_binding(mach->type_env, "expr", sdrl_make_type(0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_expr_type, NULL, NULL));
-	sdrl_add_binding(mach->type_env, "form", sdrl_make_type(0, SDRL_BT_POINTER | SDRL_TBF_PASS_EXPRS, (sdrl_evaluate_t) sdrl_evaluate_form_type, NULL, NULL));
-	sdrl_add_binding(mach->type_env, "builtin", sdrl_make_type(0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_builtin_type, NULL, NULL));
+	sdrl_add_binding(mach->type_env, "number", sdrl_make_type(mach->heap, 0, SDRL_BT_NUMBER, NULL, NULL, NULL));
+	sdrl_add_binding(mach->type_env, "string", sdrl_make_type(mach->heap, SDRL_VARIABLE_SIZE, SDRL_BT_STRING, NULL, NULL, NULL));
+	sdrl_add_binding(mach->type_env, "list", sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, NULL, (sdrl_duplicate_t) sdrl_duplicate_value, (sdrl_destroy_t) sdrl_destroy_value));
+	sdrl_add_binding(mach->type_env, "expr", sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_expr_type, NULL, NULL));
+	sdrl_add_binding(mach->type_env, "form", sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER | SDRL_TBF_PASS_EXPRS, (sdrl_evaluate_t) sdrl_evaluate_form_type, NULL, NULL));
+	sdrl_add_binding(mach->type_env, "builtin", sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_builtin_type, NULL, NULL));
 
 	return(mach);
 }
@@ -57,11 +58,12 @@ struct sdrl_machine *sdrl_create_machine(void)
  */
 int sdrl_destroy_machine(struct sdrl_machine *mach)
 {
-	sdrl_destroy_expr(mach->code);
+
+	sdrl_destroy_value(mach->heap, mach->ret);
 	sdrl_destroy_continuation(mach->cont);
 	sdrl_destroy_environment(mach->env);
 	sdrl_destroy_environment(mach->type_env);
-	sdrl_destroy_value(mach->ret);
+	sdrl_destroy_heap(mach->heap);
 	free(mach);
 	return(0);
 }
@@ -124,15 +126,15 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 {
 	struct sdrl_value *func;
 
-	sdrl_destroy_value(mach->ret);
+	sdrl_destroy_value(mach->heap, mach->ret);
 	mach->ret = NULL;
 
 	if (!expr)
 		return(0);
 	else if (expr->type == SDRL_ET_NUMBER)
-		mach->ret = sdrl_make_value(sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) expr->data.number, 0, NULL);
+		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) expr->data.number, 0, NULL);
 	else if (expr->type == SDRL_ET_STRING)
-		mach->ret = sdrl_make_value(sdrl_find_binding(mach->type_env, "string"), (sdrl_data_t) expr->data.str, strlen(expr->data.str), NULL);
+		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "string"), (sdrl_data_t) expr->data.str, strlen(expr->data.str), NULL);
 	else if (expr->type == SDRL_ET_CALL) {
 		if (expr->data.expr->type == SDRL_ET_STRING) {
 			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str)))
@@ -167,12 +169,14 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
 		else {
 			mach->ret = args;
 			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, func));
+//			func->type->evaluate(mach, func, args);
 		}
 	}
 	else {
 		if (args)
 			return(ERR_INVALID_PARAMS);
-		mach->ret = sdrl_duplicate_value(func);
+//		mach->ret = sdrl_make_reference_m(func);
+		mach->ret = sdrl_duplicate_value(mach->heap, func);
 	}
 	return(0);
 }
@@ -182,6 +186,8 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
  */
 int sdrl_evaluate_params(struct sdrl_machine *mach, struct sdrl_expr *exprs)
 {
+	if (!exprs)
+		return(0);
 	if (exprs->next)
 		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, exprs->next));
 	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_merge_return, mach->ret));
@@ -248,7 +254,7 @@ static int sdrl_evaluate_expr_type(struct sdrl_machine *mach, struct sdrl_value 
  */
 static int sdrl_evaluate_form_type(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_expr *params)
 {
-	sdrl_destroy_value(mach->ret);
+	sdrl_destroy_value(mach->heap, mach->ret);
 	mach->ret = NULL;
 	return(((int (*)(struct sdrl_machine *, struct sdrl_expr *)) func->data.ptr)(mach, params));
 }
@@ -258,7 +264,7 @@ static int sdrl_evaluate_form_type(struct sdrl_machine *mach, struct sdrl_value 
  */
 static int sdrl_evaluate_builtin_type(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_value *args)
 {
-	sdrl_destroy_value(mach->ret);
+	sdrl_destroy_value(mach->heap, mach->ret);
 	mach->ret = NULL;
 	return(((int (*)(struct sdrl_machine *, struct sdrl_value *)) func->data.ptr)(mach, args));
 }
