@@ -1,6 +1,6 @@
 
 
-OBJ = machine.o events.o bindings.o expr.o value.o type.o parse.o input.o
+OBJ = machine.o events.o bindings.o expr.o value.o type.o parse.o input.o heap.o
 
 CC = gcc
 CFLAGS = -g -I.
@@ -24,4 +24,10 @@ clean:
 
 del:
 	del *.o
+
+size:
+	ls -l *.[ch] | awk '{print $$5;next}' | perl -e 'while(<>){$$sum += $$_} print "$$sum\n";'
+
+count:
+	cat `ls *.[ch]` | wc
 
