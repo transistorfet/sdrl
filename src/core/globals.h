@@ -25,6 +25,15 @@
 #undef  NULL
 #define NULL			0
 
+#define sdrl_make_linenumber_m(line, col) \
+	(line << 16 | col)
+#define sdrl_get_line_number_m(linecol) \
+	(line >> 16)
+#define sdrl_get_column_number_m(linecol) \
+	(col & 0xffff)
+
+typedef unsigned int linenumber_t;
+
 typedef double number_t;
 
 struct sdrl_heap;
