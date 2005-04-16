@@ -23,7 +23,8 @@ struct sdrl_binding {
 };
 
 struct sdrl_environment {
-	int bitflags;
+	short bitflags;
+	short refs;
 	struct sdrl_heap *heap;
 	sdrl_destroy_t destroy;
 	struct sdrl_binding *head;
@@ -31,8 +32,9 @@ struct sdrl_environment {
 	struct sdrl_environment *parent;
 };
 
-struct sdrl_environment *sdrl_create_environment(int, struct sdrl_heap *, sdrl_destroy_t);
+struct sdrl_environment *sdrl_create_environment(short, struct sdrl_heap *, sdrl_destroy_t);
 struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *);
+struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *);
 int sdrl_destroy_environment(struct sdrl_environment *);
 
 int sdrl_add_binding(struct sdrl_environment *, char *, void *);

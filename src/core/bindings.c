@@ -25,14 +25,14 @@ static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *, char *,
 /**
  * Allocate an environment for binding values to names.
  */
-struct sdrl_environment *sdrl_create_environment(int bitflags, struct sdrl_heap *heap, sdrl_destroy_t destroy)
+struct sdrl_environment *sdrl_create_environment(short bitflags, struct sdrl_heap *heap, sdrl_destroy_t destroy)
 {
 	struct sdrl_environment *env;
 
-	if (!(env = (struct sdrl_environment *) malloc(sizeof(struct sdrl_environment))))
+	if (!(env = (struct sdrl_environment *) sdrl_heap_alloc(heap, sizeof(struct sdrl_environment))))
 		return(NULL);
-
 	env->bitflags = bitflags;
+	env->refs = 1;
 	env->heap = heap;
 	env->destroy = destroy;
 	env->head = NULL;
@@ -48,27 +48,33 @@ struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *parent
 {
 	struct sdrl_environment *env;
 
-	if (!(env = (struct sdrl_environment *) malloc(sizeof(struct sdrl_environment))))
+	if (!(env = (struct sdrl_environment *) sdrl_heap_alloc(parent->heap, sizeof(struct sdrl_environment))))
 		return(NULL);
-
 	env->bitflags = parent->bitflags;
+	env->refs = 1;
 	env->heap = parent->heap;
 	env->destroy = parent->destroy;
 	env->head = NULL;
 	env->tail = NULL;
-	env->parent = parent;
+	env->parent = sdrl_make_reference_m(parent);
 	return(env);
 }
 
 /**
- * Free resources allocated by the environment including all bindings.
+ * Free resources allocated by the top most environment including all bindings and
+ * return a pointer to the parent environment or NULL if env does not have a parent.
  */
-int sdrl_destroy_environment(struct sdrl_environment *env)
+struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *env)
 {
 	struct sdrl_binding *cur, *next;
+	struct sdrl_environment *parent;
 
 	if (!env)
-		return(-1);
+		return(NULL);
+
+	parent = env->parent;
+	if (--env->refs)
+		return(parent);
 
 	cur = env->head;
 	while (cur) {
@@ -77,9 +83,22 @@ int sdrl_destroy_environment(struct sdrl_environment *env)
 		free(cur);
 		cur = next;
 	}
-	free(env);
+	if (env->parent)
+		parent = sdrl_destroy_reference_m(env->parent, sdrl_retract_environment);
+	sdrl_heap_free(env->heap, env);
+	return(parent);
+}
+
+/**
+ * Free resources allocated by the environment and all of its parents.
+ */
+int sdrl_destroy_environment(struct sdrl_environment *env)
+{
+	while (env)
+		env = sdrl_retract_environment(env);
 	return(0);
 }
+
 
 /**
  * Add a binding of name to environment.
