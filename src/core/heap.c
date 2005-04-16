@@ -127,12 +127,15 @@ int sdrl_heap_free(struct sdrl_heap *heap, void *addr)
 				prev->next = cur->next;
 			else
 				head = cur->next;
+			free(addr);
+			return(0);
 		}
+		prev = cur;
 		cur = cur->next;
 	}
 
-	free(addr);
-	return(0);
+	return(-1);
+
 /*
 	int object;
 	struct sdrl_heap *next;
@@ -162,7 +165,6 @@ int sdrl_heap_free(struct sdrl_heap *heap, void *addr)
 	return(0);
 */
 }
-
 
 void heap_report(void)
 {
