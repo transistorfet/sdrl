@@ -34,11 +34,18 @@ struct sdrl_machine *sdrl_create_machine(void)
 		return(NULL);
 	mach->ret = NULL;
 	mach->heap = sdrl_create_heap(0, 0);
-	mach->type_env = sdrl_create_environment(SDRL_BBF_CONSTANT, mach->heap, (sdrl_destroy_t) sdrl_destroy_type);
-	mach->env = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value);
 	mach->cont = sdrl_create_continuation();
 
-	if (!mach->env || !mach->type_env || !mach->cont) {
+	if (!mach->heap || !mach->cont) {
+		sdrl_destroy_machine(mach);
+		return(NULL);
+	}
+
+	mach->type_env = sdrl_create_environment(SDRL_BBF_CONSTANT, mach->heap, (sdrl_destroy_t) sdrl_destroy_type);
+	mach->global = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value);
+	mach->env = mach->global;
+
+	if (!mach->type_env || !mach->global) {
 		sdrl_destroy_machine(mach);
 		return(NULL);
 	}
@@ -58,10 +65,9 @@ struct sdrl_machine *sdrl_create_machine(void)
  */
 int sdrl_destroy_machine(struct sdrl_machine *mach)
 {
-
 	sdrl_destroy_value(mach->heap, mach->ret);
 	sdrl_destroy_continuation(mach->cont);
-	sdrl_destroy_environment(mach->env);
+	sdrl_retract_environment(mach->global);
 	sdrl_destroy_environment(mach->type_env);
 	sdrl_destroy_heap(mach->heap);
 	free(mach);
@@ -76,7 +82,7 @@ int sdrl_evaluate(struct sdrl_machine *mach, struct sdrl_expr *expr)
 	int ret = 0;
 	struct sdrl_event *event;
 
-	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr)))
+	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr, mach->env)))
 		return(ERR_OUT_OF_MEMORY);
 	do {
 		if (ret = sdrl_evaluate_event(mach, event))
@@ -95,6 +101,7 @@ int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
 	int ret = 0;
 	struct sdrl_value *value;
 
+	mach->env = event->env;
 	if (sdrl_use_ret_m(event)) {
 		value = mach->ret;
 		mach->ret = NULL;
@@ -114,7 +121,7 @@ int sdrl_evaluate_expr_list(struct sdrl_machine *mach, struct sdrl_expr *expr)
 	if (!expr)
 		return(0);
 	else if (expr->next)
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr->next));
+		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr->next, mach->env));
 	return(sdrl_evaluate_expr(mach, expr));
 }
 
@@ -142,8 +149,8 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 			else if (func->type->evaluate && sdrl_type_pass_exprs_m(func->type))
 				return(func->type->evaluate(mach, func, expr->data.expr->next));
 			else {
-				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, func));
-				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, expr->data.expr->next));
+				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, func, mach->env));
+				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, expr->data.expr->next, mach->env));
 				return(0);
 			}
 		}
@@ -168,7 +175,7 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
 			return(ERR_INVALID_PARAMS);
 		else {
 			mach->ret = args;
-			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, func));
+			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, func, mach->env));
 //			func->type->evaluate(mach, func, args);
 		}
 	}
@@ -189,10 +196,10 @@ int sdrl_evaluate_params(struct sdrl_machine *mach, struct sdrl_expr *exprs)
 	if (!exprs)
 		return(0);
 	if (exprs->next)
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, exprs->next));
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_merge_return, mach->ret));
+		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, exprs->next, mach->env));
+	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_merge_return, mach->ret, mach->env));
 	mach->ret = NULL;
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr, exprs));
+	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr, exprs, mach->env));
 	return(0);
 }
 
@@ -207,32 +214,6 @@ int sdrl_merge_return(struct sdrl_machine *mach, struct sdrl_value *ret)
 	return(0);
 }
 
-/**
- * Extend the current environment.
- */
-int sdrl_push_environment(struct sdrl_machine *mach)
-{
-	struct sdrl_environment *env;
-
-	if (!(env = sdrl_extend_environment(mach->env)))
-		return(ERR_OUT_OF_MEMORY);
-	mach->env = env;
-	return(0);
-}
-
-/**
- * Destroy the current environment and resort to its parent.
- */
-int sdrl_pop_environment(struct sdrl_machine *mach)
-{
-	struct sdrl_environment *parent;
-
-	if (!(parent = mach->env->parent))
-		return(-1);
-	sdrl_destroy_environment(mach->env);
-	mach->env = parent;
-	return(0);
-}
 
 /*** Local Functions ***/
 
@@ -241,11 +222,13 @@ int sdrl_pop_environment(struct sdrl_machine *mach)
  */
 static int sdrl_evaluate_expr_type(struct sdrl_machine *mach, struct sdrl_value *expr, struct sdrl_value *params)
 {
-	sdrl_push_environment(mach);
-	sdrl_add_binding(mach->env, "_", params);
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_pop_environment, NULL));
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr->data.ptr));
+	struct sdrl_environment *env;
 
+	if (!(env = sdrl_extend_environment(mach->env)))
+		return(ERR_OUT_OF_MEMORY);
+	sdrl_add_binding(env, "_", params);
+	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr->data.ptr, env));
+	sdrl_destroy_reference_m(env, sdrl_retract_environment);
 	return(0);
 }
 

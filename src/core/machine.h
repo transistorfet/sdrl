@@ -18,9 +18,10 @@
 struct sdrl_machine {
 	struct sdrl_value *ret;
 	struct sdrl_heap *heap;
-	struct sdrl_environment *type_env;
-	struct sdrl_environment *env;
 	struct sdrl_continuation *cont;
+	struct sdrl_environment *type_env;
+	struct sdrl_environment *global;
+	struct sdrl_environment *env;
 };
 
 struct sdrl_machine *sdrl_create_machine(void);
@@ -34,8 +35,6 @@ int sdrl_call_value(struct sdrl_machine *, struct sdrl_value *, struct sdrl_valu
 int sdrl_evaluate_params(struct sdrl_machine *, struct sdrl_expr *);
 
 int sdrl_merge_return(struct sdrl_machine *, struct sdrl_value *);
-int sdrl_push_environment(struct sdrl_machine *);
-int sdrl_pop_environment(struct sdrl_machine *);
 
 #endif
 
