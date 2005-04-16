@@ -29,10 +29,8 @@ struct sdrl_value {
 	struct sdrl_value *next;
 };
 
-#define sdrl_make_reference_m(value) \
-	++value->refs ? value : NULL
 
-#define sdrl_value_is_true_m(value) \
+#define sdrl_value_is_false_m(value) \
 	((sdrl_base_type_m(value->type) == SDRL_BT_NUMBER) && (!value->data.number)) \
 	|| ((sdrl_base_type_m(value->type) == SDRL_BT_STRING) && (!value->data.str || value->data.str[0] == '\0')) \
 	|| ((sdrl_base_type_m(value->type) == SDRL_BT_POINTER) && (!value->data.ptr))
