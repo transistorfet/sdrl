@@ -31,9 +31,10 @@ OBJS =	common/load.o		\
 	builtins/subtract.o	\
 	builtins/tail.o		\
 	builtins/unlist.o	\
+	parsers/lispy.o		\
 	parsers/parser.o
 
-CFLAGS = -g -I$(SDRL)/src/core -I.
+CFLAGS = -g -I$(SDRL)/src/core -I$(SDRL)/include -I.
 ARFLAGS = rcu
 
 include $(SDRL)/builder/builder.mk
