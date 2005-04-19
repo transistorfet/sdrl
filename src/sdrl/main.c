@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include <sdrl.h>
+#include <lib/base.h>
 
 char *infile = NULL;
 
@@ -15,6 +16,7 @@ int print_result(struct sdrl_machine *, int);
 
 main(int argc, char **argv)
 {
+	struct sdrl_expr *code;
 	struct sdrl_machine *mach;
 
 	if (parse_cmdline(argc, argv)) {
@@ -24,21 +26,22 @@ main(int argc, char **argv)
 
 	if (!(mach = sdrl_create_machine()))
 		return(-1);
-	if (prim_initialize(mach)) {
+	if (sdrl_load_base(mach)) {
 		printf("Error initializing primatives\n");
 		sdrl_destroy_machine(mach);
 		return(-1);
 	}
 
-	if (!(mach->code = sdrl_parse_file(infile))) {
+	if (!(code = sdrl_parse_file(infile, (sdrl_parser_t) sdrl_base_parse_input, NULL))) {
 		printf("Cannot parse file, %s\n", infile);
 		sdrl_destroy_machine(mach);
 		return(-1);
 	}
 
-	print_result(mach, sdrl_evaluate_expr_list(mach, mach->code));
+	print_result(mach, sdrl_evaluate(mach, code));
 
 	sdrl_destroy_machine(mach);
+	sdrl_destroy_expr(code);
 
 	return(0);
 }
@@ -72,6 +75,7 @@ int parse_cmdline(int argc, char **argv)
 int print_result(struct sdrl_machine *mach, int error)
 {
 	if (mach->ret) {
+//		prim_print(mach, mach->ret);
 //		printf("%f", mach->ret->data.number);
 //		printf("%s", mach->ret->data.str);
 	}
