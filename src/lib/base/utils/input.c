@@ -12,7 +12,15 @@
 #include "input.h"
 #include "globals.h"
 
+#define INPUT_MAX_BUFFER		1024
+
+#define sdrl_input_is_number(ch) \
+	((ch >= 0x30) && (ch <= 0x39) || (ch == '.') || (ch == '-'))
+
+static char input_buffer[INPUT_MAX_BUFFER + 1];
+
 static int input_free_source(struct sdrl_input *);
+static char input_escape_char(char);
 
 /**
  * Create an initially empty input stack.
@@ -93,21 +101,68 @@ int sdrl_add_string(struct sdrl_input *input, char *str, int size)
 	return(0);
 }
 
+
+/**
+ * Returns the number that was read from input.
+ */
+number_t sdrl_read_number(struct sdrl_input *input)
+{
+	char ch;
+	int i = 0;
+
+	while ((i < INPUT_MAX_BUFFER) && (ch = sdrl_peek_input(input)) && sdrl_input_is_number(ch))
+		input_buffer[i++] = sdrl_get_char(input);
+	input_buffer[i] = '\0';
+	return(atof(input_buffer));
+}
+
+/*
+ * Returns the quoted string that was read from input.
+ */
+char *sdrl_read_string(struct sdrl_input *input, char term)
+{
+	char ch;
+	int i = 0;
+
+	while ((i < INPUT_MAX_BUFFER) && (ch = sdrl_get_char(input)) && (ch != term)) {
+		if (ch == '\\')
+			ch = input_escape_char(sdrl_get_char(input));
+		input_buffer[i++] = ch;
+	}
+	input_buffer[i] = '\0';
+	return(input_buffer);
+}
+
+/*
+ * Returns the name that was read from input.
+ */
+char *sdrl_read_word(struct sdrl_input *input, sdrl_char_test_t is_word_char)
+{
+	char ch;
+	int i = 0;
+
+	while ((i < INPUT_MAX_BUFFER) && (ch = sdrl_peek_input(input)) && is_word_char(ch))
+		input_buffer[i++] = sdrl_get_input(input);
+	input_buffer[i] = '\0';
+	return(input_buffer);
+}
+
+
 /**
  * Returns the next char read from the input stream ignoring comments and spaces
  */
-char sdrl_get_char(struct sdrl_input *input)
+char sdrl_get_input(struct sdrl_input *input)
 {
 	char ret;
 
-	while (input->stack && (ret = sdrl_get_raw_char(input))) {
+	while (input->stack && (ret = sdrl_get_char(input))) {
 		if (ret == '#') {
-			while (ret = sdrl_get_raw_char(input))
+			while (ret = sdrl_get_char(input))
 				if (ret == '\n')
 					break;
 		}
 		else if (ret == ' ' || ret == '\n' || ret == '\t' || ret == '\r') {
-			while (ret = sdrl_get_raw_char(input)) {
+			while (ret = sdrl_get_char(input)) {
 				if (ret != ' ' && ret != '\n' && ret != '\t' && ret != '\r') {
 					input->peek = ret;
 					break;
@@ -126,7 +181,7 @@ char sdrl_get_char(struct sdrl_input *input)
 /**
  * Get the next char from the input stream.
  */
-char sdrl_get_raw_char(struct sdrl_input *input)
+char sdrl_get_char(struct sdrl_input *input)
 {
 	char ch = 0;
 
@@ -151,6 +206,16 @@ char sdrl_get_raw_char(struct sdrl_input *input)
 }
 
 /**
+ * Returns the next character ignoring spaces and comments to be read from input (only one char ahead).
+ */
+char sdrl_peek_input(struct sdrl_input *input)
+{
+	if (!input->peek)
+		input->peek = sdrl_get_input(input);
+	return(input->peek);
+}
+
+/**
  * Returns the next character to be read from input (only one char ahead).
  */
 char sdrl_peek_char(struct sdrl_input *input)
@@ -165,8 +230,42 @@ char sdrl_peek_char(struct sdrl_input *input)
  */
 linenumber_t sdrl_get_linenumber(struct sdrl_input *input)
 {
-	return(sdrl_make_linenumber_m(input->stack->line, input->stack->col));
+	if (input && input->stack)
+		return(sdrl_make_linenumber_m(input->stack->line, input->stack->col));
+	return(0);
 }
+
+
+/**
+ * Returns 1 if ch is a valid digit character, 0 otherwise.
+ */
+int sdrl_is_digit(char ch)
+{
+	if ((ch >= 0x30) && (ch <= 0x39))
+		return(1);
+	return(0);
+}
+
+/**
+ * Returns 1 if ch is a valid space character, 0 otherwise.
+ */
+int sdrl_is_space(char ch)
+{
+	if ((ch == ' ') || (ch == '\t') || (ch == '\n') || (ch == '\r'))
+		return(1);
+	return(0);
+}
+
+/**
+ * Returns 1 if ch is a valid word character, 0 otherwise.
+ */
+int sdrl_is_word(char ch)
+{
+	if ((ch >= 'A') && (ch <= 'Z') || (ch >= 'a') && (ch <= 'z') || (ch == '_'))
+		return(1);
+	return(0);
+}
+
 
 /*** Local Function ***/
 
@@ -188,5 +287,21 @@ static int input_free_source(struct sdrl_input *input)
 	input->stack = tmp;
 	return(0);
 }
+
+/**
+ * Returns the character that corresponds to the escape code ch.
+ */
+static char input_escape_char(char ch)
+{
+	switch (ch) {
+		case 't':
+			return('\x09');
+		case 'n':
+			return('\x0a');
+		default:
+			return(ch);
+	}
+}
+
 
 
