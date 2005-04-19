@@ -5,7 +5,7 @@
  */
 
 #include <sdrl.h>
-#include "base.h"
+#include <lib/base.h>
 
 
 static int parser_is_identifier(char);
@@ -34,7 +34,7 @@ struct sdrl_expr *sdrl_base_parse_expr(struct sdrl_input *input, void *param)
 	linenumber_t line;
 	struct sdrl_expr *expr;
 
-	ch = sdrl_peek_nospaces(input);
+	ch = sdrl_peek_input(input);
 	line = sdrl_get_linenumber(input);
 
 	if (!ch)
@@ -53,16 +53,16 @@ struct sdrl_expr *sdrl_base_parse_expr(struct sdrl_input *input, void *param)
 	else {
 		if (!(expr = sdrl_make_string_expr(line, sdrl_read_word(input, parser_is_identifier), NULL)))
 			return(NULL);
-		if (sdrl_peek_nospaces(input) == '(') {
+		if (sdrl_peek_input(input) == '(') {
 			sdrl_get_char(input);
 			expr->next = sdrl_base_parse_input(input, param);
-			if (sdrl_read_nospaces(input) != ')')
+			if (sdrl_get_input(input) != ')')
 				return(NULL);
 			expr = sdrl_make_call_expr(line, expr, NULL);
 		}
 	}
 
-	if (sdrl_peek_nospaces(input) == ',')
+	if (sdrl_peek_input(input) == ',')
 		sdrl_get_char(input);
 	return(expr);
 }
