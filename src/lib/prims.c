@@ -1,7 +1,8 @@
 /*
- * Name:	prims.c
- * Version:	0.1
- * Description:	Primative Functions
+ * Name:		prims.c
+ * Version:		0.1
+ * Module Requirements:	(none)
+ * Description:		Primative Functions
  */
 
 #include <stdio.h>
@@ -9,21 +10,21 @@
 #include <sdrl.h>
 #include "prims.h"
 
-#define traverse_value_m(type_name, value, init, line)					\
-	if (!(type = sdrl_find_binding(mach->type_env, type_name)))			\
-		ret = ERR_NOT_FOUND;							\
-	else {										\
-		result = init;								\
-		cur = value;								\
-		while (cur) {								\
-			if (cur->type != type) {					\
-				ret = ERR_INVALID_TYPE;					\
-				break;							\
-			}								\
-			line;								\
-			cur = cur->next;						\
-		}									\
-		mach->ret = sdrl_make_value(type, (sdrl_data_t) result, 0, NULL);	\
+#define traverse_value_m(type_name, value, init, line)						\
+	if (!(type = sdrl_find_binding(mach->type_env, type_name)))				\
+		ret = ERR_NOT_FOUND;								\
+	else {											\
+		result = init;									\
+		cur = value;									\
+		while (cur) {									\
+			if (cur->type != type) {						\
+				ret = ERR_INVALID_TYPE;						\
+				break;								\
+			}									\
+			line;									\
+			cur = cur->next;							\
+		}										\
+		mach->ret = sdrl_make_value(mach->heap, type, (sdrl_data_t) result, 0, NULL);	\
 	}
 
 static int prim_set_list(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
@@ -66,37 +67,7 @@ int load_prims(struct sdrl_machine *mach)
 	sdrl_bind_function_m(mach, builtin, "not", prim_not);
 
 	sdrl_bind_function_m(mach, builtin, "print", prim_print);
-/*
-	sdrl_add_binding(mach->env, "code", sdrl_make_value(form, (sdrl_data_t) (void *) prim_code, 0, NULL));
-	sdrl_add_binding(mach->env, "set", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_set, 0, NULL));
-	sdrl_add_binding(mach->env, "if", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_if, 0, NULL));
-	sdrl_add_binding(mach->env, "list", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_list, 0, NULL));
-	sdrl_add_binding(mach->env, "unlist", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_unlist, 0, NULL));
 
-	sdrl_add_binding(mach->env, "$", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_resolve, 0, NULL));
-	sdrl_add_binding(mach->env, "@", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_array, 0, NULL));
-	sdrl_add_binding(mach->env, "head", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_head, 0, NULL));
-	sdrl_add_binding(mach->env, "tail", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_tail, 0, NULL));
-	sdrl_add_binding(mach->env, "null", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_null, 0, NULL));
-
-	sdrl_add_binding(mach->env, "+", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_add, 0, NULL));
-	sdrl_add_binding(mach->env, "-", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_subtract, 0, NULL));
-	sdrl_add_binding(mach->env, "*", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_multiply, 0, NULL));
-	sdrl_add_binding(mach->env, "/", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_divide, 0, NULL));
-
-	sdrl_add_binding(mach->env, "=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_equals, 0, NULL));
-	sdrl_add_binding(mach->env, "!=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_not_equals, 0, NULL));
-	sdrl_add_binding(mach->env, "<", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_less_than, 0, NULL));
-	sdrl_add_binding(mach->env, ">", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_greater_than, 0, NULL));
-	sdrl_add_binding(mach->env, "<=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_less_than_equals, 0, NULL));
-	sdrl_add_binding(mach->env, ">=", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_greater_than_equals, 0, NULL));
-
-	sdrl_add_binding(mach->env, "and", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_and, 0, NULL));
-	sdrl_add_binding(mach->env, "or", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_or, 0, NULL));
-	sdrl_add_binding(mach->env, "not", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_not, 0, NULL));
-
-	sdrl_add_binding(mach->env, "print", sdrl_make_value(builtin, (sdrl_data_t) (void *) prim_print, 0, NULL));
-*/
 	return(0);
 }
 
@@ -106,7 +77,7 @@ int load_prims(struct sdrl_machine *mach)
  */
 int prim_code(struct sdrl_machine *mach, struct sdrl_expr *expr)
 {
-	mach->ret = sdrl_make_value(sdrl_find_binding(mach->type_env, "expr"), (sdrl_data_t) (void *) expr, 0, NULL);
+	mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "expr"), (sdrl_data_t) (void *) expr, 0, NULL);
 	return(0);
 }
 
@@ -130,12 +101,12 @@ int prim_set(struct sdrl_machine *mach, struct sdrl_value *value)
 			ret = prim_set_list(mach, name->data.ptr, ((i == 2) && (value->type == list)) ? (struct sdrl_value *) value->data.ptr : value); 
 		else
 			ret = prim_set_list(mach, name, value); 
-		sdrl_destroy_value(name);
+		sdrl_destroy_value(mach->heap, name);
 	}
 	if (ret)
-		sdrl_destroy_value(value);
+		sdrl_destroy_value(mach->heap, value);
 	else
-		mach->ret = sdrl_duplicate_value(value);
+		mach->ret = sdrl_duplicate_value(mach->heap, value);
 	return(ret);
 }
 
@@ -146,16 +117,24 @@ int prim_set(struct sdrl_machine *mach, struct sdrl_value *value)
 int prim_if(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	int ret = 0;
+	struct sdrl_value *block = NULL;
 
 	if (sdrl_value_count(value) < 2)
 		ret = ERR_INVALID_PARAMS;
-	else if (sdrl_value_is_true_m(value)) {
-		if (value->next->next)
-			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, sdrl_make_value(value->next->next->type, value->next->next->data, value->next->next->size, NULL)));
+	else if (!sdrl_value_is_false_m(value)) {
+		block = value->next;
+		value->next = value->next->next;
+		block->next = NULL;
 	}
-	else
-		sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, sdrl_make_value(value->next->type, value->next->data, value->next->size, NULL)));
-	sdrl_destroy_value(value);
+	else if (value->next->next) {
+		block = value->next->next;
+		value->next->next = value->next->next->next;
+		block->next = NULL;
+	}
+
+	if (block)
+		sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, block, mach->env));
+	sdrl_destroy_value(mach->heap, value);
 	mach->ret = NULL;
 	return(ret);
 }
@@ -166,7 +145,7 @@ int prim_if(struct sdrl_machine *mach, struct sdrl_value *value)
  */
 int prim_list(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	mach->ret = sdrl_make_value(sdrl_find_binding(mach->type_env, "list"), (sdrl_data_t) (void *) value, 0, NULL);
+	mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "list"), (sdrl_data_t) (void *) value, 0, NULL);
 	return(0);
 }
 
@@ -184,7 +163,7 @@ int prim_unlist(struct sdrl_machine *mach, struct sdrl_value *value)
 		mach->ret = (struct sdrl_value *) value->data.ptr;
 		value->data.ptr = NULL;
 	}
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -203,8 +182,8 @@ int prim_resolve(struct sdrl_machine *mach, struct sdrl_value *value)
 	else if (!(bind = sdrl_find_binding(mach->env, value->data.str)))
 		ret = ERR_NOT_FOUND;
 	else
-		mach->ret = sdrl_duplicate_value(bind);
-	sdrl_destroy_value(value);
+		mach->ret = sdrl_duplicate_value(mach->heap, bind);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -226,7 +205,7 @@ int prim_head(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	if (value)
 		mach->ret = sdrl_shift_value(&value);
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(0);
 }
 
@@ -241,7 +220,7 @@ int prim_tail(struct sdrl_machine *mach, struct sdrl_value *value)
 	if (value)
 		tmp = sdrl_shift_value(&value);
 	mach->ret = value;
-	sdrl_destroy_value(tmp);
+	sdrl_destroy_value(mach->heap, tmp);
 	return(0);
 }
 
@@ -252,10 +231,10 @@ int prim_tail(struct sdrl_machine *mach, struct sdrl_value *value)
 int prim_null(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	if (!value)
-		mach->ret = sdrl_make_value(sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) (number_t) -1, 0, NULL);
+		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) (number_t) -1, 0, NULL);
 	else
-		mach->ret = sdrl_make_value(sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) (number_t) 0, 0, NULL);
-	sdrl_destroy_value(value);
+		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) (number_t) 0, 0, NULL);
+	sdrl_destroy_value(mach->heap, value);
 	return(0);
 }
 
@@ -272,7 +251,7 @@ int prim_add(struct sdrl_machine *mach, struct sdrl_value *value)
 	struct sdrl_type *type;
 
 	traverse_value_m("number", value, 0, result += cur->data.number);
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -287,9 +266,10 @@ int prim_subtract(struct sdrl_machine *mach, struct sdrl_value *value)
 	struct sdrl_value *cur;
 	struct sdrl_type *type;
 
-	if (value)
+	if (value) {
 		traverse_value_m("number", value->next, value->data.number, result -= cur->data.number);
-	sdrl_destroy_value(value);
+	}
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -305,7 +285,7 @@ int prim_multiply(struct sdrl_machine *mach, struct sdrl_value *value)
 	struct sdrl_type *type;
 
 	traverse_value_m("number", value, 1, result *= cur->data.number);
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -320,9 +300,10 @@ int prim_divide(struct sdrl_machine *mach, struct sdrl_value *value)
 	struct sdrl_value *cur;
 	struct sdrl_type *type;
 
-	if (value)
+	if (value) {
 		traverse_value_m("number", value->next, value->data.number, result /= cur->data.number);
-	sdrl_destroy_value(value);
+	}
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -343,7 +324,7 @@ int prim_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 			break;
 		});
 
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -364,7 +345,7 @@ int prim_not_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 			break;
 		});
 
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -388,7 +369,7 @@ int prim_less_than(struct sdrl_machine *mach, struct sdrl_value *value)
 		else
 			last = cur;);
 
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -412,7 +393,7 @@ int prim_greater_than(struct sdrl_machine *mach, struct sdrl_value *value)
 		else
 			last = cur;);
 
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -436,7 +417,7 @@ int prim_less_than_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 		else
 			last = cur;);
 
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -460,7 +441,7 @@ int prim_greater_than_equals(struct sdrl_machine *mach, struct sdrl_value *value
 		else
 			last = cur;);
 
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -481,7 +462,7 @@ int prim_and(struct sdrl_machine *mach, struct sdrl_value *value)
 			break;
 		});
 
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -502,7 +483,7 @@ int prim_or(struct sdrl_machine *mach, struct sdrl_value *value)
 			break;
 		});
 
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -524,9 +505,9 @@ int prim_not(struct sdrl_machine *mach, struct sdrl_value *value)
 		ret = ERR_INVALID_TYPE;
 	else {
 		result = (value->data.number == 0);
-		mach->ret = sdrl_make_value(type, (sdrl_data_t) result, 0, NULL);
+		mach->ret = sdrl_make_value(mach->heap, type, (sdrl_data_t) result, 0, NULL);
 	}
-	sdrl_destroy_value(value);
+	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 
@@ -585,7 +566,7 @@ static int prim_set_list(struct sdrl_machine *mach, struct sdrl_value *names, st
 			cur_value = tmp;
 		}
 		else
-			value = sdrl_make_value(string, (sdrl_data_t) "", 0, NULL);
+			value = sdrl_make_value(mach->heap, string, (sdrl_data_t) "", 0, NULL);
 		if (sdrl_replace_binding(mach->env, cur_name->data.str, value)) {
 			if (sdrl_add_binding(mach->env, cur_name->data.str, value))
 				return(ERR_OUT_OF_MEMORY);
