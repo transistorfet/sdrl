@@ -12,10 +12,10 @@
 #include "input.h"
 #include "globals.h"
 
-struct sdrl_expr *sdrl_parse_file(char *);
-struct sdrl_expr *sdrl_parse_string(char *, int);
-struct sdrl_expr *sdrl_parse_input(struct sdrl_input *);
-struct sdrl_expr *sdrl_parse_expr(struct sdrl_input *);
+typedef struct sdrl_expr *(*sdrl_parser_t)(struct sdrl_input *, void *);
+
+struct sdrl_expr *sdrl_parse_file(char *, sdrl_parser_t, void *);
+struct sdrl_expr *sdrl_parse_string(char *, int, sdrl_parser_t, void *);
 
 #endif
 
