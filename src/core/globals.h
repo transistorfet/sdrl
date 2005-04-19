@@ -42,7 +42,7 @@ typedef double number_t;
 
 /** Decrements the count of a reference for values and so on and calls destroy if the count is 0 **/
 #define sdrl_destroy_reference_m(datum, func) \
-	(((short) datum->refs == 1) ? func(datum) : --datum->refs)
+	((datum->refs == 1) ? func(datum) : --datum->refs)
 
 struct sdrl_heap;
 struct sdrl_machine;
