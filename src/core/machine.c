@@ -19,43 +19,34 @@
 #include "globals.h"
 
 
-static int sdrl_evaluate_expr_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
-static int sdrl_evaluate_form_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_expr *);
-static int sdrl_evaluate_builtin_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
-
 /**
  * Create a machine for executing code
  */
 struct sdrl_machine *sdrl_create_machine(void)
 {
+	int ret = 0;
 	struct sdrl_machine *mach;
 
 	if (!(mach = (struct sdrl_machine *) malloc(sizeof(struct sdrl_machine))))
 		return(NULL);
 	mach->ret = NULL;
-	mach->heap = sdrl_create_heap(0, 0);
-	mach->cont = sdrl_create_continuation();
-
-	if (!mach->heap || !mach->cont) {
+	if (!(mach->heap = sdrl_create_heap(0, 0))) {
 		sdrl_destroy_machine(mach);
 		return(NULL);
 	}
 
+	mach->cont = sdrl_create_continuation();
 	mach->type_env = sdrl_create_environment(SDRL_BBF_CONSTANT, mach->heap, (sdrl_destroy_t) sdrl_destroy_type);
 	mach->global = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value);
 	mach->env = mach->global;
 
-	if (!mach->type_env || !mach->global) {
+	if (!mach->cont || !mach->type_env || !mach->global) {
 		sdrl_destroy_machine(mach);
 		return(NULL);
 	}
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_type(mach->heap, 0, SDRL_BT_NUMBER, NULL, NULL, NULL));
 	sdrl_add_binding(mach->type_env, "string", sdrl_make_type(mach->heap, SDRL_VARIABLE_SIZE, SDRL_BT_STRING, NULL, NULL, NULL));
-	sdrl_add_binding(mach->type_env, "list", sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, NULL, (sdrl_duplicate_t) sdrl_duplicate_value, (sdrl_destroy_t) sdrl_destroy_value));
-	sdrl_add_binding(mach->type_env, "expr", sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_expr_type, NULL, NULL));
-	sdrl_add_binding(mach->type_env, "form", sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER | SDRL_TBF_PASS_EXPRS, (sdrl_evaluate_t) sdrl_evaluate_form_type, NULL, NULL));
-	sdrl_add_binding(mach->type_env, "builtin", sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, (sdrl_evaluate_t) sdrl_evaluate_builtin_type, NULL, NULL));
 
 	return(mach);
 }
@@ -214,42 +205,5 @@ int sdrl_merge_return(struct sdrl_machine *mach, struct sdrl_value *ret)
 	return(0);
 }
 
-
-/*** Local Functions ***/
-
-/**
- * Evaluate function for the cmdptr type.
- */
-static int sdrl_evaluate_expr_type(struct sdrl_machine *mach, struct sdrl_value *expr, struct sdrl_value *params)
-{
-	struct sdrl_environment *env;
-
-	if (!(env = sdrl_extend_environment(mach->env)))
-		return(ERR_OUT_OF_MEMORY);
-	sdrl_add_binding(env, "_", params);
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr->data.ptr, env));
-	sdrl_destroy_reference_m(env, sdrl_retract_environment);
-	return(0);
-}
-
-/**
- * Evaluate function for the form type.
- */
-static int sdrl_evaluate_form_type(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_expr *params)
-{
-	sdrl_destroy_value(mach->heap, mach->ret);
-	mach->ret = NULL;
-	return(((int (*)(struct sdrl_machine *, struct sdrl_expr *)) func->data.ptr)(mach, params));
-}
-
-/**
- * Evaluate function for the builtin type.
- */
-static int sdrl_evaluate_builtin_type(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_value *args)
-{
-	sdrl_destroy_value(mach->heap, mach->ret);
-	mach->ret = NULL;
-	return(((int (*)(struct sdrl_machine *, struct sdrl_value *)) func->data.ptr)(mach, args));
-}
 
 
