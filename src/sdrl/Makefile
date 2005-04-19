@@ -1,31 +1,11 @@
 
 
-SDRL = ..
-SDRL_CORE = $(SDRL)/core/libsdrl.a
-SDRL_LIBS = $(SDRL)/lib/prims.o
-OBJ = main.o $(SDRL_CORE) $(SDRL_LIBS)
+SDRL = ../..
 
-CC = gcc
-CFLAGS = -g -I$(SDRL)/core
-LINK = gcc
+TARGET = sdrl
+OBJS = main.o $(SDRL)/lib/libsdrl.a $(SDRL)/lib/libbase.a
 
-NAME = sdrl
+CFLAGS = -g -I$(SDRL)/src/core -I$(SDRL)/include
 
-$(NAME): $(OBJ)
-	$(LINK) -o $(NAME) $(OBJ)
-
-%.o: %.c
-	$(CC) $(CFLAGS) -c -o $@ $<
-
-$(SDRL_CORE):
-	cd $(SDRL)/core;make
-
-tidy:
-	rm $(SDRL_CORE)
-
-clean:
-	rm *.o
-
-del:
-	del *.o
+include $(SDRL)/builder/builder.mk
 
