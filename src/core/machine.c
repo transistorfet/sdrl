@@ -145,6 +145,11 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 				return(0);
 			}
 		}
+		else if (expr->data.expr->type == SDRL_ET_CALL) {
+			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, NULL, mach->env));
+			sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, expr->data.expr, mach->env));
+			return(0);
+		}
 		else
 			return(ERR_INVALID_FUNCTION);
 	}
@@ -160,6 +165,12 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_value *args)
 {
 	int ret = 0;
+
+	if (!func && args) {
+		func = args;
+		args = args->next;
+		func->next = NULL;
+	}
 
 	if (!func)
 		ret = ERR_NOT_FOUND;
