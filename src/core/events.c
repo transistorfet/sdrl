@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "events.h"
-#include "globals.h"
+#include <sdrl/core/events.h>
+#include <sdrl/globals.h>
 
 
 /**

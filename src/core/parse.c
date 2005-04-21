@@ -6,10 +6,10 @@
 
 #include <stdlib.h>
 
-#include "expr.h"
-#include "input.h"
-#include "parse.h"
-#include "globals.h"
+#include <sdrl/core/expr.h>
+#include <sdrl/core/input.h>
+#include <sdrl/core/parse.h>
+#include <sdrl/globals.h>
 
 
 /**

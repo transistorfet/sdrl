@@ -5,7 +5,7 @@
  */
 
 #include <stdlib.h>
-#include "heap.h"
+#include <sdrl/core/heap.h>
 
 
 #define MAX_LIST	1000

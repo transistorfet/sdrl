@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "expr.h"
-#include "globals.h"
+#include <sdrl/core/expr.h>
+#include <sdrl/globals.h>
 
 
 /**

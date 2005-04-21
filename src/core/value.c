@@ -8,10 +8,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "value.h"
-#include "type.h"
-#include "heap.h"
-#include "globals.h"
+#include <sdrl/core/value.h>
+#include <sdrl/core/type.h>
+#include <sdrl/core/heap.h>
+#include <sdrl/globals.h>
 
 
 /**

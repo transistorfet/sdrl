@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bindings.h"
-#include "heap.h"
-#include "globals.h"
+#include <sdrl/core/bindings.h>
+#include <sdrl/core/heap.h>
+#include <sdrl/globals.h>
 
 #define bindings_destroy_data_m(env, data)				\
 	if (env->destroy) {						\
