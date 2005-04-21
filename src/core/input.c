@@ -9,8 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "input.h"
-#include "globals.h"
+#include <sdrl/core/input.h>
+#include <sdrl/globals.h>
 
 #define INPUT_MAX_BUFFER		1024
 
@@ -141,8 +141,8 @@ char *sdrl_read_word(struct sdrl_input *input, sdrl_char_test_t is_word_char)
 	char ch;
 	int i = 0;
 
-	while ((i < INPUT_MAX_BUFFER) && (ch = sdrl_peek_input(input)) && is_word_char(ch))
-		input_buffer[i++] = sdrl_get_input(input);
+	while ((i < INPUT_MAX_BUFFER) && (ch = sdrl_peek_char(input)) && is_word_char(ch))
+		input_buffer[i++] = sdrl_get_char(input);
 	input_buffer[i] = '\0';
 	return(input_buffer);
 }
@@ -189,6 +189,8 @@ char sdrl_get_char(struct sdrl_input *input)
 		ch = input->peek;
 		input->peek = 0;
 	}
+	else if (!input->stack)
+		return(0);
 	else if (input->stack->type == SDRL_IT_STRING)
 		ch = input->stack->ptr.str[input->stack->i++];
 	else if ((input->stack->type == SDRL_IT_FILE) && (!feof(input->stack->ptr.fptr))) {
