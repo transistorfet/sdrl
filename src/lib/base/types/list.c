@@ -5,7 +5,7 @@
  * Description:		List Type
  */
 
-#include <sdrl.h>
+#include <sdrl/sdrl.h>
 
 
 int sdrl_base_load_list_type(struct sdrl_machine *mach)

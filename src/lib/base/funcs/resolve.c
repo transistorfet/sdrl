@@ -5,7 +5,7 @@
  * Description:		Binding Resolution Expression
  */
 
-#include <sdrl.h>
+#include <sdrl/sdrl.h>
 
 /**
  * $(<name>)

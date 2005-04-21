@@ -5,7 +5,7 @@
  * Description:		Builtin (C Function) Type
  */
 
-#include <sdrl.h>
+#include <sdrl/sdrl.h>
 
 static int sdrl_evaluate_builtin_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
 

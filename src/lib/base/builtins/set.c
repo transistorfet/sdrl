@@ -5,7 +5,7 @@
  * Description:		Binding Assignment Expression
  */
 
-#include <sdrl.h>
+#include <sdrl/sdrl.h>
 
 static int sdrl_base_set_list(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
 

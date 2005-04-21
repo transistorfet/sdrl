@@ -5,7 +5,7 @@
  * Description:		Form (C Form) Type
  */
 
-#include <sdrl.h>
+#include <sdrl/sdrl.h>
 
 static int sdrl_evaluate_form_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_expr *);
 

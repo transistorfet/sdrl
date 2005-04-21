@@ -5,7 +5,7 @@
  * Description:		Equals Test Expression
  */
 
-#include <sdrl.h>
+#include <sdrl/sdrl.h>
 #include "common/traverse.h"
 
 

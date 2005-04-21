@@ -5,8 +5,8 @@
  * Description:		Base Library Loader
  */
 
-#include <sdrl.h>
-#include <lib/base.h>
+#include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Load all of the forms, builtins and types of the base library into the given machine.

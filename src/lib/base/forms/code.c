@@ -5,7 +5,7 @@
  * Description:		A form that returns its expression parameter as an expression value
  */
 
-#include <sdrl.h>
+#include <sdrl/sdrl.h>
 
 /**
  * code(<expr>, ...)

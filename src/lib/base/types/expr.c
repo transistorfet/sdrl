@@ -5,7 +5,7 @@
  * Description:		Expression (Code Function) Type
  */
 
-#include <sdrl.h>
+#include <sdrl/sdrl.h>
 
 static int sdrl_evaluate_expr_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
 

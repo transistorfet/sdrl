@@ -4,8 +4,8 @@
  * Description:	SDRL Parser
  */
 
-#include <sdrl.h>
-#include <lib/base.h>
+#include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 
 static int parser_is_identifier(char);
@@ -64,6 +64,9 @@ struct sdrl_expr *sdrl_base_parse_expr(struct sdrl_input *input, void *param)
 
 	if (sdrl_peek_input(input) == ',')
 		sdrl_get_char(input);
+	while (sdrl_is_space(sdrl_peek_char(input)))
+		sdrl_get_char(input);
+
 	return(expr);
 }
 
@@ -74,7 +77,7 @@ struct sdrl_expr *sdrl_base_parse_expr(struct sdrl_input *input, void *param)
  */
 static int parser_is_identifier(char ch)
 {
-	if ((ch != '(') && (ch != ')') && (ch != ','))
+	if ((ch != '(') && (ch != ')') && (ch != ',') && !sdrl_is_space(ch))
 		return(1);
 	return(0);
 }
