@@ -8,15 +8,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "machine.h"
-#include "heap.h"
-#include "expr.h"
-#include "type.h"
-#include "parse.h"
-#include "value.h"
-#include "events.h"
-#include "bindings.h"
-#include "globals.h"
+#include <sdrl/core/machine.h>
+#include <sdrl/core/heap.h>
+#include <sdrl/core/expr.h>
+#include <sdrl/core/type.h>
+#include <sdrl/core/parse.h>
+#include <sdrl/core/value.h>
+#include <sdrl/core/events.h>
+#include <sdrl/core/bindings.h>
+#include <sdrl/globals.h>
 
 
 /**
@@ -140,7 +140,7 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 			else if (func->type->evaluate && sdrl_type_pass_exprs_m(func->type))
 				return(func->type->evaluate(mach, func, expr->data.expr->next));
 			else {
-				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, func, mach->env));
+				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, sdrl_make_reference_m(func), mach->env));
 				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, expr->data.expr->next, mach->env));
 				return(0);
 			}
@@ -159,24 +159,29 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
  */
 int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_value *args)
 {
+	int ret = 0;
+
 	if (!func)
-		return(ERR_NOT_FOUND);
+		ret = ERR_NOT_FOUND;
 	else if (func->type->evaluate) {
 		if (sdrl_type_pass_exprs_m(func->type))
-			return(ERR_INVALID_PARAMS);
+			ret = ERR_INVALID_PARAMS;
 		else {
-			mach->ret = args;
-			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, func, mach->env));
-//			func->type->evaluate(mach, func, args);
+//			mach->ret = args;
+//			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, sdrl_make_reference_m(func), mach->env));
+			func->type->evaluate(mach, func, args);
 		}
 	}
 	else {
 		if (args)
-			return(ERR_INVALID_PARAMS);
-//		mach->ret = sdrl_make_reference_m(func);
-		mach->ret = sdrl_duplicate_value(mach->heap, func);
+			ret = ERR_INVALID_PARAMS;
+		else {
+	//		mach->ret = sdrl_make_reference_m(func);
+			mach->ret = sdrl_duplicate_value(mach->heap, func);
+		}
 	}
-	return(0);
+	sdrl_destroy_value(mach->heap, func);
+	return(ret);
 }
 
 /**
