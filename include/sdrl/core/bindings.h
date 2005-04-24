@@ -15,6 +15,7 @@
 #define SDRL_BBF_NO_REPLACE		0x0002			/** No bindings can be replaced */
 #define SDRL_BBF_NO_REMOVE		0x0004			/** No bindings can be removed */
 #define SDRL_BBF_CONSTANT		0x0006			/** No bindings can be replaced or removed */
+#define SDRL_BBF_CASE_INSENSITIVE	0x0008			/** Ignore case when looking up bindings */
 
 struct sdrl_binding {
 	char *name;

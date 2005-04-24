@@ -20,7 +20,14 @@
 			((int (*)(void *)) env->destroy)(data);		\
 	}
 
+#define bindings_compare(env, str1, str2) \
+	( (env->bitflags & SDRL_BBF_CASE_INSENSITIVE) ? !sdrl_stricmp(str1, str2) : !strcmp(str1, str2) )
+
+#define lower(ch) \
+	( (ch >= 0x41 && ch <= 0x5a) ? ch + 0x20 : ch )
+
 static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *, char *, int);
+static int sdrl_stricmp(char *, char *);
 
 /**
  * Allocate an environment for binding values to names.
@@ -156,7 +163,7 @@ int sdrl_remove_binding(struct sdrl_environment *env, char *name)
 	prev = NULL;
 	cur = env->head;
 	while (cur) {
-		if (!strcmp(name, cur->name)) {
+		if (bindings_compare(env, name, cur->name)) {
 			if (prev)
 				prev->next = cur->next;
 			else
@@ -200,7 +207,7 @@ static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, char
 	while (curenv) {
 		cur = curenv->head;
 		while (cur) {
-			if (!strcmp(name, cur->name))
+			if (bindings_compare(curenv, name, cur->name))
 				return(cur);
 			cur = cur->next;
 		}
@@ -210,5 +217,18 @@ static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, char
 	}
 	return(NULL);
 }
+
+static int sdrl_stricmp(char *str1, char *str2)
+{
+	int i = 0;
+
+	while ((str1[i] != '\0') && (str2[i] != '\0')) {
+		if (lower(str1[i]) != lower(str2[i]))
+			return(1);
+		i++;
+	}
+	return(0);
+}
+
 
 
