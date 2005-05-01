@@ -6,8 +6,8 @@
 
 #include <stdio.h>
 
-#include <sdrl.h>
-#include <lib/base.h>
+#include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 char *infile = NULL;
 
@@ -32,12 +32,14 @@ main(int argc, char **argv)
 		return(-1);
 	}
 
-	if (!(code = sdrl_parse_file(infile, (sdrl_parser_t) sdrl_base_parse_input, NULL))) {
+	if (!(code = sdrl_base_parse_file(infile, (sdrl_parser_t) sdrl_base_parse_lispy_input, NULL))) {
 		printf("Cannot parse file, %s\n", infile);
 		sdrl_destroy_machine(mach);
 		return(-1);
 	}
 
+	sdrl_base_display_expr(code);
+sdrl_add_binding(mach->env, "*globals*", sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "env"), (sdrl_data_t) (void *) mach->env, 0, NULL));
 	print_result(mach, sdrl_evaluate(mach, code));
 
 	sdrl_destroy_machine(mach);
@@ -81,37 +83,43 @@ int print_result(struct sdrl_machine *mach, int error)
 	}
 
 	printf("\n");
-	switch (error) {
-		case 0:
-			printf("Exited Normally\n");
-			return(0);
-		case ERR_END_OF_INPUT:
-			printf("End Of Input Reached\n");
-			break;
-		case ERR_SYNTAX_ERROR:
-			printf("Syntax Error\n");
-			break;
-		case ERR_INVALID_PARAMS:
-			printf("Invalid Parameters\n");
-			break;
-		case ERR_INVALID_TYPE:
-			printf("Invalid Type\n");
-			break;
-		case ERR_OUT_OF_MEMORY:
-			printf("Out Of Memory\n");
-			break;
-		case ERR_OUT_OF_BOUNDS:
-			printf("Out Of Bounds\n");
-			break;
-		case ERR_NOT_FOUND:
-			printf("Binding Not Found\n");
-			break;
-		case ERR_PARAMS_ERROR:
-			printf("Error Evaluating Parameters\n");
-			break;
-		default:
-			printf("Error Number: %d\n", error);
-			break;
+	if (mach->error) {
+		//printf("Error %d,%d: %s\n", sdrl_get_line_number_m(mach->error->line), sdrl_get_column_number_m(mach->error->line), mach->error->msg);
+		sdrl_base_display_error(mach->error);
+	}
+	else {
+		switch (error) {
+			case 0:
+				printf("Exited Normally\n");
+				return(0);
+			case ERR_END_OF_INPUT:
+				printf("End Of Input Reached\n");
+				break;
+			case ERR_SYNTAX_ERROR:
+				printf("Syntax Error\n");
+				break;
+			case ERR_INVALID_PARAMS:
+				printf("Invalid Parameters\n");
+				break;
+			case ERR_INVALID_TYPE:
+				printf("Invalid Type\n");
+				break;
+			case ERR_OUT_OF_MEMORY:
+				printf("Out Of Memory\n");
+				break;
+			case ERR_OUT_OF_BOUNDS:
+				printf("Out Of Bounds\n");
+				break;
+			case ERR_NOT_FOUND:
+				printf("Binding Not Found\n");
+				break;
+			case ERR_PARAMS_ERROR:
+				printf("Error Evaluating Parameters\n");
+				break;
+			default:
+				printf("Error Number: %d\n", error);
+				break;
+		}
 	}
 	return(-1);
 }

@@ -7,10 +7,12 @@ OBJS =	common/load.o		\
 	types/expr.o		\
 	types/form.o		\
 	types/list.o		\
+	types/env.o		\
 	forms/code.o		\
 	builtins/add.o		\
 	builtins/and.o		\
 	builtins/array.o	\
+	builtins/defenv.o	\
 	builtins/divide.o	\
 	builtins/equals.o	\
 	builtins/gthan.o	\
@@ -19,6 +21,7 @@ OBJS =	common/load.o		\
 	builtins/if.o		\
 	builtins/lethan.o	\
 	builtins/list.o		\
+	builtins/lookup.o	\
 	builtins/lthan.o	\
 	builtins/multiply.o	\
 	builtins/nequals.o	\
@@ -33,7 +36,10 @@ OBJS =	common/load.o		\
 	builtins/unlist.o	\
 	parsers/lispy.o		\
 	parsers/parser.o	\
-	utils/dispexpr.o
+	utils/disperr.o		\
+	utils/dispexpr.o	\
+	utils/parsef.o		\
+	utils/parses.o
 
 CFLAGS = -g -I$(SDRL)/include -I.
 ARFLAGS = rc

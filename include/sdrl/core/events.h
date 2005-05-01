@@ -39,6 +39,7 @@ struct sdrl_event *sdrl_make_event(int, sdrl_event_t, void *, struct sdrl_enviro
 int sdrl_destroy_event(struct sdrl_event *);
 int sdrl_push_event(struct sdrl_continuation *, struct sdrl_event *);
 struct sdrl_event *sdrl_pop_event(struct sdrl_continuation *);
+struct sdrl_event *sdrl_peek_event(struct sdrl_continuation *);
 
 int sdrl_count_events(struct sdrl_continuation *);
 

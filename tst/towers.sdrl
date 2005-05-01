@@ -14,6 +14,6 @@ set(move-tower, code(
 
 set(move-disc, code(
 	set(list(from, to), $(_))
-	print("Moved disc from ", $(from), " to ", $(to))))
+	print("Moved disc from ", $(from), " to ", $(to), "\n")))
 
 

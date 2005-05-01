@@ -15,10 +15,11 @@ int sdrl_load_base(struct sdrl_machine *mach)
 {
 	struct sdrl_type *form, *builtin;
 
-	sdrl_base_load_expr_type(mach);
-	sdrl_base_load_form_type(mach);
-	sdrl_base_load_builtin_type(mach);
-	sdrl_base_load_list_type(mach);
+	sdrl_base_load_expr_type(mach, "expr");
+	sdrl_base_load_form_type(mach, "form");
+	sdrl_base_load_builtin_type(mach, "builtin");
+	sdrl_base_load_list_type(mach, "list");
+	sdrl_base_load_env_type(mach, "env");
 
 	if (!(form = sdrl_find_binding(mach->type_env, "form")))
 		return(-1);
@@ -30,6 +31,7 @@ int sdrl_load_base(struct sdrl_machine *mach)
 	sdrl_bind_function_m(mach, builtin, "if", sdrl_base_if);
 
 	sdrl_bind_function_m(mach, builtin, "$", sdrl_base_resolve);
+	sdrl_bind_function_m(mach, builtin, "%", sdrl_base_lookup);
 	sdrl_bind_function_m(mach, builtin, "@", sdrl_base_array);
 	sdrl_bind_function_m(mach, builtin, "list", sdrl_base_list);
 	sdrl_bind_function_m(mach, builtin, "unlist", sdrl_base_unlist);
@@ -52,6 +54,8 @@ int sdrl_load_base(struct sdrl_machine *mach)
 	sdrl_bind_function_m(mach, builtin, "and", sdrl_base_and);
 	sdrl_bind_function_m(mach, builtin, "or", sdrl_base_or);
 	sdrl_bind_function_m(mach, builtin, "not", sdrl_base_not);
+
+	sdrl_bind_function_m(mach, builtin, "defenv", sdrl_base_defenv);
 
 	sdrl_bind_function_m(mach, builtin, "print", sdrl_base_print);
 

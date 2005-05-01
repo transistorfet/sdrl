@@ -26,12 +26,13 @@
 struct sdrl_type {
 	int size;
 	int bitflags;
+	sdrl_create_t create;
 	sdrl_evaluate_t evaluate;
 	sdrl_duplicate_t duplicate;
 	sdrl_destroy_t destroy;
 };
 
-struct sdrl_type *sdrl_make_type(struct sdrl_heap *, int, int, sdrl_evaluate_t, sdrl_duplicate_t, sdrl_destroy_t);
+struct sdrl_type *sdrl_make_type(struct sdrl_heap *, int, int, sdrl_create_t, sdrl_evaluate_t, sdrl_duplicate_t, sdrl_destroy_t);
 int sdrl_destroy_type(struct sdrl_heap *, struct sdrl_type *);
 
 #endif
