@@ -1,19 +1,26 @@
 
-	* can we simplify the semantics of set?
-	* add line number/char tracking to expr/parser
-	* add binary file support to input
-	* add duplicate function to expr (?)
+	* machine value type with a pointer to a machine structure (for calling a function in another machine)
+	* a function to automatically check args based on min/max args allowed?
+	* function to check types (in libbase??)
+	* function to set a binding (in libbase?)
+
+	* make a heap implementation
 	* make parser catch errors during a parse
-	* Should calling a value ( =(foo, 5), foo() ) allow params like an index or something?
+
+	* add environment type?
+	* better way to initialize libraries?
+	* a function to automagically register bindings
+
+	* make bindings use a binary tree?
 	* what about expr type in relation to destroy() (creating an expr value that is not a function or mach->code)
 	* add constant values (modifier to value or bitflags in type?)
-	* check to make sure mach->ret values are not being destroyed improperly, etc
-	* make input more robust
+	* can we simplify the semantics of set?
 
 	* add garbage collection
-	* make execution use continuation
+	* allow multiple event stacks in a continuation
 	* make the parser parse syntactic sugary goodness
 	* make the parser modifiable by the code itself
 	* add cross-cutting language constructs (aspects?)
+	* can you do aspects using the continuation stack or should you do it by modifying the expr tree
 
 

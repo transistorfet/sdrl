@@ -1,5 +1,27 @@
 
-current:	* Converted all function names to sdrl_*
+current:	* Changed bindings to store void * instead of specific struct pointers
+		* Changed bindings function names
+		* Added event.c continuation manager
+		* Converted code to use continuations instead of recursion
+		* Added heap.c heap memory manager
+		* Modified bindings to pass sdrl_heap to destroy function
+		* Modified value.c and type.c to allocate from a heap (passed during calls)
+		* Added sdrl_duplicate_expr function to expr.c
+		* Added line number information to expr
+		* Added reference counting support
+		* Moved parse functions to read in various strings/numbers to input.c
+		* Moved the parsing core to lib/ and enabled the parser to be specified by a parameter
+		* Added reference count to environments
+		* Added sdrl_retract_environment to free only the topmost environment
+		* Put a reference to the environment in sdrl_event (so no more environment popping)
+		* Broke prims.c into a proper library (libbase)
+		* Converted Makefiles to used Autobuilder
+		* Fixed memory leaks caused by if (now values passed to sdrl_call_value are destroyed)
+		* Moved includes to include/sdrl
+		* Added error reporting module
+		* Added environment type as well as lookup (%) function for resolving values in an environment
+
+v0.2:		* Converted all function names to sdrl_*
 		* Converted code to compile file into an AST before executing
 		* Added expr.c for AST functions
 		* Added type.c for advanced user-definable types (all types must be defined using it)
