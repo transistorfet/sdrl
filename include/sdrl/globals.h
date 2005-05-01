@@ -6,21 +6,21 @@
 #ifndef _SDRL_GLOBALS_H
 #define _SDRL_GLOBALS_H
 
-#define ERR_OUT_OF_MEMORY	-10
-#define ERR_NOT_FOUND		-11
-#define ERR_IN_USE		-12
-#define ERR_END_OF_INPUT	-13
-#define ERR_OUT_OF_BOUNDS	-14
+#define ERR_OUT_OF_MEMORY	-2
+#define ERR_NOT_FOUND		-3
+#define ERR_IN_USE		-4
+#define ERR_END_OF_INPUT	-5
+#define ERR_OUT_OF_BOUNDS	-6
 
-#define ERR_PARSE_ERROR		-20
-#define ERR_SYNTAX_ERROR	-21
-#define ERR_PARAMS_ERROR	-22
+#define ERR_PARSE_ERROR		-8
+#define ERR_SYNTAX_ERROR	-9
+#define ERR_PARAMS_ERROR	-10
 
-#define ERR_INVALID_PARAMS	-30
-#define ERR_INVALID_AST_TYPE	-31
-#define ERR_INVALID_TYPE	-32
-#define ERR_INVALID_NAME	-33
-#define ERR_INVALID_FUNCTION	-34
+#define ERR_INVALID_PARAMS	-12
+#define ERR_INVALID_AST_TYPE	-13
+#define ERR_INVALID_TYPE	-14
+#define ERR_INVALID_NAME	-15
+#define ERR_INVALID_FUNCTION	-16
 
 #undef  NULL
 #define NULL			0
@@ -28,9 +28,9 @@
 #define sdrl_make_linenumber_m(line, col) \
 	(line << 16 | col)
 #define sdrl_get_line_number_m(linecol) \
-	(line >> 16)
+	(linecol >> 16)
 #define sdrl_get_column_number_m(linecol) \
-	(col & 0xffff)
+	(linecol & 0xffff)
 
 typedef unsigned int linenumber_t;
 
@@ -45,8 +45,10 @@ typedef double number_t;
 	((datum->refs == 1) ? func(datum) : --datum->refs)
 
 struct sdrl_heap;
+struct sdrl_value;
 struct sdrl_machine;
 
+typedef void *(*sdrl_create_t)(struct sdrl_machine *, struct sdrl_value *);
 typedef int (*sdrl_evaluate_t)(struct sdrl_machine *, ...);
 typedef void *(*sdrl_duplicate_t)(struct sdrl_heap *, void *);
 typedef int (*sdrl_destroy_t)(struct sdrl_heap *, void *);
