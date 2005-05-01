@@ -188,6 +188,7 @@ char sdrl_get_char(struct sdrl_input *input)
 	if (input->peek) {
 		ch = input->peek;
 		input->peek = 0;
+		return(ch);
 	}
 	else if (!input->stack)
 		return(0);

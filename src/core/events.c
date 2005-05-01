@@ -101,6 +101,16 @@ struct sdrl_event *sdrl_pop_event(struct sdrl_continuation *cont)
 }
 
 /**
+ * Return the sdrl_event on the top of the continuation stack.
+ */
+struct sdrl_event *sdrl_peek_event(struct sdrl_continuation *cont)
+{
+	if (!cont->top)
+		return(NULL);
+	return(cont->top);
+}
+
+/**
  * Count the number of events on the continuation.
  */
 int sdrl_count_events(struct sdrl_continuation *cont)

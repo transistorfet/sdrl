@@ -7,6 +7,17 @@
 #include <stdlib.h>
 #include <sdrl/core/heap.h>
 
+#define SDRL_HEAP_PAGE_SIZE		0x400
+
+struct sdrl_heap {
+	unsigned int obj_size;
+	unsigned int page_size;
+	int objs;
+	unsigned char *allocs;
+	int allocs_size;
+	void *page;
+	struct sdrl_heap *next;
+};
 
 #define MAX_LIST	1000
 
