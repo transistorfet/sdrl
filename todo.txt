@@ -1,4 +1,7 @@
 
+	* add a comment to all library functions and types describing the
+	  parameters taken through struct sdrl_value *value
+
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* a function to automatically check args based on min/max args allowed?
 	* function to check types (in libbase??)
