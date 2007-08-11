@@ -2,7 +2,7 @@
 SDRL Release 0.2
 
 See changelog.txt for details of changes.  (Note: this release is
-incomatible with SDRL Release 0.1)
+incomatible with SDRL Release 0.1).
 
 Compiling:
 	cd src/sdrl
@@ -23,6 +23,6 @@ Using SDRL in a project:
 	on making your own C library functions.
 
 This package is copyrighted 2005 Sarina McFarland and licensed
-under the Artistic Licence (license.txt)
+under the Artistic Licence (See LICENCE).
 
 
