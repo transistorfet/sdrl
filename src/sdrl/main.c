@@ -1,6 +1,5 @@
 /*
  * Name:	main.c
- * Version:	0.1
  * Description:	SDRL Interpreter
  */
 
@@ -14,7 +13,7 @@ char *infile = NULL;
 int parse_cmdline(int, char **);
 int print_result(struct sdrl_machine *, int);
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
 	struct sdrl_expr *code;
 	struct sdrl_machine *mach;
@@ -38,7 +37,7 @@ main(int argc, char **argv)
 		return(-1);
 	}
 
-	sdrl_base_display_expr(code);
+	//sdrl_base_display_expr(code);
 sdrl_add_binding(mach->env, "*globals*", sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "env"), (sdrl_data_t) (void *) mach->env, 0, NULL));
 	print_result(mach, sdrl_evaluate(mach, code));
 
@@ -84,7 +83,7 @@ int print_result(struct sdrl_machine *mach, int error)
 
 	printf("\n");
 	if (mach->error) {
-		//printf("Error %d,%d: %s\n", sdrl_get_line_number_m(mach->error->line), sdrl_get_column_number_m(mach->error->line), mach->error->msg);
+		//printf("Error %d,%d: %s\n", SDRL_GET_LINE_NUMBER(mach->error->line), SDRL_GET_COLUMN_NUMBER(mach->error->line), mach->error->msg);
 		sdrl_base_display_error(mach->error);
 	}
 	else {
@@ -92,28 +91,28 @@ int print_result(struct sdrl_machine *mach, int error)
 			case 0:
 				printf("Exited Normally\n");
 				return(0);
-			case ERR_END_OF_INPUT:
+			case SDRL_ERR_END_OF_INPUT:
 				printf("End Of Input Reached\n");
 				break;
-			case ERR_SYNTAX_ERROR:
+			case SDRL_ERR_SYNTAX_ERROR:
 				printf("Syntax Error\n");
 				break;
-			case ERR_INVALID_PARAMS:
+			case SDRL_ERR_INVALID_PARAMS:
 				printf("Invalid Parameters\n");
 				break;
-			case ERR_INVALID_TYPE:
+			case SDRL_ERR_INVALID_TYPE:
 				printf("Invalid Type\n");
 				break;
-			case ERR_OUT_OF_MEMORY:
+			case SDRL_ERR_OUT_OF_MEMORY:
 				printf("Out Of Memory\n");
 				break;
-			case ERR_OUT_OF_BOUNDS:
+			case SDRL_ERR_OUT_OF_BOUNDS:
 				printf("Out Of Bounds\n");
 				break;
-			case ERR_NOT_FOUND:
+			case SDRL_ERR_NOT_FOUND:
 				printf("Binding Not Found\n");
 				break;
-			case ERR_PARAMS_ERROR:
+			case SDRL_ERR_PARAMS_ERROR:
 				printf("Error Evaluating Parameters\n");
 				break;
 			default:

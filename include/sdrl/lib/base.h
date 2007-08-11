@@ -1,6 +1,5 @@
 /*
  * Library Name:	base.h
- * Version:		0.1
  * Description:		Basic SDRL Functions Header
  */
 

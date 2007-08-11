@@ -1,6 +1,5 @@
 /*
  * Name:	events.h
- * Version:	0.2
  * Description:	Continuation Manager Header
  */
 
@@ -14,8 +13,8 @@
 #define SDRL_EBF_USE_RET		0x01		/** Pass mach->ret as the second parameter */
 #define SDRL_EBF_PRESERVE_RET		0x02		/** Don't clear mach->ret before calling function */
 
-#define sdrl_use_ret_m(event)		(event->bitflags & SDRL_EBF_USE_RET)
-#define sdrl_preserve_ret_m(event)	(event->bitflags & SDRL_EBF_PRESERVE_RET)
+#define SDRL_USE_RET(event)		(event->bitflags & SDRL_EBF_USE_RET)
+#define SDRL_PRESERVE_RET(event)	(event->bitflags & SDRL_EBF_PRESERVE_RET)
 
 struct sdrl_machine;
 typedef int (*sdrl_event_t)(struct sdrl_machine *, ...);

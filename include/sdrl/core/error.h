@@ -1,6 +1,5 @@
 /*
  * Name:	error.h
- * Version:	0.2
  * Description:	Error Generating and Reporting Functions Header File
  */
 

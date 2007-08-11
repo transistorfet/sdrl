@@ -1,6 +1,5 @@
 /*
  * Name:	bindings.h
- * Version:	0.2
  * Description:	Bindings Manager Header
  */
 

@@ -1,6 +1,5 @@
 /*
  * Name:	events.c
- * Version:	0.2
  * Description:	Continuation Manager
  */
 
@@ -57,7 +56,7 @@ struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, void *param,
 	event->bitflags = bitflags;
 	event->func = func;
 	event->param = param;
-	event->env = sdrl_make_reference_m(env);
+	event->env = SDRL_MAKE_REFERENCE(env);
 	event->next = NULL;
 
 	return(event);
@@ -69,7 +68,7 @@ struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, void *param,
 int sdrl_destroy_event(struct sdrl_event *event)
 {
 	if (event) {
-		sdrl_destroy_reference_m(event->env, sdrl_retract_environment);
+		SDRL_DESTROY_REFERENCE(event->env, sdrl_retract_environment);
 		free(event);
 	}
 	return(0);

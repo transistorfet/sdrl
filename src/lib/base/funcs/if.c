@@ -1,6 +1,5 @@
 /*
  * Builtin Name:	if.c
- * Version:		0.1
  * Module Requirements:	(none)
  * Description:		If Expression
  */
@@ -8,8 +7,8 @@
 #include <sdrl/sdrl.h>
 
 /**
- * if(<value>, <expr-value> [, <expr-value>])
- * Evaluates the first expr-value if value is not 0, the second otherwise.
+ * Args:	<value>, <expr-value> [, <expr-value>]
+ * Description:	Evaluates the first expr-value if value is not 0, the second otherwise.
  */
 int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *value)
 {
@@ -17,8 +16,8 @@ int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *value)
 	struct sdrl_value *block = NULL;
 
 	if (sdrl_value_count(value) < 2)
-		ret = ERR_INVALID_PARAMS;
-	else if (!sdrl_value_is_false_m(value)) {
+		ret = SDRL_ERR_INVALID_PARAMS;
+	else if (!SDRL_VALUE_IS_FALSE(value)) {
 		block = value->next;
 		value->next = value->next->next;
 		block->next = NULL;

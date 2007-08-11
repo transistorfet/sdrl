@@ -1,6 +1,5 @@
 /*
  * Name:	expr.c
- * Version:	0.2
  * Description:	Functions for creating and manipulating expression structures
  */
 

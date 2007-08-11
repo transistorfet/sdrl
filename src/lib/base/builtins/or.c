@@ -1,17 +1,16 @@
 /*
  * Builtin Name:	or.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		Or Boolean Expression
  */
 
 #include <sdrl/sdrl.h>
-#include "common/traverse.h"
+#include "../common/traverse.h"
 
 
 /**
- * or(<value>, ...)
- * Returns 1 if any of the number values are 1, 0 otherwise.
+ * Args:	<value>, ...
+ * Description:	Returns 1 if any of the number values are 1, 0 otherwise.
  */
 int sdrl_base_or(struct sdrl_machine *mach, struct sdrl_value *value)
 {

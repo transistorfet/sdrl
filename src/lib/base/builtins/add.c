@@ -1,17 +1,16 @@
 /*
  * Builtin Name:	add.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		Addition Expression
  */
 
 #include <sdrl/sdrl.h>
-#include "common/traverse.h"
+#include "../common/traverse.h"
 
 
 /**
- * +(<number>, ...)
- * Returns a number of the sum of the list of number-values passes.
+ * Args:	<number>, ...
+ * Description:	Returns a number of the sum of the list of number-values passes.
  */
 int sdrl_base_add(struct sdrl_machine *mach, struct sdrl_value *value)
 {

@@ -1,6 +1,5 @@
 /*
  * Name:	bindings.c
- * Version:	0.2
  * Description:	Bindings Manager
  */
 
@@ -12,18 +11,19 @@
 #include <sdrl/core/heap.h>
 #include <sdrl/globals.h>
 
-#define bindings_destroy_data_m(env, data)				\
-	if (env->destroy) {						\
-		if (env->heap)						\
-			env->destroy(env->heap, data);			\
+#define BINDINGS_DESTROY_DATA(env, data) {				\
+	if ((env)->destroy) {						\
+		if ((env)->heap)					\
+			(env)->destroy((env)->heap, (data));		\
 		else							\
-			((int (*)(void *)) env->destroy)(data);		\
-	}
+			((int (*)(void *)) (env)->destroy)((data));	\
+	}								\
+}
 
-#define bindings_compare(env, str1, str2) \
-	( (env->bitflags & SDRL_BBF_CASE_INSENSITIVE) ? !sdrl_stricmp(str1, str2) : !strcmp(str1, str2) )
+#define BINDINGS_COMPARE(env, str1, str2) \
+	( ((env)->bitflags & SDRL_BBF_CASE_INSENSITIVE) ? !sdrl_stricmp((str1), (str2)) : !strcmp((str1), (str2)) )
 
-#define lower(ch) \
+#define IS_LOWERCASE(ch) \
 	( (ch >= 0x41 && ch <= 0x5a) ? ch + 0x20 : ch )
 
 static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *, char *, int);
@@ -63,7 +63,7 @@ struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *parent
 	env->destroy = parent->destroy;
 	env->head = NULL;
 	env->tail = NULL;
-	env->parent = sdrl_make_reference_m(parent);
+	env->parent = SDRL_MAKE_REFERENCE(parent);
 	return(env);
 }
 
@@ -86,12 +86,12 @@ struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *env)
 	cur = env->head;
 	while (cur) {
 		next = cur->next;
-		bindings_destroy_data_m(env, cur->data);
+		BINDINGS_DESTROY_DATA(env, cur->data);
 		free(cur);
 		cur = next;
 	}
 	if (env->parent)
-		parent = sdrl_destroy_reference_m(env->parent, sdrl_retract_environment);
+		parent = SDRL_DESTROY_REFERENCE(env->parent, sdrl_retract_environment) ? NULL : env->parent;
 	sdrl_heap_free(env->heap, env);
 	return(parent);
 }
@@ -117,9 +117,9 @@ int sdrl_add_binding(struct sdrl_environment *env, char *name, void *data)
 	if (!name || !data || (env->bitflags & SDRL_BBF_NO_ADD))
 		return(-1);
 	if (sdrl_get_bindings(env, name, 1))
-		return(ERR_IN_USE);
+		return(SDRL_ERR_IN_USE);
 	if (!(bind = (struct sdrl_binding *) malloc(sizeof(struct sdrl_binding) + strlen(name) + 1)))
-		return(ERR_OUT_OF_MEMORY);
+		return(SDRL_ERR_OUT_OF_MEMORY);
 
 	bind->name = (char *) ((size_t) bind + sizeof(struct sdrl_binding));
 	strcpy(bind->name, name);
@@ -143,12 +143,12 @@ int sdrl_replace_binding(struct sdrl_environment *env, char *name, void *data)
 
 	if (!name || !data || (env->bitflags & SDRL_BBF_NO_REPLACE))
 		return(-1);
-	if (bind = sdrl_get_bindings(env, name, 1)) {
-		bindings_destroy_data_m(env, bind->data);
+	if ((bind = sdrl_get_bindings(env, name, 1))) {
+		BINDINGS_DESTROY_DATA(env, bind->data);
 		bind->data = data;
 		return(0);
 	}
-	return(ERR_NOT_FOUND);
+	return(SDRL_ERR_NOT_FOUND);
 }
 
 /**
@@ -163,21 +163,21 @@ int sdrl_remove_binding(struct sdrl_environment *env, char *name)
 	prev = NULL;
 	cur = env->head;
 	while (cur) {
-		if (bindings_compare(env, name, cur->name)) {
+		if (BINDINGS_COMPARE(env, name, cur->name)) {
 			if (prev)
 				prev->next = cur->next;
 			else
 				env->head = cur->next;
 			if (cur == env->tail)
 				env->tail = prev;
-			bindings_destroy_data_m(env, cur->data);
+			BINDINGS_DESTROY_DATA(env, cur->data);
 			free(cur);
 			return(0);
 		}
 		prev = cur;
 		cur = cur->next;
 	}
-	return(ERR_NOT_FOUND);
+	return(SDRL_ERR_NOT_FOUND);
 }
 
 /**
@@ -187,7 +187,7 @@ void *sdrl_find_binding(struct sdrl_environment *env, char *name)
 {
 	struct sdrl_binding *bind;
 
-	if (bind = sdrl_get_bindings(env, name, 0))
+	if ((bind = sdrl_get_bindings(env, name, 0)))
 		return(bind->data);
 	return(NULL);
 }
@@ -207,7 +207,7 @@ static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, char
 	while (curenv) {
 		cur = curenv->head;
 		while (cur) {
-			if (bindings_compare(curenv, name, cur->name))
+			if (BINDINGS_COMPARE(curenv, name, cur->name))
 				return(cur);
 			cur = cur->next;
 		}
@@ -223,7 +223,7 @@ static int sdrl_stricmp(char *str1, char *str2)
 	int i = 0;
 
 	while ((str1[i] != '\0') && (str2[i] != '\0')) {
-		if (lower(str1[i]) != lower(str2[i]))
+		if (IS_LOWERCASE(str1[i]) != IS_LOWERCASE(str2[i]))
 			return(1);
 		i++;
 	}

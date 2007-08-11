@@ -1,6 +1,5 @@
 /*
  * Parser Name:		lispy.c
- * Version:		0.2
  * Description:		Lispy Like Parser
  */
 

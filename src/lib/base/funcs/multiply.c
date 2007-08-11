@@ -1,17 +1,16 @@
 /*
  * Builtin Name:	multiply.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		Multiplication Expression
  */
 
 #include <sdrl/sdrl.h>
-#include "common/traverse.h"
+#include "../common/traverse.h"
 
 
 /**
- * *(<number>, ...)
- * Returns a number of the product of the list of number-values passes.
+ * Args:	<number>, ...
+ * Description:	Returns a number of the product of the list of number-values passes.
  */
 int sdrl_base_multiply(struct sdrl_machine *mach, struct sdrl_value *value)
 {

@@ -1,17 +1,16 @@
 /*
  * Builtin Name:	subtract.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		Subtraction Expression
  */
 
 #include <sdrl/sdrl.h>
-#include "common/traverse.h"
+#include "../common/traverse.h"
 
 
 /**
- * -(<number>, ...)
- * Returns a number of the difference of the list of number-values passes.
+ * Args:	<number>, ...
+ * Description:	Returns a number of the difference of the list of number-values passes.
  */
 int sdrl_base_subtract(struct sdrl_machine *mach, struct sdrl_value *value)
 {

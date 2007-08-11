@@ -1,6 +1,5 @@
 /*
  * Name:	value.h
- * Version:	0.2
  * Description:	Value Manager Header
  */
 
@@ -30,10 +29,10 @@ struct sdrl_value {
 };
 
 
-#define sdrl_value_is_false_m(value) \
-	((sdrl_base_type_m(value->type) == SDRL_BT_NUMBER) && (!value->data.number)) \
-	|| ((sdrl_base_type_m(value->type) == SDRL_BT_STRING) && (!value->data.str || value->data.str[0] == '\0')) \
-	|| ((sdrl_base_type_m(value->type) == SDRL_BT_POINTER) && (!value->data.ptr))
+#define SDRL_VALUE_IS_FALSE(value) \
+	((SDRL_BASE_TYPE((value)->type) == SDRL_BT_NUMBER) && (!(value)->data.number)) \
+	|| ((SDRL_BASE_TYPE((value)->type) == SDRL_BT_STRING) && (!(value)->data.str || (value)->data.str[0] == '\0')) \
+	|| ((SDRL_BASE_TYPE((value)->type) == SDRL_BT_POINTER) && (!(value)->data.ptr))
 
 struct sdrl_value *sdrl_make_value(struct sdrl_heap *, struct sdrl_type *, sdrl_data_t, int, struct sdrl_value *);
 struct sdrl_value *sdrl_duplicate_value(struct sdrl_heap *, struct sdrl_value *);

@@ -1,6 +1,5 @@
 /*
  * Library Name:	scheme.h
- * Version:		0.1
  * Description:		SD Scheme Functions Header
  */
 

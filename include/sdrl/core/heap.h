@@ -1,11 +1,12 @@
 /* 
- * Include Name:	heap.h
- * Include Version:	0.1
- * Description:		Heap Manager Interface
+ * Name:	heap.h
+ * Description:	Heap Manager Interface
  */
 
 #ifndef _SDRL_CORE_HEAP_H
 #define _SDRL_CORE_HEAP_H
+
+#include <stdlib.h>
 
 struct sdrl_heap;
 

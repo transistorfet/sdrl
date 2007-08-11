@@ -1,6 +1,5 @@
 /*
  * Loader Name:		load.c
- * Version:		0.1
  * Module Requirements:	libbase
  * Description:		Base Library Loader
  */

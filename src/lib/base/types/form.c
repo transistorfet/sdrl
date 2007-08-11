@@ -1,6 +1,5 @@
 /*
  * Builtin Name:	form.c
- * Version:		0.1
  * Module Requirements:	(none)
  * Description:		Form (C Form) Type
  */

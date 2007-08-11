@@ -1,6 +1,5 @@
 /*
  * Name:	machine.h
- * Version:	0.2
  * Description:	SDRL Header
  */
 
@@ -16,9 +15,9 @@
 #include <sdrl/core/bindings.h>
 #include <sdrl/globals.h>
 
-/*** Generate an error and set it the current machine. ***/
-#define sdrl_error_m(mach, err, msg) \
-	( (mach->error = sdrl_make_error(0, err, msg)) ? err : -1 )
+/*** Generate an error and set it in the current machine. ***/
+#define SDRL_ERROR(mach, err, msg) \
+	( ((mach)->error = sdrl_make_error(0, (err), (msg))) ? (err) : -1 )
 
 struct sdrl_machine {
 	struct sdrl_heap *heap;

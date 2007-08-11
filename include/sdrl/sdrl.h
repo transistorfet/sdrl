@@ -1,6 +1,5 @@
 /*
  * Name:	sdrl.h
- * Version:	0.2
  * Description:	SDRL Header
  */
 

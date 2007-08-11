@@ -1,12 +1,13 @@
 
 
-SDRL = ../..
+ROOT = ../..
 
 TARGET = sdrl
-OBJS = main.o $(SDRL)/lib/libsdrl.a $(SDRL)/lib/libbase.a $(SDRL)/lib/libsdrl.a
+DIRS = $(ROOT)/src/core $(ROOT)/src/lib/base
+OBJS = main.o
 
-#LDFLAGS = -L$(SDRL)/lib -lsdrl -lbase
-CFLAGS = -g -I$(SDRL)/include -L$(SDRL)/lib
+LIBS = -lbase -lsdrl
+CFLAGS = -g -I$(ROOT)/include -L$(ROOT)/lib
 
-include $(SDRL)/builder/builder.mk
+include $(ROOT)/rules.mk
 

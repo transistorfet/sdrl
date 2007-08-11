@@ -1,17 +1,16 @@
 /*
  * Builtin Name:	gthan.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		Greater Than Test Expression
  */
 
 #include <sdrl/sdrl.h>
-#include "common/traverse.h"
+#include "../common/traverse.h"
 
 
 /**
- * >(<value>, ...)
- * Returns 1 if number value are greater than eachother, 0 otherwise.
+ * Args:	<value>, ...
+ * Description:	Returns 1 if number value are greater than eachother, 0 otherwise.
  */
 int sdrl_base_greater_than(struct sdrl_machine *mach, struct sdrl_value *value)
 {

@@ -1,6 +1,5 @@
 /*
  * Name:	input.c
- * Version:	0.2
  * Description:	Input Manager
  */
 
@@ -15,7 +14,7 @@
 #define INPUT_MAX_BUFFER		1024
 
 #define sdrl_input_is_number(ch) \
-	((ch >= 0x30) && (ch <= 0x39) || (ch == '.') || (ch == '-'))
+	(((ch >= 0x30) && (ch <= 0x39)) || ((ch == '.') || (ch == '-')))
 
 static char input_buffer[INPUT_MAX_BUFFER + 1];
 
@@ -58,10 +57,10 @@ int sdrl_add_file(struct sdrl_input *input, char *filename)
 	struct sdrl_source *source;
 
 	if (!(fptr = fopen(filename, "rb")))
-		return(ERR_NOT_FOUND);
+		return(SDRL_ERR_NOT_FOUND);
 	if (!(source = (struct sdrl_source *) malloc(sizeof(struct sdrl_source)))) {
 		fclose(fptr);
-		return(ERR_OUT_OF_MEMORY);
+		return(SDRL_ERR_OUT_OF_MEMORY);
 	}
 	source->type = SDRL_IT_FILE;
 	source->line = 1;
@@ -84,10 +83,10 @@ int sdrl_add_string(struct sdrl_input *input, char *str, int size)
 	if (!size)
 		size = strlen(str);
 	if (!(cpy_str = (char *) malloc(size + 1)))
-		return(ERR_OUT_OF_MEMORY);
+		return(SDRL_ERR_OUT_OF_MEMORY);
 	if (!(source = (struct sdrl_source *) malloc(sizeof(struct sdrl_source)))) {
 		free(cpy_str);
-		return(ERR_OUT_OF_MEMORY);
+		return(SDRL_ERR_OUT_OF_MEMORY);
 	}
 	strncpy(cpy_str, str, size);
 	cpy_str[size] = '\0';
@@ -157,12 +156,12 @@ char sdrl_get_input(struct sdrl_input *input)
 
 	while (input->stack && (ret = sdrl_get_char(input))) {
 		if (ret == '#') {
-			while (ret = sdrl_get_char(input))
+			while ((ret = sdrl_get_char(input)))
 				if (ret == '\n')
 					break;
 		}
 		else if (ret == ' ' || ret == '\n' || ret == '\t' || ret == '\r') {
-			while (ret = sdrl_get_char(input)) {
+			while ((ret = sdrl_get_char(input))) {
 				if (ret != ' ' && ret != '\n' && ret != '\t' && ret != '\r') {
 					input->peek = ret;
 					break;
@@ -234,7 +233,7 @@ char sdrl_peek_char(struct sdrl_input *input)
 linenumber_t sdrl_get_linenumber(struct sdrl_input *input)
 {
 	if (input && input->stack)
-		return(sdrl_make_linenumber_m(input->stack->line, input->stack->col));
+		return(SDRL_MAKE_LINENUMBER(input->stack->line, input->stack->col));
 	return(0);
 }
 
@@ -264,7 +263,7 @@ int sdrl_is_space(char ch)
  */
 int sdrl_is_word(char ch)
 {
-	if ((ch >= 'A') && (ch <= 'Z') || (ch >= 'a') && (ch <= 'z') || (ch == '_'))
+	if (((ch >= 'A') && (ch <= 'Z')) || ((ch >= 'a') && (ch <= 'z')) || (ch == '_'))
 		return(1);
 	return(0);
 }

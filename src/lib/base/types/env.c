@@ -1,6 +1,5 @@
 /*
  * Builtin Name:	env.c
- * Version:		0.1
  * Module Requirements:	(none)
  * Description:		Environment Type
  */
@@ -32,9 +31,9 @@ static void *sdrl_create_env_type(struct sdrl_machine *mach, struct sdrl_value *
 
 	if (value) {
 		if (!(env_type = sdrl_find_binding(mach->type_env, "env")))
-			ret = ERR_NOT_FOUND;
+			ret = SDRL_ERR_NOT_FOUND;
 		else if (value->type != env_type)
-			ret = ERR_INVALID_TYPE;
+			ret = SDRL_ERR_INVALID_TYPE;
 		else
 			env = sdrl_extend_environment((struct sdrl_environment *) value->data.ptr);
 	}
@@ -51,7 +50,7 @@ static void *sdrl_create_env_type(struct sdrl_machine *mach, struct sdrl_value *
  */
 static void *sdrl_duplicate_env_type(struct sdrl_heap *heap, void *env)
 {
-	return((void *) sdrl_make_reference_m(((struct sdrl_environment *) env)));
+	return((void *) SDRL_MAKE_REFERENCE(((struct sdrl_environment *) env)));
 }
 
 /**

@@ -1,6 +1,5 @@
 /*
  * Name:	type.c
- * Version:	0.2
  * Description:	Type Manager
  */
 

@@ -1,6 +1,5 @@
 /*
  * Builtin Name:	null.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		Null Check Expression
  */
@@ -8,8 +7,8 @@
 #include <sdrl/sdrl.h>
 
 /**
- * null(<value>, ...)
- * Returns the number -1 if value passed is null; the number 0 if otherwise.
+ * Args:	<value>, ...
+ * Description:	Returns the number -1 if value passed is null; the number 0 if otherwise.
  */
 int sdrl_base_null(struct sdrl_machine *mach, struct sdrl_value *value)
 {

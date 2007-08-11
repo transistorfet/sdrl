@@ -1,6 +1,5 @@
 /*
  * Name:	expr.h
- * Version:	0.2
  * Description:	Expression Functions Header File
  */
 

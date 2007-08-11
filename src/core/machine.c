@@ -1,6 +1,5 @@
 /*
  * Name:	machine.c
- * Version:	0.2
  * Description:	SDRL Interpreter
  */
 
@@ -18,7 +17,7 @@
 #include <sdrl/core/bindings.h>
 #include <sdrl/globals.h>
 
-#define return_fatal_error_m(mach, err)			\
+#define RETURN_FATAL_ERROR(mach, err)			\
 	{						\
 		sdrl_destroy_machine(mach);		\
 		sdrl_set_error(0, err, NULL);		\
@@ -30,7 +29,6 @@
  */
 struct sdrl_machine *sdrl_create_machine(void)
 {
-	int ret = 0;
 	struct sdrl_machine *mach;
 
 	if (!(mach = (struct sdrl_machine *) malloc(sizeof(struct sdrl_machine))))
@@ -38,13 +36,13 @@ struct sdrl_machine *sdrl_create_machine(void)
 	mach->ret = NULL;
 	mach->error = NULL;
 	if (!(mach->heap = sdrl_create_heap(0, 0)))
-		return_fatal_error_m(mach, ERR_OUT_OF_MEMORY);
+		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
 	if (!(mach->cont = sdrl_create_continuation()))
-		return_fatal_error_m(mach, ERR_OUT_OF_MEMORY);
+		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
 	if (!(mach->type_env = sdrl_create_environment(SDRL_BBF_CONSTANT, mach->heap, (sdrl_destroy_t) sdrl_destroy_type)))
-		return_fatal_error_m(mach, ERR_OUT_OF_MEMORY);
+		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
 	if (!(mach->global = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value)))
-		return_fatal_error_m(mach, ERR_OUT_OF_MEMORY);
+		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
 	mach->env = mach->global;
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_type(mach->heap, 0, SDRL_BT_NUMBER, NULL, NULL, NULL, NULL));
@@ -77,9 +75,9 @@ int sdrl_evaluate(struct sdrl_machine *mach, struct sdrl_expr *expr)
 	struct sdrl_event *event;
 
 	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr, mach->env)))
-		return(ERR_OUT_OF_MEMORY);
+		return(SDRL_ERR_OUT_OF_MEMORY);
 	do {
-		if (ret = sdrl_evaluate_event(mach, event))
+		if ((ret = sdrl_evaluate_event(mach, event)))
 			return(ret);
 		event = sdrl_pop_event(mach->cont);
 	} while (event);
@@ -96,7 +94,7 @@ int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
 	struct sdrl_value *value;
 
 	mach->env = event->env;
-	if (sdrl_use_ret_m(event)) {
+	if (SDRL_USE_RET(event)) {
 		value = mach->ret;
 		mach->ret = NULL;
 		ret = event->func(mach, event->param, value);
@@ -140,15 +138,15 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "string"), (sdrl_data_t) expr->data.str, strlen(expr->data.str), NULL);
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
-			return(sdrl_error_m(mach, ERR_INVALID_FUNCTION, NULL));
+			return(SDRL_ERROR(mach, SDRL_ERR_INVALID_FUNCTION, NULL));
 		sdrl_set_linenumber(expr->data.expr->line);
 		if (expr->data.expr->type == SDRL_ET_STRING) {
 			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str)))
-				return(sdrl_error_m(mach, ERR_NOT_FOUND, expr->data.expr->data.str));
-			else if (func->type->evaluate && sdrl_type_pass_exprs_m(func->type))
+				return(SDRL_ERROR(mach, SDRL_ERR_NOT_FOUND, expr->data.expr->data.str));
+			else if (func->type->evaluate && SDRL_TYPE_PASS_EXPRS(func->type))
 				return(func->type->evaluate(mach, func, expr->data.expr->next));
 			else {
-				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, sdrl_make_reference_m(func), mach->env));
+				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, SDRL_MAKE_REFERENCE(func), mach->env));
 				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, expr->data.expr->next, mach->env));
 				return(0);
 			}
@@ -159,10 +157,10 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 			return(0);
 		}
 		else
-			return(sdrl_error_m(mach, ERR_INVALID_FUNCTION, NULL));
+			return(SDRL_ERROR(mach, SDRL_ERR_INVALID_FUNCTION, NULL));
 	}
 	else
-		return(sdrl_error_m(mach, ERR_INVALID_AST_TYPE, NULL));
+		return(SDRL_ERROR(mach, SDRL_ERR_INVALID_AST_TYPE, NULL));
 	return(0);
 }
 
@@ -181,21 +179,21 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
 	}
 
 	if (!func)
-		ret = sdrl_error_m(mach, ERR_NOT_FOUND, NULL);
+		ret = SDRL_ERROR(mach, SDRL_ERR_NOT_FOUND, NULL);
 	else if (func->type->evaluate) {
-		if (sdrl_type_pass_exprs_m(func->type))
-			ret = sdrl_error_m(mach, ERR_INVALID_PARAMS, NULL);
+		if (SDRL_TYPE_PASS_EXPRS(func->type))
+			ret = SDRL_ERROR(mach, SDRL_ERR_INVALID_PARAMS, NULL);
 		else {
 //			mach->ret = args;
-//			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, sdrl_make_reference_m(func), mach->env));
+//			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, SDRL_MAKE_REFERENCE(func), mach->env));
 			func->type->evaluate(mach, func, args);
 		}
 	}
 	else {
 		if (args)
-			ret = sdrl_error_m(mach, ERR_INVALID_PARAMS, NULL);
+			ret = SDRL_ERROR(mach, SDRL_ERR_INVALID_PARAMS, NULL);
 		else {
-	//		mach->ret = sdrl_make_reference_m(func);
+	//		mach->ret = SDRL_MAKE_REFERENCE(func);
 			mach->ret = sdrl_duplicate_value(mach->heap, func);
 		}
 	}

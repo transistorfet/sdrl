@@ -1,6 +1,5 @@
 /*
  * Name:	value.c
- * Version:	0.2
  * Description:	Value Manager
  */
 
@@ -23,7 +22,7 @@ struct sdrl_value *sdrl_make_value(struct sdrl_heap *heap, struct sdrl_type *typ
 
 	if (!type)
 		return(NULL);
-	if (sdrl_base_type_m(type) == SDRL_BT_STRING)
+	if (SDRL_BASE_TYPE(type) == SDRL_BT_STRING)
 		size++;
 
 	if (!(value = (struct sdrl_value *) sdrl_heap_alloc(heap, sizeof(struct sdrl_value) + size)))
@@ -101,7 +100,7 @@ int sdrl_push_value(struct sdrl_value **array, struct sdrl_value *value)
 	struct sdrl_value *cur;
 
 	if (!array)
-		return(ERR_NOT_FOUND);
+		return(SDRL_ERR_NOT_FOUND);
 	else if (!*array)
 		*array = value;
 	else {
@@ -145,7 +144,7 @@ struct sdrl_value *sdrl_pop_value(struct sdrl_value **array)
 int sdrl_unshift_value(struct sdrl_value **array, struct sdrl_value *value)
 {
 	if (!array)
-		return(ERR_NOT_FOUND);
+		return(SDRL_ERR_NOT_FOUND);
 	value->next = *array;
 	*array = value;
 	return(0);

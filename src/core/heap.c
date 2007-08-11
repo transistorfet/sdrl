@@ -1,8 +1,9 @@
 /*
  * Module Name:		heap.c
- * Module Version:	0.1
  * Description:		Heap Memory Manager
  */
+
+#include <stdio.h>
 
 #include <stdlib.h>
 #include <sdrl/core/heap.h>
@@ -50,7 +51,7 @@ struct sdrl_heap *sdrl_create_heap(unsigned int size, unsigned int page_size)
  */
 int sdrl_destroy_heap(struct sdrl_heap *heap)
 {
-	struct sdrl_heap *tmp;
+	//struct sdrl_heap *tmp;
 
 	if (!(heap))
 		return(-1);
@@ -182,7 +183,7 @@ void heap_report(void)
 	struct entry *cur;
 	cur = head;
 	while (cur) {
-		printf("Memory Leak: %d of size %d\n", cur->addr, cur->size);
+		printf("Memory Leak: 0x%x of size %d\n", (unsigned int) cur->addr, cur->size);
 		cur = cur->next;
 	}
 }

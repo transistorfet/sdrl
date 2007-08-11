@@ -1,6 +1,5 @@
 /*
  * Module Name:	disperr.c
- * Version:	0.2
  * Description:	Error Message Display
  */
 
@@ -39,9 +38,9 @@ int sdrl_base_display_error(struct sdrl_error *error)
 	if ((err < 0) || (err > NUM_ERRORS))
 		printf("Exited Normally");
 	else if (error->msg)
-		printf("Error %d,%d: %s %s\n", sdrl_get_line_number_m(error->line), sdrl_get_column_number_m(error->line), disperr_msgs[err], error->msg);
+		printf("Error %d,%d: %s %s\n", SDRL_GET_LINE_NUMBER(error->line), SDRL_GET_COLUMN_NUMBER(error->line), disperr_msgs[err], error->msg);
 	else
-		printf("Error %d,%d: %s\n", sdrl_get_line_number_m(error->line), sdrl_get_column_number_m(error->line), disperr_msgs[err]);
+		printf("Error %d,%d: %s\n", SDRL_GET_LINE_NUMBER(error->line), SDRL_GET_COLUMN_NUMBER(error->line), disperr_msgs[err]);
 	return(0);
 }
 

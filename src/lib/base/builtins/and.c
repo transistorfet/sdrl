@@ -1,17 +1,16 @@
 /*
  * Builtin Name:	and.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		And Boolean Expression
  */
 
 #include <sdrl/sdrl.h>
-#include "common/traverse.h"
+#include "../common/traverse.h"
 
 
 /**
- * and(<value>, ...)
- * Returns 1 if all number values are 1, 0 otherwise.
+ * Args:	<value>, ...
+ * Description:	Returns 1 if all number values are 1, 0 otherwise.
  */
 int sdrl_base_and(struct sdrl_machine *mach, struct sdrl_value *value)
 {

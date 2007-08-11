@@ -1,6 +1,5 @@
 /*
  * Builtin Name:	print.c
- * Version:		0.1
  * Module Requirements:	stdio.h
  * Description:		Print Expression
  */
@@ -9,8 +8,8 @@
 #include <stdio.h>
 
 /**
- * print(<value>, ...)
- * Prints out each of the values in the list and returns the list.
+ * Args:	<value>, ...
+ * Description:	Prints out each of the values in the list and returns the list.
  */
 int sdrl_base_print(struct sdrl_machine *mach, struct sdrl_value *value)
 {
@@ -18,7 +17,7 @@ int sdrl_base_print(struct sdrl_machine *mach, struct sdrl_value *value)
 
 	cur = value;
 	while (cur) {
-		switch (sdrl_base_type_m(cur->type)) {
+		switch (SDRL_BASE_TYPE(cur->type)) {
 			case SDRL_BT_NUMBER:
 				printf("%f", cur->data.number);
 				break;
@@ -26,7 +25,7 @@ int sdrl_base_print(struct sdrl_machine *mach, struct sdrl_value *value)
 				printf("%s", cur->data.str);
 				break;
 			case SDRL_BT_POINTER:
-				printf("%d", cur->data.ptr);
+				printf("0x%x", (unsigned int) cur->data.ptr);
 				break;
 			default:
 				break;

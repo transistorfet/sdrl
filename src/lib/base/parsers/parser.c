@@ -1,6 +1,5 @@
 /*
  * Parser Name:	parser.c
- * Version:	0.2
  * Description:	SDRL Parser
  */
 

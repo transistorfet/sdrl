@@ -1,6 +1,5 @@
 /*
  * Name:	type.h
- * Version:	0.2
  * Description:	Type Manager Header
  */
 
@@ -20,8 +19,8 @@
 #define SDRL_TBF_BASE_TYPE	0x0003		/** The basic type (the field used in sdrl_data_t) */
 #define SDRL_TBF_PASS_EXPRS	0x0004		/** Pass the expressions (unevaluated) to evaluate function */
 
-#define sdrl_base_type_m(type)		(type->bitflags & SDRL_TBF_BASE_TYPE)
-#define sdrl_type_pass_exprs_m(type)	(type->bitflags & SDRL_TBF_PASS_EXPRS)
+#define SDRL_BASE_TYPE(type)		( (type)->bitflags & SDRL_TBF_BASE_TYPE )
+#define SDRL_TYPE_PASS_EXPRS(type)	( (type)->bitflags & SDRL_TBF_PASS_EXPRS )
 
 struct sdrl_type {
 	int size;

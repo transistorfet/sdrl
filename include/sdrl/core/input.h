@@ -1,6 +1,5 @@
 /*
  * Name:	input.h
- * Version:	0.2
  * Description:	Input/Output Manager Header
  */
 

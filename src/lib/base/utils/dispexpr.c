@@ -1,6 +1,5 @@
 /*
  * Module Name:	dispexpr.c
- * Version:	0.2
  * Description:	Expression Display
  */
 

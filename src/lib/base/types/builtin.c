@@ -1,6 +1,5 @@
 /*
  * Builtin Name:	builtin.c
- * Version:		0.1
  * Module Requirements:	(none)
  * Description:		Builtin (C Function) Type
  */

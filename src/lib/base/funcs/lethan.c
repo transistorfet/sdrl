@@ -1,16 +1,15 @@
 /*
  * Builtin Name:	lethan.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		Less Than Or Equal To Test Expression
  */
 
 #include <sdrl/sdrl.h>
-#include "common/traverse.h"
+#include "../common/traverse.h"
 
 /**
- * <=(<value>, ...)
- * Returns 1 if number value are less than or equal to eachother, 0 otherwise.
+ * Args:	<value>, ...
+ * Description:	Returns 1 if number value are less than or equal to eachother, 0 otherwise.
  */
 int sdrl_base_less_than_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 {

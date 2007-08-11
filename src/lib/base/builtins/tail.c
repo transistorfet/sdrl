@@ -1,6 +1,5 @@
 /*
  * Builtin Name:	tail.c
- * Version:		0.1
  * Module Requirements:	list type
  * Description:		Tail Expression
  */
@@ -8,8 +7,8 @@
 #include <sdrl/sdrl.h>
 
 /**
- * tail(<value>, ...)
- * Returns the all of the values passed to it following the first value.
+ * Args:	<value>, ...
+ * Description:	Returns the all of the values passed to it following the first value.
  */
 int sdrl_base_tail(struct sdrl_machine *mach, struct sdrl_value *value)
 {

@@ -1,17 +1,16 @@
 /*
  * Builtin Name:	equals.c
- * Version:		0.1
  * Module Requirements:	number type
  * Description:		Equals Test Expression
  */
 
 #include <sdrl/sdrl.h>
-#include "common/traverse.h"
+#include "../common/traverse.h"
 
 
 /**
- * =(<value>, ...)
- * Returns 1 if all number values are equal to eachother, 0 otherwise.
+ * Args:	<value>, ...
+ * Description:	Returns 1 if all number values are equal to eachother, 0 otherwise.
  */
 int sdrl_base_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 {

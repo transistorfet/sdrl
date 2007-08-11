@@ -1,6 +1,5 @@
 /*
  * Builtin Name:	list.c
- * Version:		0.1
  * Module Requirements:	(none)
  * Description:		List Type
  */

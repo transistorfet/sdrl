@@ -1,7 +1,7 @@
 
-SDRL = ../../..
+ROOT = ../../..
 
-LIB_TARGET = $(SDRL)/lib/libbase.a
+LIB_TARGET = $(ROOT)/lib/libbase.a
 OBJS =	common/load.o		\
 	types/builtin.o		\
 	types/expr.o		\
@@ -41,9 +41,6 @@ OBJS =	common/load.o		\
 	utils/parsef.o		\
 	utils/parses.o
 
-CFLAGS = -g -I$(SDRL)/include -I.
-ARFLAGS = rc
-
-include $(SDRL)/builder/builder.mk
+include $(ROOT)/rules.mk
 
 

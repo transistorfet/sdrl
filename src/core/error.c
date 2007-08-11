@@ -1,6 +1,5 @@
 /*
  * Name:	error.c
- * Version:	0.2
  * Description:	Error Generating and Reporting Functions
  */
 
@@ -52,7 +51,7 @@ int sdrl_destroy_error(struct sdrl_error *error)
  */
 int sdrl_set_error(int bitflags, int err, char *msg)
 {
-	if (err == ERR_OUT_OF_MEMORY)
+	if (err == SDRL_ERR_OUT_OF_MEMORY)
 		last_error = NULL;
 	else
 		last_error = sdrl_make_error(bitflags, err, msg);
