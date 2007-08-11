@@ -1,4 +1,7 @@
 
+	* convert bindings into a hash table (if not already done)
+	* add support for threads (either in the core or in a lib)
+
 	* add a comment to all library functions and types describing the
 	  parameters taken through struct sdrl_value *value
 
