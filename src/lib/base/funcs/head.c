@@ -13,8 +13,7 @@
 int sdrl_base_head(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	if (value)
-		mach->ret = sdrl_shift_value(&value);
-	sdrl_destroy_value(mach->heap, value);
+		mach->ret = sdrl_duplicate_single_value(mach->heap, value);
 	return(0);
 }
 

@@ -36,6 +36,7 @@ struct sdrl_value {
 
 struct sdrl_value *sdrl_make_value(struct sdrl_heap *, struct sdrl_type *, sdrl_data_t, int, struct sdrl_value *);
 struct sdrl_value *sdrl_duplicate_value(struct sdrl_heap *, struct sdrl_value *);
+struct sdrl_value *sdrl_duplicate_single_value(struct sdrl_heap *, struct sdrl_value *);
 int sdrl_destroy_value(struct sdrl_heap *, struct sdrl_value *);
 
 int sdrl_push_value(struct sdrl_value **, struct sdrl_value *);

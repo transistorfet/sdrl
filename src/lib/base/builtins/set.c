@@ -28,12 +28,9 @@ int sdrl_base_set(struct sdrl_machine *mach, struct sdrl_value *value)
 			ret = sdrl_base_set_list(mach, name->data.ptr, ((i == 2) && (value->type == list)) ? (struct sdrl_value *) value->data.ptr : value); 
 		else
 			ret = sdrl_base_set_list(mach, name, value); 
-		sdrl_destroy_value(mach->heap, name);
 	}
-	if (ret)
-		sdrl_destroy_value(mach->heap, value);
-	else
-		mach->ret = sdrl_duplicate_value(mach->heap, value);
+	if (!ret)
+		mach->ret = SDRL_MAKE_REFERENCE(value);
 	return(ret);
 }
 

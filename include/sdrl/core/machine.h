@@ -39,6 +39,7 @@ int sdrl_evaluate_expr(struct sdrl_machine *, struct sdrl_expr *);
 int sdrl_call_value(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
 int sdrl_evaluate_params(struct sdrl_machine *, struct sdrl_expr *);
 
+int sdrl_destroy_reference(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_merge_return(struct sdrl_machine *, struct sdrl_value *);
 
 #endif

@@ -39,7 +39,6 @@ static void *sdrl_create_env_type(struct sdrl_machine *mach, struct sdrl_value *
 	}
 	else
 		env = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value);
-	sdrl_destroy_value(mach->heap, value);
 	if (ret)
 		return(NULL);
 	return((void *) env);

@@ -9,8 +9,6 @@
 
 #include <sdrl/sdrl.h>
 
-typedef struct sdrl_expr *(*sdrl_parser_t)(struct sdrl_input *, void *);
-
 int sdrl_load_base(struct sdrl_machine *);
 
 /*** Parsers ***/

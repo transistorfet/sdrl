@@ -48,27 +48,49 @@ struct sdrl_value *sdrl_make_value(struct sdrl_heap *heap, struct sdrl_type *typ
  */
 struct sdrl_value *sdrl_duplicate_value(struct sdrl_heap *heap, struct sdrl_value *value)
 {
-	struct sdrl_value *tmp, *prev, *head = NULL;
+	struct sdrl_value *newvalue, *prev, *head = NULL;
 
 	while (value) {
-		if (!(tmp = (struct sdrl_value *) sdrl_heap_alloc(heap, sizeof(struct sdrl_value) + value->size)))
+		if (!(newvalue = (struct sdrl_value *) sdrl_heap_alloc(heap, sizeof(struct sdrl_value) + value->size)))
 			return(NULL);
-		memcpy(tmp, value, sizeof(struct sdrl_value) + value->size);
-		if (tmp->type->duplicate)
-			tmp->data.ptr = tmp->type->duplicate(heap, value->data.ptr);
-		else if (tmp->size)
-			tmp->data = (sdrl_data_t) (char *) ((size_t) tmp + sizeof(struct sdrl_value));
+		memcpy(newvalue, value, sizeof(struct sdrl_value) + value->size);
+		if (value->type->duplicate)
+			newvalue->data.ptr = value->type->duplicate(heap, value->data.ptr);
+		else if (newvalue->size)
+			newvalue->data = (sdrl_data_t) (char *) ((size_t) newvalue + sizeof(struct sdrl_value));
 
-		tmp->refs = 1;
+		newvalue->refs = 1;
 		if (!head)
-			head = tmp;
+			head = newvalue;
 		else
-			prev->next = tmp;
-		prev = tmp;
+			prev->next = newvalue;
+		prev = newvalue;
 		value = value->next;
 	}
 
 	return(head);
+}
+
+/**
+ * Duplicate the value by direct memory copy.  Doesn't copy deep structure.
+ * Only the single address value is copied and not the values pointed to by
+ * "next".
+ */
+struct sdrl_value *sdrl_duplicate_single_value(struct sdrl_heap *heap, struct sdrl_value *value)
+{
+	struct sdrl_value *newvalue;
+
+	if (!(newvalue = (struct sdrl_value *) sdrl_heap_alloc(heap, sizeof(struct sdrl_value) + value->size)))
+		return(NULL);
+	memcpy(newvalue, value, sizeof(struct sdrl_value) + value->size);
+	if (value->type->duplicate)
+		newvalue->data.ptr = value->type->duplicate(heap, value->data.ptr);
+	else if (newvalue->size)
+		newvalue->data = (sdrl_data_t) (char *) ((size_t) newvalue + sizeof(struct sdrl_value));
+	newvalue->refs = 1;
+	newvalue->next = NULL;
+
+	return(newvalue);
 }
 
 /**

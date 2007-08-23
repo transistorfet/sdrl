@@ -58,3 +58,33 @@ define(foo, code(
 		(code, a),
 		(code, (+, a, b)))))
 
+
+References:
+
+All functions that return a pointer transfer ownership of that reference to the
+caller.  All functions that take a pointer assume that the reference is
+borrowed and that the caller is responsible for the reference unless otherwise
+stated.  The following functions steal ownership of references:
+	all destroy functions
+	sdrl_make_value		The "next" reference is stolen and the
+				"data" reference behaviour is defined
+				by the type.
+	sdrl_push_value
+	sdrl_unshift_value	The "value" reference is stolen and added to
+				the given list.
+	sdrl_add_binding
+	sdrl_replace_binding	The "data" reference is stolen and added to the
+				bindings table.  (The reference is obaque and
+				cannot be duplicated anyways).
+	sdrl_retract_environment	The reference to the environment is
+					destroyed and a reference to the parent
+					is returned.
+	sdrl_push_event
+
+	sdrl_make_*_expr
+
+	sdrl_merge_return
+
+	
+	
+

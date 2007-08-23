@@ -6,6 +6,7 @@
 #include <stdio.h>
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/io.h>
 #include <sdrl/lib/base.h>
 
 char *infile = NULL;
@@ -25,19 +26,18 @@ int main(int argc, char **argv)
 
 	if (!(mach = sdrl_create_machine()))
 		return(-1);
-	if (sdrl_load_base(mach)) {
+	if (sdrl_load_base(mach) || sdrl_load_io(mach)) {
 		printf("Error initializing primatives\n");
 		sdrl_destroy_machine(mach);
 		return(-1);
 	}
-
 	if (!(code = sdrl_base_parse_file(infile, (sdrl_parser_t) sdrl_base_parse_lispy_input, NULL))) {
 		printf("Cannot parse file, %s\n", infile);
 		sdrl_destroy_machine(mach);
 		return(-1);
 	}
 
-	//sdrl_base_display_expr(code);
+	sdrl_base_display_expr(code);
 sdrl_add_binding(mach->env, "*globals*", sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "env"), (sdrl_data_t) (void *) mach->env, 0, NULL));
 	print_result(mach, sdrl_evaluate(mach, code));
 

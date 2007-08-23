@@ -22,7 +22,6 @@ int sdrl_base_subtract(struct sdrl_machine *mach, struct sdrl_value *value)
 	if (value) {
 		traverse_value_m("number", value->next, value->data.number, result -= cur->data.number);
 	}
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

@@ -21,7 +21,6 @@ int sdrl_base_resolve(struct sdrl_machine *mach, struct sdrl_value *value)
 		ret = SDRL_ERR_NOT_FOUND;
 	else
 		mach->ret = sdrl_duplicate_value(mach->heap, bind);
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

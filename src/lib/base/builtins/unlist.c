@@ -20,7 +20,6 @@ int sdrl_base_unlist(struct sdrl_machine *mach, struct sdrl_value *value)
 		mach->ret = (struct sdrl_value *) value->data.ptr;
 		value->data.ptr = NULL;
 	}
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

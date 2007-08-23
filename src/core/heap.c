@@ -20,7 +20,7 @@ struct sdrl_heap {
 	struct sdrl_heap *next;
 };
 
-#define MAX_LIST	1000
+#define MAX_LIST	100000
 
 struct entry {
 	void *addr;

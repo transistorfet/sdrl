@@ -6,6 +6,8 @@
 #ifndef _SDRL_GLOBALS_H
 #define _SDRL_GLOBALS_H
 
+#define SDRL_ERR_FAILED			-1
+
 #define SDRL_ERR_OUT_OF_MEMORY		-2
 #define SDRL_ERR_NOT_FOUND		-3
 #define SDRL_ERR_IN_USE			-4
@@ -34,23 +36,29 @@ typedef unsigned int linenumber_t;
 typedef double number_t;
 
 /** Increments the count of a reference for values and so on. (destroy decrements) **/
-#define SDRL_MAKE_REFERENCE(datum) \
-	(++(datum)->refs ? (datum) : NULL)
+#define SDRL_MAKE_REFERENCE(datum)		\
+	( ((datum) && ++(datum)->refs) ?	\
+		(datum)				\
+		: NULL )
 
 /** Decrements the count of a reference for values and so on and calls destroy if the count is 0 **/
-#define SDRL_DESTROY_REFERENCE(datum, func) \
+#define SDRL_DESTROY_REFERENCE(datum, func)	\
 	( ((datum)->refs == 1) ?		\
 		( func(datum), 1 )		\
 		: ( --(datum)->refs, 0 ) )
 
 struct sdrl_heap;
+struct sdrl_expr;
 struct sdrl_value;
+struct sdrl_input;
 struct sdrl_machine;
 
 typedef void *(*sdrl_create_t)(struct sdrl_machine *, struct sdrl_value *);
 typedef int (*sdrl_evaluate_t)(struct sdrl_machine *, ...);
 typedef void *(*sdrl_duplicate_t)(struct sdrl_heap *, void *);
 typedef int (*sdrl_destroy_t)(struct sdrl_heap *, void *);
+
+typedef struct sdrl_expr *(*sdrl_parser_t)(struct sdrl_input *, void *);
 
 #endif
 

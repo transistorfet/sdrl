@@ -56,7 +56,7 @@ int sdrl_load_base(struct sdrl_machine *mach)
 
 	sdrl_bind_function_m(mach, builtin, "defenv", sdrl_base_defenv);
 
-	sdrl_bind_function_m(mach, builtin, "print", sdrl_base_print);
+	//sdrl_bind_function_m(mach, builtin, "print", sdrl_base_print);
 
 	return(0);
 }

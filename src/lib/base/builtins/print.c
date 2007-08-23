@@ -32,7 +32,7 @@ int sdrl_base_print(struct sdrl_machine *mach, struct sdrl_value *value)
 		}
 		cur = cur->next;
 	}
-	mach->ret = value;
+	mach->ret = SDRL_MAKE_REFERENCE(value);
 	return(0);
 }
 

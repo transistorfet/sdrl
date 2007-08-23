@@ -42,7 +42,6 @@ int sdrl_base_lookup(struct sdrl_machine *mach, struct sdrl_value *value)
 				mach->ret = sdrl_duplicate_value(mach->heap, bind);
 		}
 	}
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

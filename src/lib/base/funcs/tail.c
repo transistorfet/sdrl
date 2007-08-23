@@ -14,10 +14,10 @@ int sdrl_base_tail(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	struct sdrl_value *tmp = NULL;
 
-	if (value)
-		tmp = sdrl_shift_value(&value);
-	mach->ret = value;
-	sdrl_destroy_value(mach->heap, tmp);
+	if (value && value->next)
+		mach->ret = SDRL_MAKE_REFERENCE(value->next);
+	else
+		mach->ret = NULL;
 	return(0);
 }
 

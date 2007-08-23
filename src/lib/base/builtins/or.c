@@ -25,7 +25,6 @@ int sdrl_base_or(struct sdrl_machine *mach, struct sdrl_value *value)
 			break;
 		});
 
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

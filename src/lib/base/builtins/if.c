@@ -13,24 +13,19 @@
 int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	int ret = 0;
-	struct sdrl_value *block = NULL;
+	struct sdrl_value *block;
 
 	if (sdrl_value_count(value) < 2)
 		ret = SDRL_ERR_INVALID_PARAMS;
-	else if (!SDRL_VALUE_IS_FALSE(value)) {
-		block = value->next;
-		value->next = value->next->next;
-		block->next = NULL;
-	}
-	else if (value->next->next) {
-		block = value->next->next;
-		value->next->next = value->next->next->next;
-		block->next = NULL;
-	}
+	else if (!SDRL_VALUE_IS_FALSE(value))
+		block = sdrl_duplicate_single_value(mach->heap, value->next);
+	else if (value->next->next)
+		block = sdrl_duplicate_single_value(mach->heap, value->next->next);
 
-	if (block)
+	if (block) {
+		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_destroy_reference, block, mach->env));
 		sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, block, mach->env));
-	sdrl_destroy_value(mach->heap, value);
+	}
 	mach->ret = NULL;
 	return(ret);
 }

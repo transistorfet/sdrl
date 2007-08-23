@@ -28,7 +28,6 @@ int sdrl_base_less_than(struct sdrl_machine *mach, struct sdrl_value *value)
 		else
 			last = cur;);
 
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

@@ -20,7 +20,6 @@ int sdrl_base_multiply(struct sdrl_machine *mach, struct sdrl_value *value)
 	struct sdrl_type *type;
 
 	traverse_value_m("number", value, 1, result *= cur->data.number);
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

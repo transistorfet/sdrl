@@ -12,7 +12,7 @@
  */
 int sdrl_base_array(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	mach->ret = value;
+	mach->ret = SDRL_MAKE_REFERENCE(value);
 	return(0);
 }
 

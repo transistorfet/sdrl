@@ -26,7 +26,6 @@ int sdrl_base_defenv(struct sdrl_machine *mach, struct sdrl_value *value)
 	}
 	else
 		ret = -1;
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

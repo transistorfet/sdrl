@@ -12,7 +12,7 @@
  */
 int sdrl_base_list(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "list"), (sdrl_data_t) (void *) value, 0, NULL);
+	mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "list"), (sdrl_data_t) (void *) SDRL_MAKE_REFERENCE(value), 0, NULL);
 	return(0);
 }
 

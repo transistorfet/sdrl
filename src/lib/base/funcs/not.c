@@ -28,7 +28,6 @@ int sdrl_base_not(struct sdrl_machine *mach, struct sdrl_value *value)
 		result = (value->data.number == 0);
 		mach->ret = sdrl_make_value(mach->heap, type, (sdrl_data_t) result, 0, NULL);
 	}
-	sdrl_destroy_value(mach->heap, value);
 	return(ret);
 }
 

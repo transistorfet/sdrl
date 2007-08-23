@@ -43,6 +43,7 @@ struct sdrl_machine *sdrl_create_machine(void)
 		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
 	if (!(mach->global = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value)))
 		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
+	// TODO should we consider this a reference? (we might not want to in which case we should comment that)
 	mach->env = mach->global;
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_type(mach->heap, 0, SDRL_BT_NUMBER, NULL, NULL, NULL, NULL));
@@ -77,7 +78,9 @@ int sdrl_evaluate(struct sdrl_machine *mach, struct sdrl_expr *expr)
 	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr, mach->env)))
 		return(SDRL_ERR_OUT_OF_MEMORY);
 	do {
-		if ((ret = sdrl_evaluate_event(mach, event)))
+		ret = sdrl_evaluate_event(mach, event);
+		sdrl_destroy_event(event);
+		if (ret)
 			return(ret);
 		event = sdrl_pop_event(mach->cont);
 	} while (event);
@@ -98,14 +101,14 @@ int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
 		value = mach->ret;
 		mach->ret = NULL;
 		ret = event->func(mach, event->param, value);
+		sdrl_destroy_value(mach->heap, value);
 	}
 	else 
 		ret = event->func(mach, event->param);
-	sdrl_destroy_event(event);
 	return(ret);
 }
 
-/*
+/**
  * Evaluate the list of exprs
  */
 int sdrl_evaluate_expr_list(struct sdrl_machine *mach, struct sdrl_expr *expr)
@@ -146,7 +149,7 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 			else if (func->type->evaluate && SDRL_TYPE_PASS_EXPRS(func->type))
 				return(func->type->evaluate(mach, func, expr->data.expr->next));
 			else {
-				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, SDRL_MAKE_REFERENCE(func), mach->env));
+				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, func, mach->env));
 				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, expr->data.expr->next, mach->env));
 				return(0);
 			}
@@ -173,6 +176,7 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
 	int ret = 0;
 
 	if (!func && args) {
+		// TODO this is wrong, we can't clobber args
 		func = args;
 		args = args->next;
 		func->next = NULL;
@@ -197,7 +201,7 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
 			mach->ret = sdrl_duplicate_value(mach->heap, func);
 		}
 	}
-	sdrl_destroy_value(mach->heap, func);
+	//sdrl_destroy_value(mach->heap, func);
 	return(ret);
 }
 
@@ -214,6 +218,16 @@ int sdrl_evaluate_params(struct sdrl_machine *mach, struct sdrl_expr *exprs)
 	mach->ret = NULL;
 	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr, exprs, mach->env));
 	return(0);
+}
+
+/**
+ * Destory the given reference to a value and if no further references
+ * exist, the value itself will be destroyed.  (Note: this function is
+ * primarily for use as an event handler).
+ */
+int sdrl_destroy_reference(struct sdrl_machine *mach, struct sdrl_value *value)
+{
+	return(sdrl_destroy_value(mach->heap, value));
 }
 
 /**
