@@ -9,31 +9,31 @@ OBJS =	common/load.o		\
 	types/list.o		\
 	types/env.o		\
 	forms/code.o		\
-	builtins/add.o		\
-	builtins/and.o		\
-	builtins/array.o	\
-	builtins/defenv.o	\
-	builtins/divide.o	\
-	builtins/equals.o	\
-	builtins/gthan.o	\
-	builtins/gethan.o	\
-	builtins/head.o		\
-	builtins/if.o		\
-	builtins/lethan.o	\
-	builtins/list.o		\
-	builtins/lookup.o	\
-	builtins/lthan.o	\
-	builtins/multiply.o	\
-	builtins/nequals.o	\
-	builtins/not.o		\
-	builtins/null.o		\
-	builtins/or.o		\
-	builtins/print.o	\
-	builtins/resolve.o	\
-	builtins/set.o		\
-	builtins/subtract.o	\
-	builtins/tail.o		\
-	builtins/unlist.o	\
+	funcs/add.o		\
+	funcs/and.o		\
+	funcs/array.o		\
+	funcs/defenv.o		\
+	funcs/divide.o		\
+	funcs/equals.o		\
+	funcs/gthan.o		\
+	funcs/gethan.o		\
+	funcs/head.o		\
+	funcs/if.o		\
+	funcs/lethan.o		\
+	funcs/list.o		\
+	funcs/lookup.o		\
+	funcs/lthan.o		\
+	funcs/multiply.o	\
+	funcs/nequals.o		\
+	funcs/not.o		\
+	funcs/null.o		\
+	funcs/or.o		\
+	funcs/print.o		\
+	funcs/resolve.o		\
+	funcs/set.o		\
+	funcs/subtract.o	\
+	funcs/tail.o		\
+	funcs/unlist.o		\
 	parsers/lispy.o		\
 	parsers/parser.o	\
 	utils/disperr.o		\
