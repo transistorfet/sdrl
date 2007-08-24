@@ -12,11 +12,10 @@
  */
 int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	int ret = 0;
 	struct sdrl_value *block;
 
 	if (sdrl_value_count(value) < 2)
-		ret = SDRL_ERR_INVALID_PARAMS;
+		return(SDRL_ERR_INVALID_PARAMS);
 	else if (!SDRL_VALUE_IS_FALSE(value))
 		block = sdrl_duplicate_single_value(mach->heap, value->next);
 	else if (value->next->next)
@@ -27,7 +26,7 @@ int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *value)
 		sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, block, mach->env));
 	}
 	mach->ret = NULL;
-	return(ret);
+	return(0);
 }
 
 
