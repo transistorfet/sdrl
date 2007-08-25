@@ -1,24 +1,18 @@
 
+	* convert bindings into a hash table
 	* think about retract_environment and references (potential problems? see code)
 	* add const to all parameters that you can
-
-	* comment parsing doesn't work
-
-	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
-	* convert bindings into a hash table (if not already done)
-	* add support for threads (either in the core or in a lib)
-
-	* figure out the calling convetion for C functions.  Should the C function be expected to delete a
-	  reference to the values it was given or not?
-
-	* come up with a new name for builtins (perhaps just functions)
-
-	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
-	* should we rename sdrl_call_value to sdrl_evaluate_value?
-	* change the name/format of bitflag test macros or else use bitfields (sdrl_event's SDRL_USE_RET)
 	* there is probably a memory leak in error.c particularily in sdrl_set_error where the contents
 	  of last_error are overwritten without first freeing possibly existing error.  (I need to dig into
 	  it more but i don't really like the way i wrote errors anyways)
+
+	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
+	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
+	* should we rename sdrl_call_value to sdrl_evaluate_value?
+
+	* make string functions
+	* make equals command check any type instead of just number
+	* change the name/format of bitflag test macros or else use bitfields (sdrl_event's SDRL_USE_RET)
 
 	* add a comment to all library functions and types describing the
 	  parameters taken through struct sdrl_value *value
@@ -28,14 +22,12 @@
 	* function to check types (in libbase??)
 	* function to set a binding (in libbase?)
 
+	* add support for threads (either in the core or in a lib)
 	* make a heap implementation
 	* make parser catch errors during a parse
 
-	* add environment type?
 	* better way to initialize libraries?
-	* a function to automagically register bindings
 
-	* make bindings use a binary tree?
 	* what about expr type in relation to destroy() (creating an expr value that is not a function or mach->code)
 	* add constant values (modifier to value or bitflags in type?)
 	* can we simplify the semantics of set?
