@@ -24,6 +24,8 @@
 #define SDRL_ERR_INVALID_NAME		-15
 #define SDRL_ERR_INVALID_FUNCTION	-16
 
+#define SDRL_ERR_DIVIDE_BY_ZERO		-17
+
 #define SDRL_MAKE_LINENUMBER(line, col) \
 	(line << 16 | col)
 #define SDRL_GET_LINE_NUMBER(linecol) \

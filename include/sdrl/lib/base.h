@@ -12,11 +12,7 @@
 int sdrl_load_base(struct sdrl_machine *);
 
 /*** Parsers ***/
-struct sdrl_expr *sdrl_base_parse_input(struct sdrl_input *, void *);
-struct sdrl_expr *sdrl_base_parse_expr(struct sdrl_input *, void *);
-
-struct sdrl_expr *sdrl_base_parse_lispy_input(struct sdrl_input *, void *);
-struct sdrl_expr *sdrl_base_parse_lispy_expr(struct sdrl_input *, void *);
+struct sdrl_expr *sdrl_base_parse_lambda_input(struct sdrl_input *, void *);
 
 /*** Types ***/
 int sdrl_base_load_builtin_type(struct sdrl_machine *, char *);

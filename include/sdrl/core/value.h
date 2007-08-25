@@ -28,6 +28,8 @@ struct sdrl_value {
 	struct sdrl_value *next;
 };
 
+#define SDRL_FOREACH_VALUE(list, cur)	\
+	for (cur = list; cur; cur = cur->next)
 
 #define SDRL_VALUE_IS_FALSE(value) \
 	((SDRL_BASE_TYPE((value)->type) == SDRL_BT_NUMBER) && (!(value)->data.number)) \
