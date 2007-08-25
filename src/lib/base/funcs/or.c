@@ -14,18 +14,22 @@
  */
 int sdrl_base_or(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	int ret = 0;
-	number_t result = 1;
+	number_t result = 0;
 	struct sdrl_value *cur;
 	struct sdrl_type *type;
 
-	traverse_value_m("number", value, 0,
+	if (!(type = sdrl_find_binding(mach->type_env, "number")))
+		return(SDRL_ERR_NOT_FOUND);
+	SDRL_FOREACH_VALUE(value, cur) {
+		if (cur->type != type)
+			return(SDRL_ERR_INVALID_TYPE);
 		if (cur->data.number) {
 			result = 1;
 			break;
-		});
-
-	return(ret);
+		}
+	}
+	mach->ret = sdrl_make_value(mach->heap, type, (sdrl_data_t) result, 0, NULL);
+	return(0);
 }
 
 
