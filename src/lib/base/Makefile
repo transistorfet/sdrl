@@ -34,10 +34,10 @@ OBJS =	common/load.o		\
 	funcs/subtract.o	\
 	funcs/tail.o		\
 	funcs/unlist.o		\
-	parsers/lispy.o		\
-	parsers/parser.o	\
+	parsers/lambda.o	\
 	utils/disperr.o		\
 	utils/dispexpr.o	\
+	utils/input.o		\
 	utils/parsef.o		\
 	utils/parses.o
 
