@@ -14,8 +14,6 @@
 #define SDRL_IT_FILE		0x01
 #define SDRL_IT_STRING		0x02
 
-typedef int (*sdrl_char_test_t)(char);
-
 struct sdrl_source {
 	int type;
 	short line;
@@ -38,21 +36,11 @@ int sdrl_destroy_input(struct sdrl_input *);
 int sdrl_add_file(struct sdrl_input *, char *);
 int sdrl_add_string(struct sdrl_input *, char *, int);
 
-number_t sdrl_read_number(struct sdrl_input *);
-char *sdrl_read_string(struct sdrl_input *, char);
-char *sdrl_read_word(struct sdrl_input *, sdrl_char_test_t);
-
-char sdrl_get_input(struct sdrl_input *);
 char sdrl_get_char(struct sdrl_input *);
-
-char sdrl_peek_input(struct sdrl_input *);
 char sdrl_peek_char(struct sdrl_input *);
+void sdrl_unget_char(struct sdrl_input *, char);
 
 linenumber_t sdrl_get_linenumber(struct sdrl_input *);
-
-int sdrl_is_digit(char);
-int sdrl_is_space(char);
-int sdrl_is_word(char);
 
 #endif
 
