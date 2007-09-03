@@ -20,6 +20,12 @@ current:	* Changed bindings to store void * instead of specific struct pointers
 		* Moved includes to include/sdrl
 		* Added error reporting module
 		* Added environment type as well as lookup (%) function for resolving values in an environment
+		* Completely removed all parsing related code from the core (namely input.c)
+		* Added a seperate I/O library
+		* Refactored code particularily changing the style of macro names
+		* Added a test suite with automatic test running script
+		* Normalized function arguments with respect to references (who is responsible)
+		* Renamed builtins/ to funcs/
 
 v0.2:		* Converted all function names to sdrl_*
 		* Converted code to compile file into an AST before executing
