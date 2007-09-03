@@ -1,0 +1,19 @@
+# EXPECTED OUTPUT
+# 1.000000
+# 6.000000
+# 40320.000000
+#
+# Exited Normally
+# END EXPECTED OUTPUT
+
+(set fac (code
+	(set (list n) ($ _))
+	(if (= ($ n) 0)
+		1
+		(code (* ($ n) (fac (- ($ n) 1)))))))
+
+(print (fac 0) "\n")
+(print (fac 3) "\n")
+(print (fac 8) "\n")
+
+
