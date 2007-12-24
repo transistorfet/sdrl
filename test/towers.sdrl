@@ -1,16 +1,24 @@
+# EXPECTED OUTPUT
+# Moved disc from 1.000000 to 3.000000
+# Moved disc from 1.000000 to 2.000000
+# Moved disc from 3.000000 to 2.000000
+# Moved disc from 1.000000 to 3.000000
+# Moved disc from 2.000000 to 1.000000
+# Moved disc from 2.000000 to 3.000000
+# Moved disc from 1.000000 to 3.000000
 #
-# Towers of Hanoi implemented recursively for 3 pegs
-#
+# Exited Normally
+# END EXPECTED OUTPUT
 
 (set move-tower (code
 	(set (list from to discs) ($ _))
-	(if (= ($ discs) 0)
+	(if (= ($ discs) 1)
 		(code
-			(move-disc ($ from) ($to)))
+			(move-disc ($ from) ($ to)))
 		(code
-			(move-tower ($ from) (- 6 ($ from) ($to)) (- ($ discs) 1))
+			(move-tower ($ from) (- 6 ($ from) ($ to)) (- ($ discs) 1))
 			(move-disc ($ from) ($ to))
-			(move-tower (- 6 ($ from) ($ to)) ($ to) (- ($ discs) 1)))))
+			(move-tower (- 6 ($ from) ($ to)) ($ to) (- ($ discs) 1))))))
 
 (set move-disc (code
 	(set (list from to) ($ _))
