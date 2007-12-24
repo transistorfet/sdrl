@@ -1,8 +1,10 @@
 
-SDRL Release 0.2
+SDRL Release 0.3
+2007/12/23
 
-See changelog.txt for details of changes.  (Note: this release is
-incomatible with SDRL Release 0.1).
+This is a long long overdue release but it is somewhat rushed.  It was intended
+that most of these changes would be released approximately two years ago but
+interst in the project dropped.  See changelog.txt for details of changes.
 
 Compiling:
 	cd src/sdrl
@@ -12,7 +14,7 @@ Compiling:
 	Copy this to somewhere in your path.
 
 Using SDRL in a project:
-	Include the file (src/core/)sdrl.h into your project and
+	Include the file <sdrl/sdrl.h> into your project and
 	when compiling, run make in core, compile any files in
 	lib/ and then link libsdrl.a and the compiled lib/ files
 	into your source project.  (In the next release I hope to
@@ -23,6 +25,6 @@ Using SDRL in a project:
 	on making your own C library functions.
 
 This package is copyrighted 2005 Sarina McFarland and licensed
-under the Artistic Licence (See LICENCE).
+under the Artistic Licence (See LICENCE and COPYRIGHT).
 
 
