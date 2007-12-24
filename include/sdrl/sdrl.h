@@ -17,7 +17,7 @@
 #include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
 
-#define sdrl_bind_function_m(mach, type, name, func) \
+#define SDRL_BIND_FUNCTION(mach, type, name, func) \
 	sdrl_add_binding(mach->env, name, sdrl_make_value(mach->heap, type, (sdrl_data_t) (void *) func, 0, NULL));
 
 #endif

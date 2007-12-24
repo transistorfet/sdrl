@@ -2,12 +2,7 @@
 ROOT = ../../..
 
 LIB_TARGET = $(ROOT)/lib/libbase.a
-OBJS =	common/load.o		\
-	types/builtin.o		\
-	types/expr.o		\
-	types/form.o		\
-	types/list.o		\
-	types/env.o		\
+OBJS =	load.o			\
 	forms/code.o		\
 	funcs/add.o		\
 	funcs/and.o		\
@@ -34,6 +29,12 @@ OBJS =	common/load.o		\
 	funcs/tail.o		\
 	funcs/unlist.o		\
 	parsers/lambda.o	\
+	types/func.o		\
+	types/expr.o		\
+	types/form.o		\
+	types/func.o		\
+	types/list.o		\
+	types/env.o		\
 	utils/disperr.o		\
 	utils/dispexpr.o	\
 	utils/input.o		\

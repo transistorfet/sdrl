@@ -8,18 +8,18 @@
 #include <sdrl/lib/io.h>
 
 /**
- * Load all of the forms, builtins and types of the base library into the given machine.
+ * Load all of the forms, funcs and types of the base library into the given machine.
  */
 int sdrl_load_io(struct sdrl_machine *mach)
 {
-	struct sdrl_type *builtin;
+	struct sdrl_type *func;
 
-	if (!(builtin = sdrl_find_binding(mach->type_env, "builtin")))
+	if (!(func = sdrl_find_binding(mach->type_env, "func")))
 		return(-1);
 
-	sdrl_bind_function_m(mach, builtin, "print", sdrl_io_print);
+	SDRL_BIND_FUNCTION(mach, func, "print", sdrl_io_print);
 
-	sdrl_bind_function_m(mach, builtin, "open", sdrl_io_open);
+	SDRL_BIND_FUNCTION(mach, func, "open", sdrl_io_open);
 
 	return(0);
 }
