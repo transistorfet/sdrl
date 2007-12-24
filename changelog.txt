@@ -1,5 +1,5 @@
 
-current:	* Changed bindings to store void * instead of specific struct pointers
+v0.3:		* Changed bindings to store void * instead of specific struct pointers
 		* Changed bindings function names
 		* Added event.c continuation manager
 		* Converted code to use continuations instead of recursion
@@ -11,12 +11,13 @@ current:	* Changed bindings to store void * instead of specific struct pointers
 		* Added reference counting support
 		* Moved parse functions to read in various strings/numbers to input.c
 		* Moved the parsing core to lib/ and enabled the parser to be specified by a parameter
+		* Changed the "default" parser to the lispy parser
 		* Added reference count to environments
 		* Added sdrl_retract_environment to free only the topmost environment
 		* Put a reference to the environment in sdrl_event (so no more environment popping)
 		* Broke prims.c into a proper library (libbase)
-		* Converted Makefiles to used Autobuilder
-		* Fixed memory leaks caused by if (now values passed to sdrl_call_value are destroyed)
+		* Rewrote build system
+		* Fixed memory leaks caused by 'if' (now values passed to sdrl_call_value are destroyed)
 		* Moved includes to include/sdrl
 		* Added error reporting module
 		* Added environment type as well as lookup (%) function for resolving values in an environment

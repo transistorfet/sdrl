@@ -1,4 +1,7 @@
 
+	* implement a simple regular expression matcher as seen in beautiful code. It is simple, functional,
+	  and more importantly, it needs more builtin functions (the ability to get chars in a string)
+
 	* convert bindings into a hash table
 	* think about retract_environment and references (potential problems? see code)
 	* add const to all parameters that you can
