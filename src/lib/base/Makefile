@@ -28,7 +28,6 @@ OBJS =	common/load.o		\
 	funcs/not.o		\
 	funcs/null.o		\
 	funcs/or.o		\
-	funcs/print.o		\
 	funcs/resolve.o		\
 	funcs/set.o		\
 	funcs/subtract.o	\

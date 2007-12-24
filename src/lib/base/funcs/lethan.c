@@ -5,7 +5,6 @@
  */
 
 #include <sdrl/sdrl.h>
-#include "../common/traverse.h"
 
 /**
  * Args:	<value>, ...

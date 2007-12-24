@@ -4,11 +4,11 @@
  */
 
 
-#ifndef _SDRL_CORE_INPUT_H
-#define _SDRL_CORE_INPUT_H
+#ifndef _SDRL_LIB_BASE_INPUT_H
+#define _SDRL_LIB_BASE_INPUT_H
 
 #include <stdio.h>
-#include <sdrl/core/input.h>
+
 #include <sdrl/globals.h>
 
 #define SDRL_IT_FILE		0x01

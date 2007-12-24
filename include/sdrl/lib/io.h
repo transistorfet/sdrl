@@ -9,6 +9,8 @@
 
 #include <sdrl/sdrl.h>
 
+int sdrl_load_io(struct sdrl_machine *);
+
 /*** Builtins ***/
 int sdrl_io_print(struct sdrl_machine *, struct sdrl_value *);
 

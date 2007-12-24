@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
+#include <sdrl/lib/base/input.h>
 
 /**
  * Parse a string and return an expression given its name and the parser to use.

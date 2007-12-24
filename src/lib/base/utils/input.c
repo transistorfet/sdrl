@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <sdrl/core/input.h>
 #include <sdrl/globals.h>
+#include <sdrl/lib/base/input.h>
 
 static int input_free_source(struct sdrl_input *);
 

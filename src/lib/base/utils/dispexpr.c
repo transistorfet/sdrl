@@ -3,6 +3,8 @@
  * Description:	Expression Display
  */
 
+#include <stdio.h>
+
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 

@@ -5,6 +5,7 @@
 
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
+#include <sdrl/lib/base/input.h>
 
 #define LAMBDA_MAX_NUMBER		128
 #define LAMBDA_MAX_STRING		1024
