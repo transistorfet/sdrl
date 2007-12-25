@@ -8,6 +8,7 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/io.h>
 #include <sdrl/lib/base.h>
+#include <sdrl/lib/string.h>
 
 char *infile = NULL;
 
@@ -26,7 +27,9 @@ int main(int argc, char **argv)
 
 	if (!(mach = sdrl_create_machine()))
 		return(-1);
-	if (sdrl_load_base(mach) || sdrl_load_io(mach)) {
+	if (sdrl_load_base(mach)
+	    || sdrl_load_string(mach)
+	    || sdrl_load_io(mach)) {
 		printf("Error initializing primatives\n");
 		sdrl_destroy_machine(mach);
 		return(-1);
