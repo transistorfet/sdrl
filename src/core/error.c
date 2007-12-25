@@ -15,7 +15,7 @@ static struct sdrl_error *last_error = NULL;
 /**
  * Allocate and initialize an error report.
  */
-struct sdrl_error *sdrl_make_error(int bitflags, int err, char *msg)
+struct sdrl_error *sdrl_make_error(int bitflags, int err, const char *msg)
 {
 	struct sdrl_error *error;
 
@@ -49,7 +49,7 @@ int sdrl_destroy_error(struct sdrl_error *error)
 /**
  * Create a new error and set it as the last error to have occured and return the error code.
  */
-int sdrl_set_error(int bitflags, int err, char *msg)
+int sdrl_set_error(int bitflags, int err, const char *msg)
 {
 	if (err == SDRL_ERR_OUT_OF_MEMORY)
 		last_error = NULL;

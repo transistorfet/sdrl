@@ -8,7 +8,7 @@
 
 #define NUM_ERRORS	16
 
-static char *disperr_msgs[NUM_ERRORS] = {
+static const char *disperr_msgs[NUM_ERRORS] = {
 	"General error",
 	"Out of memory",
 	"Binding not found:",

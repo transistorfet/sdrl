@@ -10,7 +10,7 @@ static void *sdrl_create_env_type(struct sdrl_machine *, struct sdrl_value *);
 static void *sdrl_duplicate_env_type(struct sdrl_heap *, void *);
 static int sdrl_destroy_env_type(struct sdrl_heap *, void *);
 
-int sdrl_base_load_env_type(struct sdrl_machine *mach, char *name)
+int sdrl_base_load_env_type(struct sdrl_machine *mach, const char *name)
 {
 	struct sdrl_type *env;
 

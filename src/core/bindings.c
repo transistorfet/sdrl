@@ -26,8 +26,8 @@
 #define IS_LOWERCASE(ch) \
 	( (ch >= 0x41 && ch <= 0x5a) ? ch + 0x20 : ch )
 
-static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *, char *, int);
-static int sdrl_stricmp(char *, char *);
+static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *, const char *, int);
+static int sdrl_stricmp(const char *, const char *);
 
 /**
  * Allocate an environment for binding values to names.
@@ -110,7 +110,7 @@ int sdrl_destroy_environment(struct sdrl_environment *env)
 /**
  * Add a binding of name to environment.
  */
-int sdrl_add_binding(struct sdrl_environment *env, char *name, void *data)
+int sdrl_add_binding(struct sdrl_environment *env, const char *name, void *data)
 {
 	struct sdrl_binding *bind;
 
@@ -137,7 +137,7 @@ int sdrl_add_binding(struct sdrl_environment *env, char *name, void *data)
 /**
  * Replace the binding's data with data.
  */
-int sdrl_replace_binding(struct sdrl_environment *env, char *name, void *data)
+int sdrl_replace_binding(struct sdrl_environment *env, const char *name, void *data)
 {
 	struct sdrl_binding *bind;
 
@@ -154,7 +154,7 @@ int sdrl_replace_binding(struct sdrl_environment *env, char *name, void *data)
 /**
  * Remove a bindings of name from environment
  */
-int sdrl_remove_binding(struct sdrl_environment *env, char *name)
+int sdrl_remove_binding(struct sdrl_environment *env, const char *name)
 {
 	struct sdrl_binding *cur, *prev;
 
@@ -183,7 +183,7 @@ int sdrl_remove_binding(struct sdrl_environment *env, char *name)
 /**
  * Find the value bound to name in env or its parents.
  */
-void *sdrl_find_binding(struct sdrl_environment *env, char *name)
+void *sdrl_find_binding(struct sdrl_environment *env, const char *name)
 {
 	struct sdrl_binding *bind;
 
@@ -198,7 +198,7 @@ void *sdrl_find_binding(struct sdrl_environment *env, char *name)
  * Returns binding of name in environment or one of environments parents
  * searching up to levels (0 to search all).
  */
-static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, char *name, int levels)
+static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, const char *name, int levels)
 {
 	struct sdrl_binding *cur;
 	struct sdrl_environment *curenv;
@@ -218,7 +218,7 @@ static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, char
 	return(NULL);
 }
 
-static int sdrl_stricmp(char *str1, char *str2)
+static int sdrl_stricmp(const char *str1, const char *str2)
 {
 	int i = 0;
 

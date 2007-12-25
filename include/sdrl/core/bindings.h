@@ -37,11 +37,11 @@ struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *);
 struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *);
 int sdrl_destroy_environment(struct sdrl_environment *);
 
-int sdrl_add_binding(struct sdrl_environment *, char *, void *);
-int sdrl_replace_binding(struct sdrl_environment *, char *, void *);
-int sdrl_remove_binding(struct sdrl_environment *, char *);
+int sdrl_add_binding(struct sdrl_environment *, const char *, void *);
+int sdrl_replace_binding(struct sdrl_environment *, const char *, void *);
+int sdrl_remove_binding(struct sdrl_environment *, const char *);
 
-void *sdrl_find_binding(struct sdrl_environment *, char *);
+void *sdrl_find_binding(struct sdrl_environment *, const char *);
 
 #endif
 

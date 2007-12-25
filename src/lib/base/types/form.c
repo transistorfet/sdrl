@@ -8,7 +8,7 @@
 
 static int sdrl_evaluate_form_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_expr *);
 
-int sdrl_base_load_form_type(struct sdrl_machine *mach, char *name)
+int sdrl_base_load_form_type(struct sdrl_machine *mach, const char *name)
 {
 	struct sdrl_type *form;
 

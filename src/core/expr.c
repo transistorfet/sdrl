@@ -30,7 +30,7 @@ struct sdrl_expr *sdrl_make_number_expr(linenumber_t line, number_t number, stru
 /**
  * Return a newly allocated string expression using a malloc'd string, str.
  */
-struct sdrl_expr *sdrl_make_string_expr(linenumber_t line, char *str, struct sdrl_expr *next)
+struct sdrl_expr *sdrl_make_string_expr(linenumber_t line, const char *str, struct sdrl_expr *next)
 {
 	struct sdrl_expr *expr;
 

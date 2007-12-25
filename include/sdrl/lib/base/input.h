@@ -33,8 +33,8 @@ struct sdrl_input {
 
 struct sdrl_input *sdrl_create_input(void);
 int sdrl_destroy_input(struct sdrl_input *);
-int sdrl_add_file(struct sdrl_input *, char *);
-int sdrl_add_string(struct sdrl_input *, char *, int);
+int sdrl_add_file(struct sdrl_input *, const char *);
+int sdrl_add_string(struct sdrl_input *, const char *, int);
 
 char sdrl_get_char(struct sdrl_input *);
 char sdrl_peek_char(struct sdrl_input *);

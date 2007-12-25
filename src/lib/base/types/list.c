@@ -7,7 +7,7 @@
 #include <sdrl/sdrl.h>
 
 
-int sdrl_base_load_list_type(struct sdrl_machine *mach, char *name)
+int sdrl_base_load_list_type(struct sdrl_machine *mach, const char *name)
 {
 	struct sdrl_type *list;
 

@@ -43,7 +43,7 @@ int sdrl_destroy_input(struct sdrl_input *input)
 /**
  * Add a file to the top of the input stack.
  */
-int sdrl_add_file(struct sdrl_input *input, char *filename)
+int sdrl_add_file(struct sdrl_input *input, const char *filename)
 {
 	FILE *fptr;
 	struct sdrl_source *source;
@@ -67,7 +67,7 @@ int sdrl_add_file(struct sdrl_input *input, char *filename)
 /**
  * Add a copy of the string to the top of the input stack.
  */
-int sdrl_add_string(struct sdrl_input *input, char *str, int size)
+int sdrl_add_string(struct sdrl_input *input, const char *str, int size)
 {
 	char *cpy_str;
 	struct sdrl_source *source;

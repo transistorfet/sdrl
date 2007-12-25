@@ -8,7 +8,7 @@
 
 static int sdrl_evaluate_func_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
 
-int sdrl_base_load_func_type(struct sdrl_machine *mach, char *name)
+int sdrl_base_load_func_type(struct sdrl_machine *mach, const char *name)
 {
 	struct sdrl_type *func;
 
