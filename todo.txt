@@ -1,7 +1,10 @@
 
+	* fix the disperr.c function since it will no longer print error messasges correctly
+
 	* implement a simple regular expression matcher as seen in beautiful code. It is simple, functional,
 	  and more importantly, it needs more builtin functions (the ability to get chars in a string)
 
+	* make libraries namespacable
 	* convert bindings into a hash table
 	* think about retract_environment and references (potential problems? see code)
 	* add const to all parameters that you can
@@ -13,7 +16,7 @@
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* should we rename sdrl_call_value to sdrl_evaluate_value?
 
-	* make string functions
+	* make string functions: strcmp, substr, char, uppercase, lowercase
 	* make equals command check any type instead of just number
 	* change the name/format of bitflag test macros or else use bitfields (sdrl_event's SDRL_USE_RET)
 
@@ -23,7 +26,6 @@
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* a function to automatically check args based on min/max args allowed? (both in C and SDRL)
 	* function to check types (in libbase??)
-	* function to set a binding (in libbase?)
 
 	* add support for threads (either in the core or in a lib)
 	* make a heap implementation
