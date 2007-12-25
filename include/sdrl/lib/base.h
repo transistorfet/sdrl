@@ -24,7 +24,7 @@ int sdrl_base_load_list_type(struct sdrl_machine *, char *);
 /*** Forms ***/
 int sdrl_base_code(struct sdrl_machine *, struct sdrl_expr *);
 
-/*** Builtins ***/
+/*** Functions ***/
 int sdrl_base_set(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_if(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_list(struct sdrl_machine *, struct sdrl_value *);
