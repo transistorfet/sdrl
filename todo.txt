@@ -1,13 +1,12 @@
 
+	* add more tests, should they be categorized particularily with respect to the libraries being tested?
 	* fix the disperr.c function since it will no longer print error messasges correctly
 
 	* implement a simple regular expression matcher as seen in beautiful code. It is simple, functional,
 	  and more importantly, it needs more builtin functions (the ability to get chars in a string)
 
 	* make libraries namespacable
-	* convert bindings into a hash table
 	* think about retract_environment and references (potential problems? see code)
-	* add const to all parameters that you can
 	* there is probably a memory leak in error.c particularily in sdrl_set_error where the contents
 	  of last_error are overwritten without first freeing possibly existing error.  (I need to dig into
 	  it more but i don't really like the way i wrote errors anyways)
@@ -15,33 +14,34 @@
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* should we rename sdrl_call_value to sdrl_evaluate_value?
+	* add the ability to make sdrl_value constant (modifier to value or bitflags in type?)
+	* fix the heap implementation to be a simpler memory tracker but without the hax
+	* make parser catch errors during a parse
+	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
+
+	* should you make a trackable_oject type struct that all objects that are trackable/garbage
+	  collectable such as values and environments (types too?) inherit so you can cast them and deal with
+	  them more nicely?  Would this also make it better for libraries that want to get in on the GC
+	  action?  Would this struct contain the pointer to the heap in addition to just the ref num?
 
 	* make string functions: strcmp, substr, char, uppercase, lowercase
 	* make equals command check any type instead of just number
 	* change the name/format of bitflag test macros or else use bitfields (sdrl_event's SDRL_USE_RET)
 
-	* add a comment to all library functions and types describing the
-	  parameters taken through struct sdrl_value *value
-
+	* add a function to automatically check args based on min/max args allowed and types? (both in C and
+	  SDRL)
+	* what about expr type in relation to destroy() (creating an expr value that is not a function
+	  or mach->code)
+	* can/should we simplify the semantics of set?
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
-	* a function to automatically check args based on min/max args allowed? (both in C and SDRL)
-	* function to check types (in libbase??)
+	* allow multiple event stacks in a continuation (what is this actually for? a thread type of thing?)
+
+Features:
 
 	* add support for threads (either in the core or in a lib)
-	* make a heap implementation
-	* make parser catch errors during a parse
-
-	* better way to initialize libraries?
-
-	* what about expr type in relation to destroy() (creating an expr value that is not a function or mach->code)
-	* add constant values (modifier to value or bitflags in type?)
-	* can we simplify the semantics of set?
-
 	* add garbage collection
-	* allow multiple event stacks in a continuation
-	* make the parser parse syntactic sugary goodness
-	* make the parser modifiable by the code itself
-	* add cross-cutting language constructs (aspects?)
-	* can you do aspects using the continuation stack or should you do it by modifying the expr tree
+	* a parser that supports various syntactic sugar
+	* cross-cutting language constructs (aspects?) (can you do aspects using the continuation stack or
+	  should you do it by modifying the expr tree)
 
 

@@ -27,8 +27,9 @@ struct sdrl_environment {
 	short refs;
 	struct sdrl_heap *heap;
 	sdrl_destroy_t destroy;
-	struct sdrl_binding *head;
-	struct sdrl_binding *tail;
+	int size;
+	int entries;
+	struct sdrl_binding **table;
 	struct sdrl_environment *parent;
 };
 
