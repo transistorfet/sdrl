@@ -35,7 +35,7 @@ struct sdrl_machine *sdrl_create_machine(void)
 		return(NULL);
 	mach->ret = NULL;
 	mach->error = NULL;
-	if (!(mach->heap = sdrl_create_heap(0, 0)))
+	if (!(mach->heap = sdrl_create_heap()))
 		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
 	if (!(mach->cont = sdrl_create_continuation()))
 		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
