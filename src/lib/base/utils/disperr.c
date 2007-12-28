@@ -36,7 +36,7 @@ int sdrl_base_display_error(struct sdrl_error *error)
 
 	err = (error->err * -1) - 1;
 	if ((err < 0) || (err > NUM_ERRORS))
-		printf("Exited Normally");
+		return(0);
 	else if (error->msg)
 		printf("Error %d,%d: %s %s\n", SDRL_GET_LINE_NUMBER(error->line), SDRL_GET_COLUMN_NUMBER(error->line), disperr_msgs[err], error->msg);
 	else

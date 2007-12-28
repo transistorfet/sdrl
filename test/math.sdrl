@@ -1,7 +1,5 @@
 # EXPECTED OUTPUT
 # 2405.000000
-#
-# Exited Normally
 # END EXPECTED OUTPUT
 
 (print (* (/ 10 2) (+ 8 3 2) (+ 4 (- 1324 1300) 9)) "\n")

@@ -6,8 +6,6 @@
 # Moved disc from 2.000000 to 1.000000
 # Moved disc from 2.000000 to 3.000000
 # Moved disc from 1.000000 to 3.000000
-#
-# Exited Normally
 # END EXPECTED OUTPUT
 
 (set move-tower (code

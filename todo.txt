@@ -1,40 +1,47 @@
 
-	* add more tests, should they be categorized particularily with respect to the libraries being tested?
-	* fix the disperr.c function since it will no longer print error messasges correctly
-
-	* implement a simple regular expression matcher as seen in beautiful code. It is simple, functional,
-	  and more importantly, it needs more builtin functions (the ability to get chars in a string)
+	* change the makefiles to move the sdrl binary to bin/ and put a makefile in the root dir 
 
 	* make libraries namespacable
-	* think about retract_environment and references (potential problems? see code)
-	* there is probably a memory leak in error.c particularily in sdrl_set_error where the contents
-	  of last_error are overwritten without first freeing possibly existing error.  (I need to dig into
-	  it more but i don't really like the way i wrote errors anyways)
+	* add a 'load' command that (somehow) calls the library loading function that adds all the library
+	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
+	  that each library behaves in an expected way
+	* redesign error.c  What are you trying to achieve with it?
+	* make the output of dispexpr.c more readable
+
+	* add the ability to make sdrl_value constant (modifier to value or bitflags in type?) (or do you
+	  really only need/want to make a binding constant?)
+	* make parser catch errors during a parse
 
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* should we rename sdrl_call_value to sdrl_evaluate_value?
-	* add the ability to make sdrl_value constant (modifier to value or bitflags in type?)
-	* fix the heap implementation to be a simpler memory tracker but without the hax
-	* make parser catch errors during a parse
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
+	* change the name/format of bitflag test macros (sdrl_event's SDRL_USE_RET)
+
+	* make string functions: strcmp, substr, char, uppercase, lowercase
+	* make equals command check any type instead of just number
+
+	* add a function to automatically check args based on min/max args allowed and types? (both in C and
+	  SDRL)
+	* what about expr type in relation to destroy() (creating an expr value that is not a function
+	  or mach->code)  (wtf was i talking about here?)
+	* can/should we simplify the semantics of set?  Perhaps making 2 different functions
+	* machine value type with a pointer to a machine structure (for calling a function in another machine)
+	* allow multiple event stacks in a continuation (what is this actually for? a thread type of thing?)
+
+Tests:
+
+	* should tests be categorized particularily with respect to the libraries being tested?
+	* implement a simple regular expression matcher as seen in beautiful code. It is simple, functional,
+	  and more importantly, it needs more builtin functions (the ability to get chars in a string)
+	* a brainfuck interpreter
+
+Structural Issues:
 
 	* should you make a trackable_oject type struct that all objects that are trackable/garbage
 	  collectable such as values and environments (types too?) inherit so you can cast them and deal with
 	  them more nicely?  Would this also make it better for libraries that want to get in on the GC
 	  action?  Would this struct contain the pointer to the heap in addition to just the ref num?
-
-	* make string functions: strcmp, substr, char, uppercase, lowercase
-	* make equals command check any type instead of just number
-	* change the name/format of bitflag test macros or else use bitfields (sdrl_event's SDRL_USE_RET)
-
-	* add a function to automatically check args based on min/max args allowed and types? (both in C and
-	  SDRL)
-	* what about expr type in relation to destroy() (creating an expr value that is not a function
-	  or mach->code)
-	* can/should we simplify the semantics of set?
-	* machine value type with a pointer to a machine structure (for calling a function in another machine)
-	* allow multiple event stacks in a continuation (what is this actually for? a thread type of thing?)
 
 Features:
 

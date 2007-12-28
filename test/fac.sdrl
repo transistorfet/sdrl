@@ -2,8 +2,6 @@
 # 1.000000
 # 6.000000
 # 40320.000000
-#
-# Exited Normally
 # END EXPECTED OUTPUT
 
 (set fac (code

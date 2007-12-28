@@ -76,24 +76,17 @@ int parse_cmdline(int argc, char **argv)
 
 }
 
-int print_result(struct sdrl_machine *mach, int error)
+int print_result(struct sdrl_machine *mach, int exitcode)
 {
-	if (mach->ret) {
-//		prim_print(mach, mach->ret);
-//		printf("%f", mach->ret->data.number);
-//		printf("%s", mach->ret->data.str);
-	}
-
-	printf("\n");
 	if (mach->error) {
 		//printf("Error %d,%d: %s\n", SDRL_GET_LINE_NUMBER(mach->error->line), SDRL_GET_COLUMN_NUMBER(mach->error->line), mach->error->msg);
+		printf("\n");
 		sdrl_base_display_error(mach->error);
 	}
 	else {
-		switch (error) {
+		switch (exitcode) {
 			case 0:
-				printf("Exited Normally\n");
-				return(0);
+				break;
 			case SDRL_ERR_END_OF_INPUT:
 				printf("End Of Input Reached\n");
 				break;
@@ -119,7 +112,7 @@ int print_result(struct sdrl_machine *mach, int error)
 				printf("Error Evaluating Parameters\n");
 				break;
 			default:
-				printf("Error Number: %d\n", error);
+				printf("Error Number: %d\n", exitcode);
 				break;
 		}
 	}
