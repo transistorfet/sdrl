@@ -97,7 +97,7 @@ static void sdrl_heap_report(struct sdrl_heap *heap)
 
 	cur = heap->head;
 	while (cur) {
-		printf("Unfreed: 0x%x\n", (unsigned int) (cur + sizeof(struct sdrl_heap_entry)));
+		printf("Unfreed: 0x%x\n", (unsigned int) (cur + 1));
 		cur = cur->next;
 	}
 }
