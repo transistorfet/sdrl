@@ -12,6 +12,7 @@
 int sdrl_load_string(struct sdrl_machine *);
 
 /*** Functions ***/
+int sdrl_string_char(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_string_length(struct sdrl_machine *, struct sdrl_value *);
 
 #endif
