@@ -10,11 +10,8 @@
 #include <sdrl/core/bindings.h>
 #include <sdrl/globals.h>
 
-#define SDRL_EBF_USE_RET		0x01		/** Pass mach->ret as the second parameter */
-#define SDRL_EBF_PRESERVE_RET		0x02		/** Don't clear mach->ret before calling function */
-
-#define SDRL_USE_RET(event)		(event->bitflags & SDRL_EBF_USE_RET)
-#define SDRL_PRESERVE_RET(event)	(event->bitflags & SDRL_EBF_PRESERVE_RET)
+#define SDRL_EBF_USE_RET		0x0001		/** Pass mach->ret as the second parameter */
+#define SDRL_EBF_PRESERVE_RET		0x0002		/** Don't clear mach->ret before calling function */
 
 struct sdrl_machine;
 typedef int (*sdrl_event_t)(struct sdrl_machine *, ...);

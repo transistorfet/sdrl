@@ -24,8 +24,6 @@
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* should we rename sdrl_call_value to sdrl_evaluate_value?
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
-	* change the name/format of bitflag test macros (sdrl_event's SDRL_USE_RET)
-	* make a bunch of generic bit macros (in globals.h)
 
 	* make string functions: strcmp, substr, uppercase, lowercase, char2string(propername?)
 	* make equals command check any type instead of just number

@@ -27,6 +27,13 @@
 #define SDRL_ERR_DIVIDE_BY_ZERO		-14
 
 
+#define SDRL_BF_IS_SET(value, mask)	\
+	( (value)->bitflags & mask )
+#define SDRL_BF_SET(value, mask)	\
+	( (value)->bitflags |= mask )
+#define SDRL_BF_CLEAR(value, mask)	\
+	( (value)->bitflags &= ~mask )
+
 #define SDRL_MAKE_LINENUMBER(line, col) \
 	(line << 16 | col)
 #define SDRL_GET_LINE_NUMBER(linecol) \

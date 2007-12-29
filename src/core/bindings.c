@@ -25,10 +25,10 @@
 }
 
 #define BINDINGS_HASH(env, str) \
-	( ( ((env)->bitflags & SDRL_BBF_CASE_INSENSITIVE) ? sdrl_hash_icase((str)) : sdrl_hash((str)) ) % (env)->size )
+	( ( SDRL_BF_IS_SET((env), SDRL_BBF_CASE_INSENSITIVE) ? sdrl_hash_icase((str)) : sdrl_hash((str)) ) % (env)->size )
 
 #define BINDINGS_COMPARE(env, str1, str2) \
-	( ((env)->bitflags & SDRL_BBF_CASE_INSENSITIVE) ? !sdrl_stricmp((str1), (str2)) : !strcmp((str1), (str2)) )
+	( SDRL_BF_IS_SET((env), SDRL_BBF_CASE_INSENSITIVE) ? !sdrl_stricmp((str1), (str2)) : !strcmp((str1), (str2)) )
 
 #define IS_LOWERCASE(ch) \
 	( (ch >= 0x41 && ch <= 0x5a) ? ch + 0x20 : ch )
@@ -130,7 +130,7 @@ int sdrl_add_binding(struct sdrl_environment *env, const char *name, void *data)
 	unsigned int hash;
 	struct sdrl_binding *bind;
 
-	if (!name || !data || (env->bitflags & SDRL_BBF_NO_ADD))
+	if (!name || !data || SDRL_BF_IS_SET(env, SDRL_BBF_NO_ADD))
 		return(-1);
 	if (sdrl_get_bindings(env, name, 1))
 		return(SDRL_ERR_IN_USE);
@@ -157,7 +157,7 @@ int sdrl_replace_binding(struct sdrl_environment *env, const char *name, void *d
 {
 	struct sdrl_binding *bind;
 
-	if (!name || !data || (env->bitflags & SDRL_BBF_NO_REPLACE))
+	if (!name || !data || SDRL_BF_IS_SET(env, SDRL_BBF_NO_REPLACE))
 		return(-1);
 	if ((bind = sdrl_get_bindings(env, name, 1))) {
 		BINDINGS_DESTROY_DATA(env, bind->data);
@@ -175,7 +175,7 @@ int sdrl_remove_binding(struct sdrl_environment *env, const char *name)
 	unsigned int hash;
 	struct sdrl_binding *cur, *prev;
 
-	if (!name || (env->bitflags & SDRL_BBF_NO_REMOVE))
+	if (!name || SDRL_BF_IS_SET(env, SDRL_BBF_NO_REMOVE))
 		return(-1);
 	hash = BINDINGS_HASH(env, name);
 	prev = NULL;

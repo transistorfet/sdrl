@@ -100,7 +100,7 @@ int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
 	mach->env = SDRL_MAKE_REFERENCE(event->env);
 	//mach->env = event->env;
 
-	if (SDRL_USE_RET(event)) {
+	if (SDRL_BF_IS_SET(event, SDRL_EBF_USE_RET)) {
 		value = mach->ret;
 		mach->ret = NULL;
 		ret = event->func(mach, event->param, value);
@@ -149,7 +149,7 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 		if (expr->data.expr->type == SDRL_ET_STRING) {
 			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str)))
 				return(SDRL_ERROR(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
-			else if (func->type->evaluate && SDRL_TYPE_PASS_EXPRS(func->type))
+			else if (func->type->evaluate && SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS))
 				return(func->type->evaluate(mach, func, expr->data.expr->next));
 			else {
 				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, func, mach->env));
@@ -186,7 +186,7 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
 	if (!func)
 		ret = SDRL_ERROR(mach, SDRL_ES_LOW, SDRL_ERR_NOT_FOUND, NULL);
 	else if (func->type->evaluate) {
-		if (SDRL_TYPE_PASS_EXPRS(func->type))
+		if (SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS))
 			ret = SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		else {
 			// TODO what are the advantages and disadvantages of these two ways of execution?

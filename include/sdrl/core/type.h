@@ -20,7 +20,6 @@
 #define SDRL_TBF_PASS_EXPRS	0x0004		/** Pass the expressions (unevaluated) to evaluate function */
 
 #define SDRL_BASE_TYPE(type)		( (type)->bitflags & SDRL_TBF_BASE_TYPE )
-#define SDRL_TYPE_PASS_EXPRS(type)	( (type)->bitflags & SDRL_TBF_PASS_EXPRS )
 
 struct sdrl_type {
 	int size;

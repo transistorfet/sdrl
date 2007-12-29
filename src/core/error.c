@@ -60,7 +60,7 @@ struct sdrl_error *sdrl_make_error(linenumber_t line, short severity, int err, c
  */
 int sdrl_destroy_error(struct sdrl_error *error)
 {
-	if (error && !(error->bitflags & SDRL_EBF_STATIC))
+	if (error && !SDRL_BF_IS_SET(error, SDRL_EBF_STATIC))
 		free(error);
 	return(0);
 }
