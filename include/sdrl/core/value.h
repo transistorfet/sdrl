@@ -15,7 +15,7 @@
 #define sdrl_char_c	(sdrl_data_t) (char *)
 
 typedef union sdrl_data {
-	number_t number;
+	number_t num;
 	char *str;
 	void *ptr;
 } sdrl_data_t;
@@ -32,7 +32,7 @@ struct sdrl_value {
 	for (cur = list; cur; cur = cur->next)
 
 #define SDRL_VALUE_IS_FALSE(value) \
-	((SDRL_BASE_TYPE((value)->type) == SDRL_BT_NUMBER) && (!(value)->data.number)) \
+	((SDRL_BASE_TYPE((value)->type) == SDRL_BT_NUMBER) && (!(value)->data.num)) \
 	|| ((SDRL_BASE_TYPE((value)->type) == SDRL_BT_STRING) && (!(value)->data.str || (value)->data.str[0] == '\0')) \
 	|| ((SDRL_BASE_TYPE((value)->type) == SDRL_BT_POINTER) && (!(value)->data.ptr))
 

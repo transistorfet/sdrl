@@ -20,7 +20,7 @@ int sdrl_io_print(struct sdrl_machine *mach, struct sdrl_value *value)
 	while (cur) {
 		switch (SDRL_BASE_TYPE(cur->type)) {
 			case SDRL_BT_NUMBER:
-				printf("%f", cur->data.number);
+				printf("%f", cur->data.num);
 				break;
 			case SDRL_BT_STRING:
 				printf("%s", cur->data.str);

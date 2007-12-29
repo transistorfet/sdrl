@@ -26,7 +26,7 @@ int sdrl_base_less_than_equals(struct sdrl_machine *mach, struct sdrl_value *val
 	SDRL_FOREACH_VALUE(value->next, cur) {
 		if (cur->type != type)
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-		if (last->data.number > cur->data.number ) {
+		if (last->data.num > cur->data.num) {
 			result = 0;
 			break;
 		}

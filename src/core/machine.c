@@ -139,7 +139,7 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 
 	mach->current_line = expr->line;
 	if (expr->type == SDRL_ET_NUMBER)
-		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) expr->data.number, 0, NULL);
+		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) expr->data.num, 0, NULL);
 	else if (expr->type == SDRL_ET_STRING)
 		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "string"), (sdrl_data_t) expr->data.str, strlen(expr->data.str), NULL);
 	else if (expr->type == SDRL_ET_CALL) {

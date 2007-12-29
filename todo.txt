@@ -19,7 +19,6 @@
 	  on) without the need for 2 types for everything
 	* make parser catch errors during a parse
 
-	* make value's "number" member "num" instead (since we abbrev'd str and ptr)
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* should we rename sdrl_call_value to sdrl_evaluate_value?

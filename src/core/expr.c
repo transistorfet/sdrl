@@ -13,7 +13,7 @@
 /**
  * Return a newly allocated number expression
  */
-struct sdrl_expr *sdrl_make_number_expr(linenumber_t line, number_t number, struct sdrl_expr *next)
+struct sdrl_expr *sdrl_make_number_expr(linenumber_t line, number_t num, struct sdrl_expr *next)
 {
 	struct sdrl_expr *expr;
 
@@ -22,7 +22,7 @@ struct sdrl_expr *sdrl_make_number_expr(linenumber_t line, number_t number, stru
 
 	expr->type = SDRL_ET_NUMBER;
 	expr->line = line;
-	expr->data.number = number;
+	expr->data.num = num;
 	expr->next = next;
 	return(expr);
 }
@@ -72,7 +72,7 @@ struct sdrl_expr *sdrl_duplicate_expr(struct sdrl_expr *expr)
 	if (!expr)
 		return(NULL);
 	else if (expr->type == SDRL_ET_NUMBER)
-		return(sdrl_make_number_expr(expr->line, expr->data.number, sdrl_duplicate_expr(expr->next)));
+		return(sdrl_make_number_expr(expr->line, expr->data.num, sdrl_duplicate_expr(expr->next)));
 	else if (expr->type == SDRL_ET_STRING)
 		return(sdrl_make_string_expr(expr->line, expr->data.str, sdrl_duplicate_expr(expr->next)));
 	else if (expr->type == SDRL_ET_CALL)

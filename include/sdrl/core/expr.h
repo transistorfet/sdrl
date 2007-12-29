@@ -17,7 +17,7 @@ struct sdrl_expr {
 	int type;
 	linenumber_t line;
 	union {
-		number_t number;
+		number_t num;
 		char *str;
 		struct sdrl_expr *expr;
 	} data;

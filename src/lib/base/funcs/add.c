@@ -21,7 +21,7 @@ int sdrl_base_add(struct sdrl_machine *mach, struct sdrl_value *value)
 	SDRL_FOREACH_VALUE(value, cur) {
 		if (cur->type != type)
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-		result += cur->data.number;
+		result += cur->data.num;
 	}
 	mach->ret = sdrl_make_value(mach->heap, type, (sdrl_data_t) result, 0, NULL);
 	return(0);

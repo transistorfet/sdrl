@@ -25,7 +25,7 @@ int sdrl_base_equals(struct sdrl_machine *mach, struct sdrl_value *value)
 	SDRL_FOREACH_VALUE(value->next, cur) {
 		if (cur->type != value->type)
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-		if (cur->data.number != value->data.number) {
+		if (cur->data.num != value->data.num) {
 			result = 0;
 			break;
 		}

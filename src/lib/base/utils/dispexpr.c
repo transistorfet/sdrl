@@ -33,7 +33,7 @@ static int dispexpr_display_expr(struct sdrl_expr *expr)
 	if (!expr)
 		return(1);
 	else if (expr->type == SDRL_ET_NUMBER)
-		printf("<%f>", expr->data.number);
+		printf("<%f>", expr->data.num);
 	else if (expr->type == SDRL_ET_STRING)
 		printf("\"%s\"", expr->data.str);
 	else if (expr->type == SDRL_ET_CALL) {

@@ -21,7 +21,7 @@ int sdrl_base_not(struct sdrl_machine *mach, struct sdrl_value *value)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	else if (value->type != type)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-	result = (value->data.number == 0);
+	result = (value->data.num == 0);
 	mach->ret = sdrl_make_value(mach->heap, type, (sdrl_data_t) result, 0, NULL);
 	return(0);
 }
