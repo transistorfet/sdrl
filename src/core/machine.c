@@ -43,8 +43,7 @@ struct sdrl_machine *sdrl_create_machine(void)
 		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
 	if (!(mach->global = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value)))
 		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
-	// TODO should we consider this a reference? (we might not want to in which case we should comment that)
-	mach->env = mach->global;
+	mach->env = SDRL_MAKE_REFERENCE(mach->global);
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_type(mach->heap, 0, SDRL_BT_NUMBER, NULL, NULL, NULL, NULL));
 	sdrl_add_binding(mach->type_env, "string", sdrl_make_type(mach->heap, SDRL_VARIABLE_SIZE, SDRL_BT_STRING, NULL, NULL, NULL, NULL));
@@ -59,7 +58,8 @@ int sdrl_destroy_machine(struct sdrl_machine *mach)
 {
 	sdrl_destroy_value(mach->heap, mach->ret);
 	sdrl_destroy_continuation(mach->cont);
-	sdrl_retract_environment(mach->global);
+	SDRL_DESTROY_REFERENCE(mach->env, sdrl_retract_environment);
+	sdrl_destroy_environment(mach->global);
 	sdrl_destroy_environment(mach->type_env);
 	sdrl_destroy_error(mach->error);
 	sdrl_destroy_heap(mach->heap);
@@ -96,7 +96,11 @@ int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
 	int ret = 0;
 	struct sdrl_value *value;
 
-	mach->env = event->env;
+	// TODO we need to make a decision on this whole environment reference thing
+	SDRL_DESTROY_REFERENCE(mach->env, sdrl_retract_environment);
+	mach->env = SDRL_MAKE_REFERENCE(event->env);
+//	mach->env = event->env;
+
 	if (SDRL_USE_RET(event)) {
 		value = mach->ret;
 		mach->ret = NULL;
@@ -194,6 +198,7 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
 		}
 	}
 	else {
+		// TODO what do we do if the function is not evaluatable?
 		if (args)
 			ret = SDRL_ERROR(mach, SDRL_ERR_INVALID_PARAMS, NULL);
 		else {
