@@ -15,11 +15,8 @@
 #include <sdrl/core/bindings.h>
 #include <sdrl/globals.h>
 
-/*** Generate an error and set it in the current machine. ***/
-#define SDRL_ERROR(mach, err, msg) \
-	( ((mach)->error = sdrl_make_error(0, (err), (msg))) ? (err) : -1 )
-
 struct sdrl_machine {
+	linenumber_t current_line;
 	struct sdrl_heap *heap;
 	struct sdrl_value *ret;
 	struct sdrl_error *error;
@@ -28,6 +25,14 @@ struct sdrl_machine {
 	struct sdrl_environment *global;
 	struct sdrl_environment *env;
 };
+
+/*** Generate an error and set it in the current machine. ***/
+static inline int SDRL_ERROR(struct sdrl_machine *mach, short severity, int err, const char *msg) {
+	if (mach->error)
+		sdrl_destroy_error(mach->error);
+	mach->error = sdrl_make_error(mach->current_line, severity, err, msg);
+	return(err);
+}
 
 struct sdrl_machine *sdrl_create_machine(void);
 int sdrl_destroy_machine(struct sdrl_machine *);

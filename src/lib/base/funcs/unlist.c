@@ -13,7 +13,7 @@
 int sdrl_base_unlist(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	if ((sdrl_value_count(value) != 1) || (value->type != sdrl_find_binding(mach->type_env, "list")))
-		return(SDRL_ERR_INVALID_PARAMS);
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	mach->ret = (struct sdrl_value *) value->data.ptr;
 	value->data.ptr = NULL;
 	return(0);

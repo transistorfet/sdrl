@@ -1,28 +1,44 @@
 
-Log:
- - the {} syntax was not only a pain in the ass but essentially just a special case
-   of code() that did not require the parameters to be passed unevaluated.  I removed
-   them and added the ability to call functions without evaluating the params.  It
-   goes against the goal of no special functions but it makes the parser simpler as
-   well as making it more lispy-like (which is somewhat good but it makes it more
-   ordinary and lisp-copyish.
 
---------------------------------------------------------------------------
+References:
 
+All functions that return a pointer transfer ownership of that reference to the
+caller.  All functions that take a pointer assume that the reference is
+borrowed and that the caller is responsible for the reference unless otherwise
+stated.  The following functions steal ownership of references:
+	all destroy functions	The reference is destroyed
 
-- floating point number support (?)
+	sdrl_make_value		The "next" reference is stolen and the
+				"data" reference behaviour is defined
+				by the type.
+
+	sdrl_push_value
+	sdrl_unshift_value	The "value" reference is stolen and added to
+				the given list.
+
+	sdrl_add_binding
+	sdrl_replace_binding	The "data" reference is stolen and added to the
+				bindings table.  (The reference is opaque and
+				cannot be duplicated anyways).
+
+	sdrl_retract_environment	The reference to the environment is
+					destroyed and a reference to the parent
+					is returned.
+
+	sdrl_push_event
+
+	sdrl_make_*_expr
+
+	sdrl_merge_return
+
+	
+	
+
+SDRL 0.1 NOTES:
+
 - null check (!@) (?)
 - null datatype (for lists) (?)
 - ! and !! functionality for multiple params (?)
-
-
-
-
-
-
-
-	// what do you do if the binding is to a non-executable
-	// yet is being applied (value index for strings, arrays, environments, etc?)
 
 :('struct, @('x,'y,'z))
 :(struct, @(5,6,7))		# x, y, z would be those values
@@ -37,54 +53,5 @@ Possible Commands
 ++
 --
 
-open
-close
-read
-write
 
-
-
-
-define(foo, code(
-	define(@(a, b), $)
-	if(==(a, b),
-		code(a),
-		code(+(a, b)))))
-
-
-(define, foo, (code,
-	(define, (@, a, b), $)
-	(if (==, a, b),
-		(code, a),
-		(code, (+, a, b)))))
-
-
-References:
-
-All functions that return a pointer transfer ownership of that reference to the
-caller.  All functions that take a pointer assume that the reference is
-borrowed and that the caller is responsible for the reference unless otherwise
-stated.  The following functions steal ownership of references:
-	all destroy functions
-	sdrl_make_value		The "next" reference is stolen and the
-				"data" reference behaviour is defined
-				by the type.
-	sdrl_push_value
-	sdrl_unshift_value	The "value" reference is stolen and added to
-				the given list.
-	sdrl_add_binding
-	sdrl_replace_binding	The "data" reference is stolen and added to the
-				bindings table.  (The reference is obaque and
-				cannot be duplicated anyways).
-	sdrl_retract_environment	The reference to the environment is
-					destroyed and a reference to the parent
-					is returned.
-	sdrl_push_event
-
-	sdrl_make_*_expr
-
-	sdrl_merge_return
-
-	
-	
 

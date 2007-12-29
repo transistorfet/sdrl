@@ -17,13 +17,6 @@
 #include <sdrl/core/bindings.h>
 #include <sdrl/globals.h>
 
-#define RETURN_FATAL_ERROR(mach, err)			\
-	{						\
-		sdrl_destroy_machine(mach);		\
-		sdrl_set_error(0, err, NULL);		\
-		return(NULL);				\
-	}
-
 /**
  * Create a machine for executing code
  */
@@ -33,16 +26,21 @@ struct sdrl_machine *sdrl_create_machine(void)
 
 	if (!(mach = (struct sdrl_machine *) malloc(sizeof(struct sdrl_machine))))
 		return(NULL);
+	mach->current_line = 0;
 	mach->ret = NULL;
 	mach->error = NULL;
-	if (!(mach->heap = sdrl_create_heap()))
-		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
-	if (!(mach->cont = sdrl_create_continuation()))
-		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
-	if (!(mach->type_env = sdrl_create_environment(SDRL_BBF_CONSTANT, mach->heap, (sdrl_destroy_t) sdrl_destroy_type)))
-		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
-	if (!(mach->global = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value)))
-		RETURN_FATAL_ERROR(mach, SDRL_ERR_OUT_OF_MEMORY);
+	if (!(mach->heap = sdrl_create_heap()) || !(mach->cont = sdrl_create_continuation())) {
+		sdrl_destroy_machine(mach);
+		return(NULL);
+	}
+	if (!(mach->type_env = sdrl_create_environment(SDRL_BBF_CONSTANT, mach->heap, (sdrl_destroy_t) sdrl_destroy_type))) {
+		sdrl_destroy_machine(mach);
+		return(NULL);
+	}
+	if (!(mach->global = sdrl_create_environment(0, mach->heap, (sdrl_destroy_t) sdrl_destroy_value))) {
+		sdrl_destroy_machine(mach);
+		return(NULL);
+	}
 	mach->env = SDRL_MAKE_REFERENCE(mach->global);
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_type(mach->heap, 0, SDRL_BT_NUMBER, NULL, NULL, NULL, NULL));
@@ -76,10 +74,11 @@ int sdrl_evaluate(struct sdrl_machine *mach, struct sdrl_expr *expr)
 	struct sdrl_event *event;
 
 	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr, mach->env)))
-		return(SDRL_ERR_OUT_OF_MEMORY);
+		return(SDRL_ERROR(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 	do {
 		ret = sdrl_evaluate_event(mach, event);
 		sdrl_destroy_event(event);
+		// TODO check the error and see if we should return or continue
 		if (ret)
 			return(ret);
 		event = sdrl_pop_event(mach->cont);
@@ -99,7 +98,7 @@ int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
 	// TODO we need to make a decision on this whole environment reference thing
 	SDRL_DESTROY_REFERENCE(mach->env, sdrl_retract_environment);
 	mach->env = SDRL_MAKE_REFERENCE(event->env);
-//	mach->env = event->env;
+	//mach->env = event->env;
 
 	if (SDRL_USE_RET(event)) {
 		value = mach->ret;
@@ -138,18 +137,18 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 	if (!expr)
 		return(0);
 
-	sdrl_set_linenumber(expr->line);
+	mach->current_line = expr->line;
 	if (expr->type == SDRL_ET_NUMBER)
 		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "number"), (sdrl_data_t) expr->data.number, 0, NULL);
 	else if (expr->type == SDRL_ET_STRING)
 		mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "string"), (sdrl_data_t) expr->data.str, strlen(expr->data.str), NULL);
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
-			return(SDRL_ERROR(mach, SDRL_ERR_INVALID_FUNCTION, NULL));
-		sdrl_set_linenumber(expr->data.expr->line);
+			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
+		mach->current_line = expr->data.expr->line;
 		if (expr->data.expr->type == SDRL_ET_STRING) {
 			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str)))
-				return(SDRL_ERROR(mach, SDRL_ERR_NOT_FOUND, expr->data.expr->data.str));
+				return(SDRL_ERROR(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
 			else if (func->type->evaluate && SDRL_TYPE_PASS_EXPRS(func->type))
 				return(func->type->evaluate(mach, func, expr->data.expr->next));
 			else {
@@ -164,10 +163,10 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 			return(0);
 		}
 		else
-			return(SDRL_ERROR(mach, SDRL_ERR_INVALID_FUNCTION, NULL));
+			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
 	}
 	else
-		return(SDRL_ERROR(mach, SDRL_ERR_INVALID_AST_TYPE, NULL));
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_AST_TYPE, NULL));
 	return(0);
 }
 
@@ -180,33 +179,29 @@ int sdrl_call_value(struct sdrl_machine *mach, struct sdrl_value *func, struct s
 	int ret = 0;
 
 	if (!func && args) {
-		// TODO this is wrong, we can't clobber args
 		func = args;
 		args = args->next;
-		func->next = NULL;
 	}
 
 	if (!func)
-		ret = SDRL_ERROR(mach, SDRL_ERR_NOT_FOUND, NULL);
+		ret = SDRL_ERROR(mach, SDRL_ES_LOW, SDRL_ERR_NOT_FOUND, NULL);
 	else if (func->type->evaluate) {
 		if (SDRL_TYPE_PASS_EXPRS(func->type))
-			ret = SDRL_ERROR(mach, SDRL_ERR_INVALID_PARAMS, NULL);
+			ret = SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		else {
-//			mach->ret = args;
-//			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, SDRL_MAKE_REFERENCE(func), mach->env));
-			func->type->evaluate(mach, func, args);
+			// TODO what are the advantages and disadvantages of these two ways of execution?
+			//mach->ret = args;
+			//sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, SDRL_MAKE_REFERENCE(func), mach->env));
+			ret = func->type->evaluate(mach, func, args);
 		}
 	}
 	else {
 		// TODO what do we do if the function is not evaluatable?
 		if (args)
-			ret = SDRL_ERROR(mach, SDRL_ERR_INVALID_PARAMS, NULL);
-		else {
-	//		mach->ret = SDRL_MAKE_REFERENCE(func);
+			ret = SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+		else
 			mach->ret = sdrl_duplicate_value(mach->heap, func);
-		}
 	}
-	//sdrl_destroy_value(mach->heap, func);
 	return(ret);
 }
 

@@ -58,7 +58,7 @@ int parse_cmdline(int argc, char **argv)
 			j = 0;
 			while (argv[i][++j] != '\0') {
 				switch (argv[i][j]) {
-					// parse flags
+					// TODO parse flags
 					default:
 						printf("Usage: %s [infile]\n", argv[0]);
 						return(1);
@@ -79,43 +79,11 @@ int parse_cmdline(int argc, char **argv)
 int print_result(struct sdrl_machine *mach, int exitcode)
 {
 	if (mach->error) {
-		//printf("Error %d,%d: %s\n", SDRL_GET_LINE_NUMBER(mach->error->line), SDRL_GET_COLUMN_NUMBER(mach->error->line), mach->error->msg);
 		printf("\n");
 		sdrl_base_display_error(mach->error);
 	}
-	else {
-		switch (exitcode) {
-			case 0:
-				break;
-			case SDRL_ERR_END_OF_INPUT:
-				printf("End Of Input Reached\n");
-				break;
-			case SDRL_ERR_SYNTAX_ERROR:
-				printf("Syntax Error\n");
-				break;
-			case SDRL_ERR_INVALID_PARAMS:
-				printf("Invalid Parameters\n");
-				break;
-			case SDRL_ERR_INVALID_TYPE:
-				printf("Invalid Type\n");
-				break;
-			case SDRL_ERR_OUT_OF_MEMORY:
-				printf("Out Of Memory\n");
-				break;
-			case SDRL_ERR_OUT_OF_BOUNDS:
-				printf("Out Of Bounds\n");
-				break;
-			case SDRL_ERR_NOT_FOUND:
-				printf("Binding Not Found\n");
-				break;
-			case SDRL_ERR_PARAMS_ERROR:
-				printf("Error Evaluating Parameters\n");
-				break;
-			default:
-				printf("Error Number: %d\n", exitcode);
-				break;
-		}
-	}
-	return(-1);
+	else if (exitcode != 0)
+		printf("\nInternal Error %d\n", exitcode);
+	return(exitcode);
 }
 

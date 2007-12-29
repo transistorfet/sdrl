@@ -17,15 +17,15 @@ int sdrl_base_less_than_equals(struct sdrl_machine *mach, struct sdrl_value *val
 	struct sdrl_type *type;
 
 	if (!value)
-		return(SDRL_ERR_INVALID_PARAMS);
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	if (!(type = sdrl_find_binding(mach->type_env, "number")))
-		return(SDRL_ERR_NOT_FOUND);
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	if (value->type != type)
-		return(SDRL_ERR_INVALID_TYPE);
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 	last = value;
 	SDRL_FOREACH_VALUE(value->next, cur) {
 		if (cur->type != type)
-			return(SDRL_ERR_INVALID_TYPE);
+			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 		if (last->data.number > cur->data.number ) {
 			result = 0;
 			break;

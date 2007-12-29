@@ -19,9 +19,9 @@ int sdrl_base_set(struct sdrl_machine *mach, struct sdrl_value *value)
 	struct sdrl_value *name;
 
 	if ((i = sdrl_value_count(value)) < 2)
-		ret = SDRL_ERR_INVALID_PARAMS;
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	else if (!(list = sdrl_find_binding(mach->type_env, "list")))
-		ret = SDRL_ERR_NOT_FOUND;
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	else {
 		name = sdrl_shift_value(&value);
 		if (name->type == list)
@@ -45,12 +45,12 @@ static int sdrl_base_set_list(struct sdrl_machine *mach, struct sdrl_value *name
 	struct sdrl_value *cur_name, *cur_value, *tmp, *value;
 
 	if (!(string = sdrl_find_binding(mach->type_env, "string")))
-		return(SDRL_ERR_NOT_FOUND);
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	cur_name = names;
 	cur_value = values;
 	while (cur_name) {
 		if (cur_name->type != string)
-			return(SDRL_ERR_INVALID_TYPE);
+			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 		if (cur_value) {
 			tmp = cur_value->next;
 			value = (cur_name->next) ? sdrl_shift_value(&cur_value) : cur_value;
@@ -60,7 +60,7 @@ static int sdrl_base_set_list(struct sdrl_machine *mach, struct sdrl_value *name
 			value = sdrl_make_value(mach->heap, string, (sdrl_data_t) "", 0, NULL);
 		if (sdrl_replace_binding(mach->env, cur_name->data.str, value)) {
 			if (sdrl_add_binding(mach->env, cur_name->data.str, value))
-				return(SDRL_ERR_OUT_OF_MEMORY);
+				return(SDRL_ERROR(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 		}
 		cur_name = cur_name->next;
 	}

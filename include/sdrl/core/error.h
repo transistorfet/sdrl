@@ -9,19 +9,25 @@
 
 #include <sdrl/globals.h>
 
+#define SDRL_EBF_STATIC		0x0001
+
+#define SDRL_ES_FATAL		1
+#define SDRL_ES_HIGH		2
+#define SDRL_ES_MEDIUM		3
+#define SDRL_ES_LOW		4
+#define SDRL_ES_WARNING		5
+
 struct sdrl_error {
 	linenumber_t line;
-	int bitflags;
+	short bitflags;
+	short severity;
 	int err;
 	const char *msg;
 };
 
-struct sdrl_error *sdrl_make_error(int, int, const char *);
+struct sdrl_error *sdrl_make_error(linenumber_t, short, int, const char *);
 int sdrl_destroy_error(struct sdrl_error *);
-void sdrl_set_linenumber(linenumber_t);
-int sdrl_set_error(int, int, const char *);
-struct sdrl_error *sdrl_last_error(void);
-int sdrl_clear_error(void);
+struct sdrl_error *sdrl_duplicate_error(struct sdrl_error *);
 
 #endif
 

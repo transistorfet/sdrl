@@ -1,15 +1,22 @@
 
+	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
+	  ones)
+	* can we without too much trouble make the string type record the length as well?
+	* make the parser set a bit when the string is a bare string just for possible future information
+
 	* change the makefiles to move the sdrl binary to bin/ and put a makefile in the root dir 
 
+	* make sdrl_count_value() or whatever an inline function
 	* make libraries namespacable
 	* add a 'load' command that (somehow) calls the library loading function that adds all the library
 	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
 	  that each library behaves in an expected way
-	* redesign error.c  What are you trying to achieve with it?
 	* make the output of dispexpr.c more readable
 
 	* add the ability to make sdrl_value constant (modifier to value or bitflags in type?) (or do you
 	  really only need/want to make a binding constant?)
+	* add an easy way to make a value that refers to a static piece of data (that you don't call destroy
+	  on) without the need for 2 types for everything
 	* make parser catch errors during a parse
 
 	* make value's "number" member "num" instead (since we abbrev'd str and ptr)
@@ -18,8 +25,9 @@
 	* should we rename sdrl_call_value to sdrl_evaluate_value?
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
 	* change the name/format of bitflag test macros (sdrl_event's SDRL_USE_RET)
+	* make a bunch of generic bit macros (in globals.h)
 
-	* make string functions: strcmp, substr, char, uppercase, lowercase
+	* make string functions: strcmp, substr, uppercase, lowercase, char2string(propername?)
 	* make equals command check any type instead of just number
 
 	* add a function to automatically check args based on min/max args allowed and types? (both in C and
@@ -29,6 +37,8 @@
 	* can/should we simplify the semantics of set?  Perhaps making 2 different functions
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* allow multiple event stacks in a continuation (what is this actually for? a thread type of thing?)
+
+	* can we somehow perform the check for a string's length without the call the strlen in string:char?
 
 Tests:
 
@@ -43,6 +53,14 @@ Structural Issues:
 	  collectable such as values and environments (types too?) inherit so you can cast them and deal with
 	  them more nicely?  Would this also make it better for libraries that want to get in on the GC
 	  action?  Would this struct contain the pointer to the heap in addition to just the ref num?
+	* what do you do if a value being applied/evaluated is non-executable (does not have an evaluate
+	  function in it's type)?  Should you just return the value?  Should it be an error?
+	* you need to come up with a namemangle or something that is reserved for interpreter use such that
+	  special variables are named that way (like the global environment, the error handling function, etc)
+	* re-evaluate the reference tracking in the environment functions (extend/retract) particuarily with
+	  respect to the fact that extending mach->env needs to take into account that mach->env's reference
+	  needs to be destoyed.  Should extend steal the environment reference it's given (thus you just need
+	  to make a reference whenever you extend an env other than mach->env
 
 Features:
 

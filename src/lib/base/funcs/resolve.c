@@ -15,9 +15,9 @@ int sdrl_base_resolve(struct sdrl_machine *mach, struct sdrl_value *value)
 	struct sdrl_value *bind;
 
 	if (!value || (value->type != sdrl_find_binding(mach->type_env, "string")))
-		return(SDRL_ERR_INVALID_TYPE);
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 	else if (!(bind = sdrl_find_binding(mach->env, value->data.str)))
-		return(SDRL_ERR_NOT_FOUND);
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	mach->ret = sdrl_duplicate_value(mach->heap, bind);
 	return(0);
 }

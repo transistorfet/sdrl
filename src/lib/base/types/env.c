@@ -31,9 +31,9 @@ static void *sdrl_create_env_type(struct sdrl_machine *mach, struct sdrl_value *
 
 	if (value) {
 		if (!(env_type = sdrl_find_binding(mach->type_env, "env")))
-			ret = SDRL_ERR_NOT_FOUND;
+			ret = SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
 		else if (value->type != env_type)
-			ret = SDRL_ERR_INVALID_TYPE;
+			ret = SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		else
 			env = sdrl_extend_environment((struct sdrl_environment *) value->data.ptr);
 	}
