@@ -1,31 +1,28 @@
 
-	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
-	  ones)
-	* can we without too much trouble make the string type record the length as well?
-	* make the parser set a bit when the string is a bare string just for possible future information
-
+	* make sdrl_count_value() or whatever an inline function
+	* make string functions: strcmp, substr, uppercase, lowercase, char2string(propername?)
+	* make equals command check any type instead of just number
 	* change the makefiles to move the sdrl binary to bin/ and put a makefile in the root dir 
 
-	* make sdrl_count_value() or whatever an inline function
+	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
+	  ones)
+
 	* make libraries namespacable
 	* add a 'load' command that (somehow) calls the library loading function that adds all the library
 	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
 	  that each library behaves in an expected way
 	* make the output of dispexpr.c more readable
-
 	* add the ability to make sdrl_value constant (modifier to value or bitflags in type?) (or do you
 	  really only need/want to make a binding constant?)
 	* add an easy way to make a value that refers to a static piece of data (that you don't call destroy
 	  on) without the need for 2 types for everything
 	* make parser catch errors during a parse
+	* can we without too much trouble make the string type record the length as well?
 
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* should we rename sdrl_call_value to sdrl_evaluate_value?
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
-
-	* make string functions: strcmp, substr, uppercase, lowercase, char2string(propername?)
-	* make equals command check any type instead of just number
 
 	* add a function to automatically check args based on min/max args allowed and types? (both in C and
 	  SDRL)
@@ -58,6 +55,8 @@ Structural Issues:
 	  respect to the fact that extending mach->env needs to take into account that mach->env's reference
 	  needs to be destoyed.  Should extend steal the environment reference it's given (thus you just need
 	  to make a reference whenever you extend an env other than mach->env
+	* should we distinguish between bareword strings and quoted strings in exprs which would at least give
+	  us the choice to act differently (ie. always do a lookup on barewords)?
 
 Features:
 
