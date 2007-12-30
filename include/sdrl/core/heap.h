@@ -6,7 +6,7 @@
 #ifndef _SDRL_CORE_HEAP_H
 #define _SDRL_CORE_HEAP_H
 
-#include <stdlib.h>
+#include <stddef.h>
 
 struct sdrl_heap;
 
