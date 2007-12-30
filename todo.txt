@@ -1,5 +1,4 @@
 
-	* make sdrl_count_value() or whatever an inline function
 	* make string functions: strcmp, substr, uppercase, lowercase, char2string(propername?)
 	* make equals command check any type instead of just number
 	* change the makefiles to move the sdrl binary to bin/ and put a makefile in the root dir 
@@ -8,6 +7,7 @@
 	  ones)
 
 	* make libraries namespacable
+	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2)))
 	* add a 'load' command that (somehow) calls the library loading function that adds all the library
 	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
 	  that each library behaves in an expected way

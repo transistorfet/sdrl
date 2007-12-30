@@ -189,18 +189,3 @@ struct sdrl_value *sdrl_shift_value(struct sdrl_value **array)
 }
 
 
-/**
- * Returns the number of elements in the linked-list of values.
- */
-int sdrl_value_count(struct sdrl_value *array)
-{
-	int i = 0;
-
-	while (array) {
-		i++;
-		array = array->next;
-	}
-	return(i);
-}
-
-

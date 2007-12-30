@@ -46,7 +46,16 @@ struct sdrl_value *sdrl_pop_value(struct sdrl_value **);
 int sdrl_unshift_value(struct sdrl_value **, struct sdrl_value *);
 struct sdrl_value *sdrl_shift_value(struct sdrl_value **);
 
-int sdrl_value_count(struct sdrl_value *);
+/**
+ * Returns the number of elements in the linked-list of values.
+ */
+static inline int sdrl_value_count(struct sdrl_value *array) {
+	int i = 0;
+
+	for (;array;array = array->next)
+		i++;
+	return(i);
+}
 
 #endif
 
