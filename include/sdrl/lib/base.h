@@ -41,6 +41,7 @@ int sdrl_base_add(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_subtract(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_multiply(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_divide(struct sdrl_machine *, struct sdrl_value *);
+int sdrl_base_modulo(struct sdrl_machine *, struct sdrl_value *);
 
 int sdrl_base_equals(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_not_equals(struct sdrl_machine *, struct sdrl_value *);

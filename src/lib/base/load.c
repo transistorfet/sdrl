@@ -42,6 +42,7 @@ int sdrl_load_base(struct sdrl_machine *mach)
 	SDRL_BIND_FUNCTION(mach, func, "-", sdrl_base_subtract);
 	SDRL_BIND_FUNCTION(mach, func, "*", sdrl_base_multiply);
 	SDRL_BIND_FUNCTION(mach, func, "/", sdrl_base_divide);
+	SDRL_BIND_FUNCTION(mach, func, "mod", sdrl_base_modulo);
 
 	SDRL_BIND_FUNCTION(mach, func, "=", sdrl_base_equals);
 	SDRL_BIND_FUNCTION(mach, func, "!=", sdrl_base_not_equals);
