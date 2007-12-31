@@ -36,7 +36,8 @@ static inline struct sdrl_value *sdrl_next_arg(struct sdrl_value **next) {
 	return(value);
 }
 
-struct sdrl_value *sdrl_next_arg_check(struct sdrl_machine *, struct sdrl_value **, struct sdrl_type *);
+struct sdrl_value *sdrl_next_arg_checked(struct sdrl_machine *, struct sdrl_value **, struct sdrl_type *);
+struct sdrl_value *sdrl_next_arg_optional(struct sdrl_machine *, struct sdrl_value **, struct sdrl_type *);
 
 #endif
 

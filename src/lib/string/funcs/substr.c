@@ -16,17 +16,25 @@
  */
 int sdrl_string_substr(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	number_t ret = 0;
-	struct sdrl_type *number, *string;
+	struct sdrl_value *str, *from, *to;
+	struct sdrl_type *num_type, *str_type;
 
-/*
-	// TODO this is just here to prevent trouble
 	if (!value)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
-	if (!(number = sdrl_find_binding(mach->type_env, "number")) || !(string = sdrl_find_binding(mach->type_env, "string")))
+	if (!(num_type = sdrl_find_binding(mach->type_env, "number"))
+	    || !(str_type = sdrl_find_binding(mach->type_env, "string")))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
-	if ((value->type != string) || (value->next && value->next->type != number) || (value->next->next && value->next->next->type != number))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+	if (!(str = sdrl_next_arg_checked(mach, &value, str_type))
+	    || !(from = sdrl_next_arg_checked(mach, &value, num_type))
+	    || (!(to = sdrl_next_arg_optional(mach, &value, num_type)) && value))
+		return(mach->error->err);
+	// TODO you need a function sdrl_next_arg_optional but how will you make it easy to check for a
+	//	failed condition?  you can't check the return because that might be NULL.  You could assume
+	//	that if there is an error then it must have been our error.  Perhaps you should make a point
+	//	of keeping the mach->error cleared (in the machine) unless the error is handled somehow so
+	//	that we can make this assumption?
+
+/*
 	if ((value->next->data.num >= 0) && (value->next->data.num < strlen(value->data.str)))
 		ret = value->data.str[ (int) value->next->data.num ];
 	mach->ret = sdrl_make_value(mach->heap, number, (sdrl_data_t) ret, 0, NULL);
