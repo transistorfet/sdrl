@@ -137,7 +137,7 @@ int sdrl_add_binding(struct sdrl_environment *env, const char *name, void *data)
 	if (!(bind = (struct sdrl_binding *) malloc(sizeof(struct sdrl_binding) + strlen(name) + 1)))
 		return(SDRL_ERR_OUT_OF_MEMORY);
 
-	bind->name = (char *) ((size_t) bind + sizeof(struct sdrl_binding));
+	bind->name = (char *) (bind + 1);
 	strcpy(bind->name, name);
 	bind->data = data;
 

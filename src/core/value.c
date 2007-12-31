@@ -29,7 +29,7 @@ struct sdrl_value *sdrl_make_value(struct sdrl_heap *heap, struct sdrl_type *typ
 		return(NULL);
 
 	if (size) {
-		value->data = (sdrl_data_t) (char *) ((size_t) value + sizeof(struct sdrl_value));
+		value->data = (sdrl_data_t) (char *) (value + 1);
 		memcpy(value->data.ptr, data.ptr, size);
 	}
 	else
@@ -57,7 +57,7 @@ struct sdrl_value *sdrl_duplicate_value(struct sdrl_heap *heap, struct sdrl_valu
 		if (value->type->duplicate)
 			newvalue->data.ptr = value->type->duplicate(heap, value->data.ptr);
 		else if (newvalue->size)
-			newvalue->data = (sdrl_data_t) (char *) ((size_t) newvalue + sizeof(struct sdrl_value));
+			newvalue->data = (sdrl_data_t) (char *) (newvalue + 1);
 
 		newvalue->refs = 1;
 		if (!head)
@@ -86,7 +86,7 @@ struct sdrl_value *sdrl_duplicate_single_value(struct sdrl_heap *heap, struct sd
 	if (value->type->duplicate)
 		newvalue->data.ptr = value->type->duplicate(heap, value->data.ptr);
 	else if (newvalue->size)
-		newvalue->data = (sdrl_data_t) (char *) ((size_t) newvalue + sizeof(struct sdrl_value));
+		newvalue->data = (sdrl_data_t) (char *) (newvalue + 1);
 	newvalue->refs = 1;
 	newvalue->next = NULL;
 

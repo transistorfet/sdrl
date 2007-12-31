@@ -41,7 +41,7 @@ struct sdrl_expr *sdrl_make_string_expr(linenumber_t line, const char *str, stru
 
 	expr->type = SDRL_ET_STRING;
 	expr->line = line;
-	expr->data.str = (char *) ((size_t) expr + sizeof(struct sdrl_expr));
+	expr->data.str = (char *) (expr + 1);
 	strcpy(expr->data.str, str);
 	expr->next = next;
 	return(expr);
