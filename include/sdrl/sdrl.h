@@ -4,8 +4,8 @@
  */
 
 
-#ifndef _SDRL_H
-#define _SDRL_H
+#ifndef _SDRL_SDRL_H
+#define _SDRL_SDRL_H
 
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
@@ -15,10 +15,8 @@
 #include <sdrl/core/events.h>
 #include <sdrl/core/bindings.h>
 #include <sdrl/core/machine.h>
+#include <sdrl/macros.h>
 #include <sdrl/globals.h>
-
-#define SDRL_BIND_FUNCTION(mach, type, name, func) \
-	sdrl_add_binding(mach->env, name, sdrl_make_value(mach->heap, type, (sdrl_data_t) (void *) func, 0, NULL));
 
 #endif
 

@@ -7,6 +7,7 @@ OBJS = \
 	load.o	\
 	funcs/char.o	\
 	funcs/length.o	\
+	funcs/substr.o	\
 
 
 include ../../../rules.mk
@@ -17,7 +18,8 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h ../../../include/sdrl/lib/string.h
+  ../../../include/sdrl/core/machine.h ../../../include/sdrl/macros.h \
+  ../../../include/sdrl/lib/string.h
 
 char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
@@ -25,7 +27,7 @@ char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h
+  ../../../include/sdrl/core/machine.h ../../../include/sdrl/macros.h
 
 length.o: funcs/length.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
@@ -33,5 +35,13 @@ length.o: funcs/length.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h
+  ../../../include/sdrl/core/machine.h ../../../include/sdrl/macros.h
+
+substr.o: funcs/substr.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/bindings.h \
+  ../../../include/sdrl/core/machine.h ../../../include/sdrl/macros.h
 
