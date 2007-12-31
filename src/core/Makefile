@@ -12,6 +12,7 @@ OBJS = \
 	machine.o	\
 	type.o	\
 	value.o	\
+	utils.o	\
 
 
 include ../../rules.mk
@@ -43,4 +44,11 @@ type.o: type.c ../../include/sdrl/core/type.h \
 value.o: value.c ../../include/sdrl/core/value.h \
   ../../include/sdrl/core/type.h ../../include/sdrl/core/heap.h \
   ../../include/sdrl/globals.h
+
+utils.o: utils.c ../../include/sdrl/core/utils.h \
+  ../../include/sdrl/core/heap.h ../../include/sdrl/core/expr.h \
+  ../../include/sdrl/globals.h ../../include/sdrl/core/type.h \
+  ../../include/sdrl/core/value.h ../../include/sdrl/core/error.h \
+  ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
+  ../../include/sdrl/core/machine.h
 

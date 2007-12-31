@@ -12,10 +12,10 @@
 #include <sdrl/core/type.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/error.h>
+#include <sdrl/core/utils.h>
 #include <sdrl/core/events.h>
 #include <sdrl/core/bindings.h>
 #include <sdrl/core/machine.h>
-#include <sdrl/macros.h>
 #include <sdrl/globals.h>
 
 #endif

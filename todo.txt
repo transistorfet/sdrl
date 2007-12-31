@@ -1,4 +1,5 @@
 
+	* convert all library functions to use the new utils functions
 	* change type functions to return the type instead of binding it as well
 	* make string functions: strcmp, substr, uppercase, lowercase, char2string(propername?)
 	* make equals command check any type instead of just number
