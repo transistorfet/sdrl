@@ -1,7 +1,6 @@
 
 	* fix the parser to parse negative and decimal numbers
 	* convert all library functions to use the new utils functions
-	* change type functions to return the type instead of binding it as well
 	* make string functions: strcmp, substr, uppercase, lowercase, char2string(propername?)
 	* make equals command check any type instead of just number
 	* change the makefiles to move the sdrl binary to bin/ and put a makefile in the root dir 

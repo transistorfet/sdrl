@@ -8,12 +8,17 @@
 
 static int sdrl_evaluate_form_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_expr *);
 
-int sdrl_base_load_form_type(struct sdrl_machine *mach, const char *name)
+struct sdrl_type *sdrl_base_make_form_type(struct sdrl_machine *mach)
 {
-	struct sdrl_type *form;
-
-	form = sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER | SDRL_TBF_PASS_EXPRS, NULL, (sdrl_evaluate_t) sdrl_evaluate_form_type, NULL, NULL);	
-	return(sdrl_add_binding(mach->type_env, name, form));
+	return(sdrl_make_type(
+		mach->heap,
+		0,
+		SDRL_BT_POINTER | SDRL_TBF_PASS_EXPRS,
+		NULL,
+		(sdrl_evaluate_t) sdrl_evaluate_form_type,
+		NULL,
+		NULL
+	));	
 }
 
 /*** Local Functions ***/

@@ -10,12 +10,17 @@ static void *sdrl_create_env_type(struct sdrl_machine *, struct sdrl_value *);
 static void *sdrl_duplicate_env_type(struct sdrl_heap *, void *);
 static int sdrl_destroy_env_type(struct sdrl_heap *, void *);
 
-int sdrl_base_load_env_type(struct sdrl_machine *mach, const char *name)
+struct sdrl_type *sdrl_base_make_env_type(struct sdrl_machine *mach)
 {
-	struct sdrl_type *env;
-
-	env = sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, (sdrl_create_t) sdrl_create_env_type, NULL, (sdrl_duplicate_t) sdrl_duplicate_env_type, (sdrl_destroy_t) sdrl_destroy_env_type);
-	return(sdrl_add_binding(mach->type_env, name, env));
+	return(sdrl_make_type(
+		mach->heap,
+		0,
+		SDRL_BT_POINTER,
+		(sdrl_create_t) sdrl_create_env_type,
+		NULL,
+		(sdrl_duplicate_t) sdrl_duplicate_env_type,
+		(sdrl_destroy_t) sdrl_destroy_env_type
+	));
 }
 
 /*** Local Functions ***/

@@ -14,11 +14,11 @@ int sdrl_load_base(struct sdrl_machine *mach)
 {
 	struct sdrl_type *form, *func;
 
-	sdrl_base_load_expr_type(mach, "expr");
-	sdrl_base_load_form_type(mach, "form");
-	sdrl_base_load_func_type(mach, "func");
-	sdrl_base_load_list_type(mach, "list");
-	sdrl_base_load_env_type(mach, "env");
+	sdrl_add_binding(mach->type_env, "expr", sdrl_base_make_expr_type(mach));
+	sdrl_add_binding(mach->type_env, "form", sdrl_base_make_form_type(mach));
+	sdrl_add_binding(mach->type_env, "func", sdrl_base_make_func_type(mach));
+	sdrl_add_binding(mach->type_env, "list", sdrl_base_make_list_type(mach));
+	sdrl_add_binding(mach->type_env, "env", sdrl_base_make_env_type(mach));
 
 	if (!(form = sdrl_find_binding(mach->type_env, "form")))
 		return(-1);

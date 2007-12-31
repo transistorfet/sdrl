@@ -13,11 +13,18 @@ static struct sdrl_type *file_type;
 static void *sdrl_create_file_type(struct sdrl_machine *, struct sdrl_value *);
 static int sdrl_destroy_file_type(struct sdrl_heap *, void *);
 
-int sdrl_base_load_file_type(struct sdrl_machine *mach, const char *name)
+struct sdrl_type *sdrl_base_make_file_type(struct sdrl_machine *mach)
 {
-	if (!(file_type = sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, (sdrl_create_t) sdrl_create_file_type, NULL, NULL, (sdrl_destroy_t) sdrl_destroy_file_type)))
-		return(-1);
-	return(sdrl_add_binding(mach->type_env, name, file_type));
+	file_type = sdrl_make_type(
+		mach->heap,
+		0,
+		SDRL_BT_POINTER,
+		(sdrl_create_t) sdrl_create_file_type,
+		NULL,
+		NULL,
+		(sdrl_destroy_t) sdrl_destroy_file_type
+	);
+	return(file_type);
 }
 
 /*** Local Functions ***/

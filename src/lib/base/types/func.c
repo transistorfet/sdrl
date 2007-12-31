@@ -8,12 +8,17 @@
 
 static int sdrl_evaluate_func_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
 
-int sdrl_base_load_func_type(struct sdrl_machine *mach, const char *name)
+struct sdrl_type *sdrl_base_make_func_type(struct sdrl_machine *mach)
 {
-	struct sdrl_type *func;
-
-	func =  sdrl_make_type(mach->heap, 0, SDRL_BT_POINTER, NULL, (sdrl_evaluate_t) sdrl_evaluate_func_type, NULL, NULL);
-	return(sdrl_add_binding(mach->type_env, name, func));
+	return(sdrl_make_type(
+		mach->heap,
+		0,
+		SDRL_BT_POINTER,
+		NULL,
+		(sdrl_evaluate_t) sdrl_evaluate_func_type,
+		NULL,
+		NULL
+	));
 }
 
 /*** Local Functions ***/
