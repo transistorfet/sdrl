@@ -3,6 +3,8 @@
  * Description:		Lambda Calculus Parser (Bracketed)
  */
 
+#include <stdlib.h>
+
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 #include <sdrl/lib/base/input.h>
