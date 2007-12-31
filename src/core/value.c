@@ -48,7 +48,7 @@ struct sdrl_value *sdrl_make_value(struct sdrl_heap *heap, struct sdrl_type *typ
  */
 struct sdrl_value *sdrl_duplicate_value(struct sdrl_heap *heap, struct sdrl_value *value)
 {
-	struct sdrl_value *newvalue, *prev, *head = NULL;
+	struct sdrl_value *newvalue, *prev = NULL, *head = NULL;
 
 	while (value) {
 		if (!(newvalue = (struct sdrl_value *) sdrl_heap_alloc(heap, sizeof(struct sdrl_value) + value->size)))

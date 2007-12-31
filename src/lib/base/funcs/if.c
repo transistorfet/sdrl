@@ -12,7 +12,7 @@
  */
 int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *value)
 {
-	struct sdrl_value *block;
+	struct sdrl_value *block = NULL;
 
 	if (sdrl_value_count(value) < 2)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
