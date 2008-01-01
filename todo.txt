@@ -1,7 +1,6 @@
 
-	* fix the parser to parse negative and decimal numbers
 	* convert all library functions to use the new utils functions
-	* make string functions: strcmp, substr, uppercase, lowercase, char2string(propername?)
+	* make string functions: strcmp, substr, uppercase, lowercase
 	* make equals command check any type instead of just number
 	* change the makefiles to move the sdrl binary to bin/ and put a makefile in the root dir 
 
@@ -33,6 +32,7 @@
 	* can/should we simplify the semantics of set?  Perhaps making 2 different functions
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* allow multiple event stacks in a continuation (what is this actually for? a thread type of thing?)
+	* make the lambda parser support hex and octal number representation
 
 	* can we somehow perform the check for a string's length without the call the strlen in string:char?
 
@@ -50,7 +50,9 @@ Structural Issues:
 	  them more nicely?  Would this also make it better for libraries that want to get in on the GC
 	  action?  Would this struct contain the pointer to the heap in addition to just the ref num?
 	* what do you do if a value being applied/evaluated is non-executable (does not have an evaluate
-	  function in it's type)?  Should you just return the value?  Should it be an error?
+	  function in it's type)?  Should you just return the value?  Should it be an error?  This "feature"
+	  is exploited by "if" such that it calls its params like a function but if they aren't (code ) blocks,
+	  it expects that the call will result in the value passed being returned.
 	* you need to come up with a namemangle or something that is reserved for interpreter use such that
 	  special variables are named that way (like the global environment, the error handling function, etc)
 	* re-evaluate the reference tracking in the environment functions (extend/retract) particuarily with

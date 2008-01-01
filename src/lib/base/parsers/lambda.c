@@ -56,8 +56,7 @@ static struct sdrl_expr *lambda_parse_expr(struct sdrl_input *input)
 		return(NULL);
 	else if (ch == ')')
 		return(NULL);
-	else if (lambda_is_digit(ch)) {
-		// TODO make this recognize numbers that start with a negative sign
+	else if (lambda_is_digit(ch) || ((ch == '-') && lambda_is_digit(sdrl_peek_char(input)))) {
 		if (!(expr = lambda_parse_number(input, ch, line)))
 			return(NULL);
 	}
@@ -85,13 +84,13 @@ static struct sdrl_expr *lambda_parse_number(struct sdrl_input *input, char firs
 	// TODO make this parse octal and hex numbers
 	buffer[0] = first;
 	while ((i < LAMBDA_MAX_NUMBER - 1) && (buffer[++i] = sdrl_get_char(input))) {
-		if (!lambda_is_digit(buffer[i]))
+		if (!lambda_is_identifier(buffer[i]))
 			break;
 	}
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_number_expr(line, atof(buffer), NULL));
+	return(sdrl_make_number_expr(line, strtod(buffer, NULL), NULL));
 }
 
 static struct sdrl_expr *lambda_parse_string(struct sdrl_input *input, char first, linenumber_t line)
