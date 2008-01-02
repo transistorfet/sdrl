@@ -49,8 +49,8 @@ static struct sdrl_expr *lambda_parse_expr(struct sdrl_input *input)
 	linenumber_t line;
 	struct sdrl_expr *expr;
 
-	ch = lambda_get_next_char(input);
 	line = sdrl_get_linenumber(input);
+	ch = lambda_get_next_char(input);
 
 	if (!ch)
 		return(NULL);
