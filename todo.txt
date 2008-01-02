@@ -2,7 +2,6 @@
 	* convert all library functions to use the new utils functions
 	* make string functions: strcmp, substr, uppercase, lowercase
 	* make equals command check any type instead of just number
-	* change the makefiles to move the sdrl binary to bin/ and put a makefile in the root dir 
 
 	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
 	  ones)

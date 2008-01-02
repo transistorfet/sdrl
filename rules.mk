@@ -1,15 +1,14 @@
 #
 # Name:		rules.mk
-# Version:	0.1
 # Description:	Make Rules
 #
 
 .SUFFIXES: .o .c .h .cpp .s .asm .rc
-.PHONY: $(DIRS)
+.PHONY: builds $(DIRS)
 
 include $(ROOT)/config.mk
 
-all: $(TARGET) $(LIB_TARGET)
+all: builds $(TARGET) $(LIB_TARGET)
 
 $(TARGET): $(DIRS) $(OBJS)
 	$(LD) $(LIBPATH) $(LDFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
@@ -35,16 +34,7 @@ $(DIRS): FORCE
 
 FORCE:
 
-depend:
-	$(DEPEND) $(SRCS) > .depend
-
 dist:
 	tar -cvf $(DIST).tar $(SRCS)
-
-clean:
-	$(RM) $(OBJS)
-
-distclean: clean
-	$(RM) .depend
 
 
