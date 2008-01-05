@@ -1,13 +1,4 @@
 
-	* possibly add caching to environments.  The easiest way to allow full caching is to store a bitflag
-	  with a cache entry to signify it as such so that when you destroy the entry, you don't call the
-	  destroy function.  The trouble though is when the original entry is destroyed somehow for some
-	  reason (or is even reassigned).  The cache entry will then be invalid.  A less efficent alternative
-	  could be to store a pointer to the env containing the entry instead.  What about though if an
-	  inbetween env creates a new entry that overrides the previous one?
-	* change add_binding to prevent a double hashlookup (just combine the get_binding and actual add calls
-	  perhaps in such a way as to make it easy to remove
-
 	* convert all library functions to use the new utils functions
 	* make string functions: strcmp, substr, uppercase, lowercase
 	* make equals command check any type instead of just number
@@ -77,6 +68,12 @@ Structural Issues:
 	  with duplicate.  Destroy seems a bit funny just taking the heap (but that makes it easy to use the
 	  sdrl_destory_value function).  What about the parameters to the type create function?  Is that
 	  function primarily for direct calling from SDRL or direct calling from C?
+	* possibly add caching to environments.  The easiest way to allow full caching is to store a bitflag
+	  with a cache entry to signify it as such so that when you destroy the entry, you don't call the
+	  destroy function.  The trouble though is when the original entry is destroyed somehow for some
+	  reason (or is even reassigned).  The cache entry will then be invalid.  A less efficent alternative
+	  could be to store a pointer to the env containing the entry instead.  What about though if an
+	  inbetween env creates a new entry that overrides the previous one?
 
 Features:
 

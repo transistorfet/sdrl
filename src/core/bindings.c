@@ -24,20 +24,16 @@
 	}								\
 }
 
-#define BINDINGS_HASH(env, str) \
-	( ( SDRL_BF_IS_SET((env), SDRL_BBF_CASE_INSENSITIVE) ? sdrl_hash_icase((str)) : sdrl_hash((str)) ) % (env)->size )
-
 #define BINDINGS_COMPARE(env, str1, str2) \
 	( SDRL_BF_IS_SET((env), SDRL_BBF_CASE_INSENSITIVE) ? !sdrl_stricmp((str1), (str2)) : !strcmp((str1), (str2)) )
 
-#define IS_LOWERCASE(ch) \
+#define LOWERCASE(ch) \
 	( (ch >= 0x41 && ch <= 0x5a) ? ch + 0x20 : ch )
 
 static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *, const char *, int);
 static inline int sdrl_bindings_rehash(struct sdrl_environment *env, int newsize);
 static int sdrl_stricmp(const char *, const char *);
 static inline unsigned int sdrl_hash(const char *);
-static inline unsigned int sdrl_hash_icase(const char *);
 
 /**
  * Allocate an environment for binding values to names.
@@ -132,16 +128,19 @@ int sdrl_add_binding(struct sdrl_environment *env, const char *name, void *data)
 
 	if (!name || !data || SDRL_BF_IS_SET(env, SDRL_BBF_NO_ADD))
 		return(-1);
-	if (sdrl_get_bindings(env, name, 1))
-		return(SDRL_ERR_IN_USE);
+	/** Search for an existing entry */
+	hash = sdrl_hash(name) % env->size;
+	for (bind = env->table[hash]; bind; bind = bind->next) {
+		if (BINDINGS_COMPARE(env, name, bind->name))
+			return(SDRL_ERR_IN_USE);
+	}
+
 	if (!(bind = (struct sdrl_binding *) malloc(sizeof(struct sdrl_binding) + strlen(name) + 1)))
 		return(SDRL_ERR_OUT_OF_MEMORY);
-
 	bind->name = (char *) (bind + 1);
 	strcpy(bind->name, name);
 	bind->data = data;
 
-	hash = BINDINGS_HASH(env, name);
 	bind->next = env->table[hash];
 	env->table[hash] = bind;
 	env->entries++;
@@ -177,7 +176,7 @@ int sdrl_remove_binding(struct sdrl_environment *env, const char *name)
 
 	if (!name || SDRL_BF_IS_SET(env, SDRL_BBF_NO_REMOVE))
 		return(-1);
-	hash = BINDINGS_HASH(env, name);
+	hash = sdrl_hash(name) % env->size;
 	prev = NULL;
 	cur = env->table[hash];
 	while (cur) {
@@ -221,18 +220,15 @@ static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, cons
 	struct sdrl_binding *cur;
 	struct sdrl_environment *curenv;
 
+	hash = sdrl_hash(name);
 	curenv = env;
-	while (curenv) {
-		hash = BINDINGS_HASH(curenv, name);
-		cur = curenv->table[hash];
-		while (cur) {
+	for (curenv = env; curenv; curenv = curenv->parent) {
+		for (cur = curenv->table[hash % curenv->size]; cur; cur = cur->next) {
 			if (BINDINGS_COMPARE(curenv, name, cur->name))
 				return(cur);
-			cur = cur->next;
 		}
 		if (--levels == 0)
 			return(NULL);
-		curenv = curenv->parent;
 	}
 	return(NULL);
 }
@@ -255,7 +251,7 @@ static inline int sdrl_bindings_rehash(struct sdrl_environment *env, int newsize
 		cur = env->table[i];
 		while (cur) {
 			next = cur->next;
-			hash = BINDINGS_HASH(env, cur->name);
+			hash = sdrl_hash(cur->name) % env->size;
 			cur->next = newtable[hash];
 			newtable[hash] = cur;
 			cur = next;
@@ -271,7 +267,7 @@ static int sdrl_stricmp(const char *str1, const char *str2)
 	int i = 0;
 
 	while ((str1[i] != '\0') && (str2[i] != '\0')) {
-		if (IS_LOWERCASE(str1[i]) != IS_LOWERCASE(str2[i]))
+		if (LOWERCASE(str1[i]) != LOWERCASE(str2[i]))
 			return(1);
 		i++;
 	}
@@ -284,18 +280,7 @@ static inline unsigned int sdrl_hash(const char *str)
 	unsigned int hash = 0;
 
 	for (i = 0;str[i] != '\0';i++)
-		hash = str[i] + (hash << 6) + (hash << 16) - hash;
+		hash = LOWERCASE(str[i]) + (hash << 6) + (hash << 16) - hash;
 	return(hash);
 }
-
-static inline unsigned int sdrl_hash_icase(const char *str)
-{
-	int i;
-	unsigned int hash = 0;
-
-	for (i = 0;str[i] != '\0';i++)
-		hash = (((str[i] >= 'A') && (str[i] <= 'Z')) ? str[i] + 0x20 : str[i]) + (hash << 6) + (hash << 16) - hash;
-	return(hash);
-}
-
 
