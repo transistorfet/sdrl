@@ -1,0 +1,18 @@
+
+(set fac (lblock
+	(set (list n sum) ($ _))
+	(if (= ($ n) 0)
+		sum
+		(code (fac (- ($ n) 1) (* ($ n) ($ sum)))))))
+
+(fac 100 1)
+(fac 100 1)
+(fac 100 1)
+(fac 100 1)
+(fac 100 1)
+(fac 100 1)
+(fac 100 1)
+(fac 100 1)
+(fac 100 1)
+(fac 100 1)
+
