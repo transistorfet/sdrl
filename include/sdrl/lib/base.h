@@ -15,14 +15,18 @@ int sdrl_load_base(struct sdrl_machine *);
 struct sdrl_expr *sdrl_base_parse_lambda_input(struct sdrl_input *, void *);
 
 /*** Types ***/
+struct sdrl_type *sdrl_base_make_dblock_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_env_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_expr_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_form_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_func_type(struct sdrl_machine *);
+struct sdrl_type *sdrl_base_make_lblock_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_list_type(struct sdrl_machine *);
 
 /*** Forms ***/
 int sdrl_base_code(struct sdrl_machine *, struct sdrl_expr *);
+int sdrl_base_dblock(struct sdrl_machine *, struct sdrl_expr *);
+int sdrl_base_lblock(struct sdrl_machine *, struct sdrl_expr *);
 
 /*** Functions ***/
 int sdrl_base_set(struct sdrl_machine *, struct sdrl_value *);

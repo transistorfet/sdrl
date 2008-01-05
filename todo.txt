@@ -1,4 +1,13 @@
 
+	* possibly add caching to environments.  The easiest way to allow full caching is to store a bitflag
+	  with a cache entry to signify it as such so that when you destroy the entry, you don't call the
+	  destroy function.  The trouble though is when the original entry is destroyed somehow for some
+	  reason (or is even reassigned).  The cache entry will then be invalid.  A less efficent alternative
+	  could be to store a pointer to the env containing the entry instead.  What about though if an
+	  inbetween env creates a new entry that overrides the previous one?
+	* change add_binding to prevent a double hashlookup (just combine the get_binding and actual add calls
+	  perhaps in such a way as to make it easy to remove
+
 	* convert all library functions to use the new utils functions
 	* make string functions: strcmp, substr, uppercase, lowercase
 	* make equals command check any type instead of just number
@@ -48,6 +57,9 @@ Structural Issues:
 	  collectable such as values and environments (types too?) inherit so you can cast them and deal with
 	  them more nicely?  Would this also make it better for libraries that want to get in on the GC
 	  action?  Would this struct contain the pointer to the heap in addition to just the ref num?
+	* we need to be able to reference count/track the expr datatypes because we store pointers to them
+	  but in most situations, we will parse stuff into expr, evaluate the expr, and then throw it away
+	  but keep the same machine (and want any functions for example added to the system to stay).
 	* what do you do if a value being applied/evaluated is non-executable (does not have an evaluate
 	  function in it's type)?  Should you just return the value?  Should it be an error?  This "feature"
 	  is exploited by "if" such that it calls its params like a function but if they aren't (code ) blocks,
@@ -60,6 +72,11 @@ Structural Issues:
 	  to make a reference whenever you extend an env other than mach->env
 	* should we distinguish between bareword strings and quoted strings in exprs which would at least give
 	  us the choice to act differently (ie. always do a lookup on barewords)?
+	* the type system needs some redesigning.  The parameters are inconsistent.  You need to determine
+	  how the create function will truely work.  Should it return the value instead just a pointer? same
+	  with duplicate.  Destroy seems a bit funny just taking the heap (but that makes it easy to use the
+	  sdrl_destory_value function).  What about the parameters to the type create function?  Is that
+	  function primarily for direct calling from SDRL or direct calling from C?
 
 Features:
 

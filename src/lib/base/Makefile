@@ -10,6 +10,8 @@ LIB_TARGET = ../../../lib/libbase.a
 
 OBJS =	load.o	\
 	forms/code.o	\
+	forms/lblock.o	\
+	forms/dblock.o	\
 	funcs/add.o	\
 	funcs/and.o	\
 	funcs/array.o	\
@@ -41,6 +43,8 @@ OBJS =	load.o	\
 	types/form.o	\
 	types/list.o	\
 	types/func.o	\
+	types/lblock.o	\
+	types/dblock.o	\
 	utils/disperr.o	\
 	utils/dispexpr.o	\
 	utils/input.o	\
@@ -78,6 +82,22 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h ../../../include/sdrl/lib/base.h
 
 code.o: forms/code.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/bindings.h \
+  ../../../include/sdrl/core/machine.h
+
+lblock.o: forms/lblock.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/bindings.h \
+  ../../../include/sdrl/core/machine.h
+
+dblock.o: forms/dblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
@@ -327,6 +347,22 @@ list.o: types/list.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h
 
 func.o: types/func.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/bindings.h \
+  ../../../include/sdrl/core/machine.h
+
+lblock.o: types/lblock.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/bindings.h \
+  ../../../include/sdrl/core/machine.h
+
+dblock.o: types/dblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \

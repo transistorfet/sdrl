@@ -14,18 +14,26 @@ int sdrl_load_base(struct sdrl_machine *mach)
 {
 	struct sdrl_type *form, *func;
 
+	/** Bind types */
+	sdrl_add_binding(mach->type_env, "dblock", sdrl_base_make_dblock_type(mach));
+	sdrl_add_binding(mach->type_env, "env", sdrl_base_make_env_type(mach));
 	sdrl_add_binding(mach->type_env, "expr", sdrl_base_make_expr_type(mach));
 	sdrl_add_binding(mach->type_env, "form", sdrl_base_make_form_type(mach));
 	sdrl_add_binding(mach->type_env, "func", sdrl_base_make_func_type(mach));
+	sdrl_add_binding(mach->type_env, "lblock", sdrl_base_make_lblock_type(mach));
 	sdrl_add_binding(mach->type_env, "list", sdrl_base_make_list_type(mach));
-	sdrl_add_binding(mach->type_env, "env", sdrl_base_make_env_type(mach));
 
 	if (!(form = sdrl_find_binding(mach->type_env, "form")))
 		return(-1);
 	if (!(func = sdrl_find_binding(mach->type_env, "func")))
 		return(-1);
 
+	/** Bind forms */
 	SDRL_BIND_FUNCTION(mach, form, "code", sdrl_base_code);
+	SDRL_BIND_FUNCTION(mach, form, "dblock", sdrl_base_dblock);
+	SDRL_BIND_FUNCTION(mach, form, "lblock", sdrl_base_lblock);
+
+	/** Bind functions */
 	SDRL_BIND_FUNCTION(mach, func, "set", sdrl_base_set);
 	SDRL_BIND_FUNCTION(mach, func, "if", sdrl_base_if);
 
@@ -56,8 +64,6 @@ int sdrl_load_base(struct sdrl_machine *mach)
 	SDRL_BIND_FUNCTION(mach, func, "not", sdrl_base_not);
 
 	SDRL_BIND_FUNCTION(mach, func, "defenv", sdrl_base_defenv);
-
-	//SDRL_BIND_FUNCTION(mach, func, "print", sdrl_base_print);
 
 	return(0);
 }
