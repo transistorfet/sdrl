@@ -4,7 +4,7 @@
 # 40320.000000
 # END EXPECTED OUTPUT
 
-(set fac (code
+(set fac (lblock
 	(set (list n) ($ _))
 	(if (= ($ n) 0)
 		1

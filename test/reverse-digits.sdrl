@@ -6,10 +6,10 @@
 # 737014178.000000
 # END EXPECTED OUTPUT
 
-(set reverse-digits (code
+(set reverse-digits (lblock
 	(reverse-digits-helper ($ _) 0)))
 
-(set reverse-digits-helper (code
+(set reverse-digits-helper (lblock
 	(set (list n sum) ($ _))
 	(if (< ($ n) 1)
 		($ sum)
