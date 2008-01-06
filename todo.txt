@@ -3,6 +3,7 @@
 	* make string functions: strcmp, substr, uppercase, lowercase
 	* make equals command check any type instead of just number
 
+	* get an autodoc creator setup
 	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
 	  ones)
 
