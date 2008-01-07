@@ -17,11 +17,10 @@ int sdrl_base_defenv(struct sdrl_machine *mach, struct sdrl_value *value)
 
 	if (!(type = sdrl_find_binding(mach->type_env, "env")))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
-	else if (type->create && (env = type->create(mach, value))) {
-		mach->ret = sdrl_make_value(mach->heap, type, (sdrl_data_t) (void *) env, 0, NULL);
-		return(0);
-	}
-	return(-1);
+	else if (!type->create || (env = type->create(mach, value)))
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, NULL));
+	mach->ret = sdrl_make_value(mach->heap, type, (sdrl_data_t) (void *) env, 0, NULL);
+	return(0);
 }
 
 
