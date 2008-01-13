@@ -38,8 +38,8 @@ clean:
 	$(RM) $(OBJS)
 
 main.o: main.c ../../include/sdrl/sdrl.h ../../include/sdrl/core/heap.h \
-  ../../include/sdrl/core/expr.h ../../include/sdrl/globals.h \
-  ../../include/sdrl/core/type.h ../../include/sdrl/core/value.h \
+  ../../include/sdrl/core/expr.h ../../include/sdrl/core/value.h \
+  ../../include/sdrl/core/type.h ../../include/sdrl/globals.h \
   ../../include/sdrl/core/error.h ../../include/sdrl/core/utils.h \
   ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
   ../../include/sdrl/core/machine.h ../../include/sdrl/core/basetypes.h \

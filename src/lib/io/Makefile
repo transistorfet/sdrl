@@ -11,7 +11,6 @@ LIB_TARGET = ../../../lib/libio.a
 OBJS =	load.o	\
 	funcs/open.o	\
 	funcs/print.o	\
-	funcs/sprintf.o	\
 	types/file.o
 
 include $(ROOT)/config.mk
@@ -38,8 +37,8 @@ clean:
 
 load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
-  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
   ../../../include/sdrl/core/machine.h \
@@ -47,8 +46,8 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
 
 open.o: funcs/open.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
-  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
   ../../../include/sdrl/core/machine.h \
@@ -56,17 +55,8 @@ open.o: funcs/open.c ../../../include/sdrl/sdrl.h \
 
 print.o: funcs/print.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
-  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
-  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
-  ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h \
-  ../../../include/sdrl/core/basetypes.h
-
-sprintf.o: funcs/sprintf.c ../../../include/sdrl/sdrl.h \
-  ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
-  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
   ../../../include/sdrl/core/machine.h \
@@ -74,10 +64,10 @@ sprintf.o: funcs/sprintf.c ../../../include/sdrl/sdrl.h \
 
 file.o: types/file.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/globals.h ../../../include/sdrl/core/type.h \
-  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
   ../../../include/sdrl/core/machine.h \
-  ../../../include/sdrl/core/basetypes.h
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h
 
