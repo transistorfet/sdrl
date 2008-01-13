@@ -7,6 +7,7 @@
 #ifndef _SDRL_CORE_EXPR_H
 #define _SDRL_CORE_EXPR_H
 
+#include <sdrl/core/value.h>
 #include <sdrl/globals.h>
 
 #define SDRL_ET_NUMBER		0x01
@@ -14,6 +15,7 @@
 #define SDRL_ET_CALL		0x03
 
 struct sdrl_expr {
+	struct sdrl_value value;
 	int type;
 	linenumber_t line;
 	union {
@@ -21,6 +23,7 @@ struct sdrl_expr {
 		char *str;
 		struct sdrl_expr *expr;
 	} data;
+	// TODO should you use the value's next member instead?
 	struct sdrl_expr *next;
 };
 

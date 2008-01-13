@@ -1,5 +1,5 @@
 /*
- * Builtin Name:	print.c
+ * Function Name:	print.c
  * Module Requirements:	stdio.h
  * Description:		Print Expression
  */
@@ -12,28 +12,31 @@
  * Args:	<value>, ...
  * Description:	Prints out each of the values in the list and returns the list.
  */
-int sdrl_io_print(struct sdrl_machine *mach, struct sdrl_value *value)
+int sdrl_io_print(struct sdrl_machine *mach, struct sdrl_value *args)
 {
 	struct sdrl_value *cur;
 
-	cur = value;
+	cur = args;
 	while (cur) {
-		switch (SDRL_BASE_TYPE(cur->type)) {
+		switch (cur->type->basetype) {
 			case SDRL_BT_NUMBER:
-				printf("%f", cur->data.num);
+				printf("%f", SDRL_NUMBER(cur)->num);
 				break;
 			case SDRL_BT_STRING:
-				printf("%s", cur->data.str);
+				printf("%s", SDRL_STRING(cur)->str);
 				break;
 			case SDRL_BT_POINTER:
-				printf("0x%x", (unsigned int) cur->data.ptr);
+				printf("0x%x", (unsigned int) SDRL_POINTER(cur)->ptr);
+				break;
+			case SDRL_BT_DATA:
+				printf("0x%x", (unsigned int) cur);
 				break;
 			default:
 				break;
 		}
 		cur = cur->next;
 	}
-	mach->ret = SDRL_MAKE_REFERENCE(value);
+	mach->ret = SDRL_MAKE_REFERENCE(args);
 	return(0);
 }
 

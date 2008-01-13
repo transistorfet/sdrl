@@ -1,9 +1,15 @@
 
-	* convert all library functions to use the new utils functions
-	* make string functions: strcmp, substr, uppercase, lowercase
-	* make equals command check any type instead of just number
+	* replace all the NULL assignments to the type in expr make functions.
 
-	* get an autodoc creator setup
+	* what do you do about the type sizeof for string type?
+	* if possible, move the number and string type creation to files in libbase
+	* should you move the remaining functions in basetypes to utils.c?
+
+	* review lookup, set and cleanup (convert to use new utils argument functions)
+
+	* make string functions: strcmp, uppercase, lowercase
+	* make equals command check any type instead of just number (just the primative types)
+
 	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
 	  ones)
 
@@ -19,11 +25,15 @@
 	  on) without the need for 2 types for everything
 	* make parser catch errors during a parse
 	* can we without too much trouble make the string type record the length as well?
+	* get an autodoc creator setup
 
+	* should you change the name of type "env" to "envref"? (same with expr)
+	* should retract_environment replace destroy_environment (in name)
+	* should you change sdrl_evaluate_params to sdrl_evaluate_args
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
-	* should we rename sdrl_call_value to sdrl_evaluate_value?
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
+	* should you change SDRL_MAKE_REFERENCE (and DESTROY) to something shorter?
 
 	* add a function to automatically check args based on min/max args allowed and types? (both in C and
 	  SDRL)
@@ -51,7 +61,13 @@ Structural Issues:
 	  action?  Would this struct contain the pointer to the heap in addition to just the ref num?
 	* we need to be able to reference count/track the expr datatypes because we store pointers to them
 	  but in most situations, we will parse stuff into expr, evaluate the expr, and then throw it away
-	  but keep the same machine (and want any functions for example added to the system to stay).
+	  but keep the same machine (and want any functions for example added to the system to stay).  This
+	  all seems really really complex overall because now you've got a special expr type that controls the
+	  expr itself and is in turn controlled by the value it belongs to.  Is it possible/desirable to
+	  unify everything such that everything that is tracked/refcounted/garbage collected inherits from
+	  the same superclass.  Do we/should we make it really easy to interface to this tracking system so
+	  that things can be tracked/refcounted/and possible garbage collected without being allocated from
+	  the heap?
 	* what do you do if a value being applied/evaluated is non-executable (does not have an evaluate
 	  function in it's type)?  Should you just return the value?  Should it be an error?  This "feature"
 	  is exploited by "if" such that it calls its params like a function but if they aren't (code ) blocks,
@@ -75,6 +91,7 @@ Structural Issues:
 	  reason (or is even reassigned).  The cache entry will then be invalid.  A less efficent alternative
 	  could be to store a pointer to the env containing the entry instead.  What about though if an
 	  inbetween env creates a new entry that overrides the previous one?
+	* can you change types somehow to make it easier to do type checking?
 
 Features:
 

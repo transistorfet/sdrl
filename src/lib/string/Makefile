@@ -42,7 +42,9 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h ../../../include/sdrl/lib/string.h
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h \
+  ../../../include/sdrl/lib/string.h
 
 char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
@@ -50,7 +52,8 @@ char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h
 
 length.o: funcs/length.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
@@ -58,7 +61,8 @@ length.o: funcs/length.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h
 
 substr.o: funcs/substr.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
@@ -66,7 +70,9 @@ substr.o: funcs/substr.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h \
+  ../../../include/sdrl/lib/string.h
 
 tostring.o: funcs/tostring.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
@@ -74,5 +80,7 @@ tostring.o: funcs/tostring.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/error.h \
   ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h ../../../include/sdrl/lib/string.h
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h \
+  ../../../include/sdrl/lib/string.h
 

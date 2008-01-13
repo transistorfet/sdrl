@@ -12,7 +12,13 @@
  */
 int sdrl_base_code(struct sdrl_machine *mach, struct sdrl_expr *expr)
 {
-	mach->ret = sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "expr"), (sdrl_data_t) (void *) expr, 0, NULL);
+	struct sdrl_type *type;
+
+	if (!(type = sdrl_find_binding(mach->type_env, "expr")))
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+	if (!type->create)
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, NULL));
+	mach->ret = type->create(mach, type, SDRL_VALUE(expr));
 	return(0);
 }
 

@@ -8,6 +8,7 @@
 #define _SDRL_CORE_BINDINGS_H
 
 #include <sdrl/core/heap.h>
+#include <sdrl/core/value.h>
 #include <sdrl/globals.h>
 
 #define SDRL_BBF_NO_ADD			0x0001			/** No bindings can be added */
@@ -23,8 +24,8 @@ struct sdrl_binding {
 };
 
 struct sdrl_environment {
-	short bitflags;
-	short refs;
+	struct sdrl_value value;
+	int bitflags;
 	struct sdrl_heap *heap;
 	sdrl_destroy_t destroy;
 	int size;
@@ -33,7 +34,10 @@ struct sdrl_environment {
 	struct sdrl_environment *parent;
 };
 
-struct sdrl_environment *sdrl_create_environment(short, struct sdrl_heap *, sdrl_destroy_t);
+#define SDRL_ENVIRONMENT(ptr)	( (struct sdrl_environment *) (ptr) )
+
+struct sdrl_type *sdrl_make_environment_type(void);
+struct sdrl_environment *sdrl_create_environment(struct sdrl_heap *, struct sdrl_type *, short, sdrl_destroy_t);
 struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *);
 struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *);
 int sdrl_destroy_environment(struct sdrl_environment *);

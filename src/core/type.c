@@ -3,39 +3,37 @@
  * Description:	Type Manager
  */
 
-#include <string.h>
+#include <stdlib.h>
 
 #include <sdrl/core/type.h>
-#include <sdrl/core/heap.h>
 #include <sdrl/globals.h>
 
 
 /**
  * Make a new generic sdrl type.
  */
-struct sdrl_type *sdrl_make_type(struct sdrl_heap *heap, int size, int bitflags, sdrl_create_t create, sdrl_evaluate_t evaluate, sdrl_duplicate_t duplicate, sdrl_destroy_t destroy)
+struct sdrl_type *sdrl_make_type(int size, short bitflags, short basetype, sdrl_create_t create, sdrl_destroy_t destroy, sdrl_duplicate_t duplicate, sdrl_evaluate_t evaluate)
 {
 	struct sdrl_type *type;
 
-	if (!(type = (struct sdrl_type *) sdrl_heap_alloc(heap, sizeof(struct sdrl_type))))
+	if (!(type = (struct sdrl_type *) malloc(sizeof(struct sdrl_type))))
 		return(NULL);
-
 	type->size = size;
 	type->bitflags = bitflags;
+	type->basetype = basetype;
 	type->create = create;
-	type->evaluate = evaluate;
-	type->duplicate = duplicate;
 	type->destroy = destroy;
-
+	type->duplicate = duplicate;
+	type->evaluate = evaluate;
 	return(type);
 }
 
 /**
  * Frees resources used by type.
  */
-int sdrl_destroy_type(struct sdrl_heap *heap, struct sdrl_type *type)
+int sdrl_destroy_type(struct sdrl_type *type)
 {
-	sdrl_heap_free(heap, type);
+	free(type);
 	return(0);
 }
 

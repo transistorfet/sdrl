@@ -1,5 +1,5 @@
 /*
- * Builtin Name:	sprintf.c
+ * Function Name:	sprintf.c
  * Module Requirements:	string.h
  * Description:		Print Fomatted String
  */
@@ -16,6 +16,8 @@ int sdrl_io_sprintf(struct sdrl_machine *mach, struct sdrl_value *value)
 {
 	struct sdrl_value *cur;
 
+	// TODO update this!
+/*
 	cur = value;
 	while (cur) {
 		switch (SDRL_BASE_TYPE(cur->type)) {
@@ -34,6 +36,7 @@ int sdrl_io_sprintf(struct sdrl_machine *mach, struct sdrl_value *value)
 		cur = cur->next;
 	}
 	mach->ret = value;
+*/
 	return(0);
 }
 

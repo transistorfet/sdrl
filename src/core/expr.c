@@ -7,8 +7,8 @@
 #include <string.h>
 
 #include <sdrl/core/expr.h>
+#include <sdrl/core/value.h>
 #include <sdrl/globals.h>
-
 
 /**
  * Return a newly allocated number expression
@@ -19,7 +19,9 @@ struct sdrl_expr *sdrl_make_number_expr(linenumber_t line, number_t num, struct 
 
 	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr))))
 		return(NULL);
-
+	SDRL_VALUE(expr)->refs = 1;
+	SDRL_VALUE(expr)->type = NULL;
+	SDRL_VALUE(expr)->next = NULL;
 	expr->type = SDRL_ET_NUMBER;
 	expr->line = line;
 	expr->data.num = num;
@@ -38,7 +40,9 @@ struct sdrl_expr *sdrl_make_string_expr(linenumber_t line, const char *str, stru
 		return(NULL);
 	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr) + strlen(str) + 1)))
 		return(NULL);
-
+	SDRL_VALUE(expr)->refs = 1;
+	SDRL_VALUE(expr)->type = NULL;
+	SDRL_VALUE(expr)->next = NULL;
 	expr->type = SDRL_ET_STRING;
 	expr->line = line;
 	expr->data.str = (char *) (expr + 1);
@@ -56,7 +60,9 @@ struct sdrl_expr *sdrl_make_call_expr(linenumber_t line, struct sdrl_expr *call,
 
 	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr))))
 		return(NULL);
-
+	SDRL_VALUE(expr)->refs = 1;
+	SDRL_VALUE(expr)->type = NULL;
+	SDRL_VALUE(expr)->next = NULL;
 	expr->type = SDRL_ET_CALL;
 	expr->line = line;
 	expr->data.expr = call;

@@ -16,6 +16,7 @@
 #include <sdrl/core/events.h>
 #include <sdrl/core/bindings.h>
 #include <sdrl/core/machine.h>
+#include <sdrl/core/basetypes.h>
 #include <sdrl/globals.h>
 
 #endif

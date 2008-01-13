@@ -1,5 +1,5 @@
 /*
- * Builtin Name:	set.c
+ * Function Name:	set.c
  * Module Requirements:	string type ; list type
  * Description:		Binding Assignment Expression
  */
@@ -12,25 +12,25 @@ static int sdrl_base_set_list(struct sdrl_machine *, struct sdrl_value *, struct
  * Args:	<name>, <value>
  * Description:	Bind value to name.  Returns a duplicate of value.
  */
-int sdrl_base_set(struct sdrl_machine *mach, struct sdrl_value *value)
+int sdrl_base_set(struct sdrl_machine *mach, struct sdrl_value *args)
 {
 	int i, ret = 0;
 	struct sdrl_type *list;
 	struct sdrl_value *name;
 
-	if ((i = sdrl_value_count(value)) < 2)
+	if ((i = sdrl_value_count(args)) < 2)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	else if (!(list = sdrl_find_binding(mach->type_env, "list")))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	else {
-		name = sdrl_shift_value(&value);
+		name = sdrl_shift_value(&args);
 		if (name->type == list)
-			ret = sdrl_base_set_list(mach, name->data.ptr, ((i == 2) && (value->type == list)) ? (struct sdrl_value *) value->data.ptr : value); 
+			ret = sdrl_base_set_list(mach, SDRL_REFERENCE(name)->ref, ((i == 2) && (args->type == list)) ? SDRL_REFERENCE(args)->ref : args); 
 		else
-			ret = sdrl_base_set_list(mach, name, value); 
+			ret = sdrl_base_set_list(mach, name, args); 
 	}
 	if (!ret)
-		mach->ret = SDRL_MAKE_REFERENCE(value);
+		mach->ret = SDRL_MAKE_REFERENCE(args);
 	return(ret);
 }
 
@@ -41,15 +41,15 @@ int sdrl_base_set(struct sdrl_machine *mach, struct sdrl_value *value)
  */
 static int sdrl_base_set_list(struct sdrl_machine *mach, struct sdrl_value *names, struct sdrl_value *values)
 {
-	struct sdrl_type *string;
+	struct sdrl_type *str_type;
 	struct sdrl_value *cur_name, *cur_value, *tmp, *value;
 
-	if (!(string = sdrl_find_binding(mach->type_env, "string")))
+	if (!(str_type = sdrl_find_binding(mach->type_env, "string")))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	cur_name = names;
 	cur_value = values;
 	while (cur_name) {
-		if (cur_name->type != string)
+		if (cur_name->type != str_type)
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 		if (cur_value) {
 			tmp = cur_value->next;
@@ -57,15 +57,14 @@ static int sdrl_base_set_list(struct sdrl_machine *mach, struct sdrl_value *name
 			cur_value = tmp;
 		}
 		else
-			value = sdrl_make_value(mach->heap, string, (sdrl_data_t) "", 0, NULL);
-		if (sdrl_replace_binding(mach->env, cur_name->data.str, value)) {
-			if (sdrl_add_binding(mach->env, cur_name->data.str, value))
+			value = sdrl_make_string(mach->heap, str_type, "", 0);
+		if (sdrl_replace_binding(mach->env, SDRL_STRING(cur_name)->str, value)) {
+			if (sdrl_add_binding(mach->env, SDRL_STRING(cur_name)->str, value))
 				return(SDRL_ERROR(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 		}
 		cur_name = cur_name->next;
 	}
 	return(0);
 }
-
 
 

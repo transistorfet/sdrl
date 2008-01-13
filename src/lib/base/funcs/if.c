@@ -1,5 +1,5 @@
 /*
- * Builtin Name:	if.c
+ * Function Name:	if.c
  * Module Requirements:	(none)
  * Description:		If Expression
  */
@@ -10,24 +10,31 @@
  * Args:	<value>, <expr-value> [, <expr-value>]
  * Description:	Evaluates the first expr-value if value is not 0, the second otherwise.
  */
-int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *value)
+int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *args)
 {
+	struct sdrl_type *type;
 	struct sdrl_value *block = NULL;
 
-	if (sdrl_value_count(value) < 2)
+	if (sdrl_value_count(args) < 2)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
-	else if (!SDRL_VALUE_IS_FALSE(value))
-		block = sdrl_duplicate_single_value(mach->heap, value->next);
-	else if (value->next->next)
-		block = sdrl_duplicate_single_value(mach->heap, value->next->next);
+	else if (!(type = sdrl_find_binding(mach->type_env, "number")))
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+	else if (args->type != type)
+		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+	// TODO convert this to to more than just number comparison
+	else if (SDRL_NUMBER(args)->num)
+		block = sdrl_duplicate_single_value(mach, args->next);
+	else if (args->next->next)
+		block = sdrl_duplicate_single_value(mach, args->next->next);
 
 	if (block) {
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_destroy_reference, block, mach->env));
-		sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_call_value, block, mach->env));
+		// TODO if you can make the event arg a value, you can make a reference in the event make
+		//	function and then you wont need this destroy event
+		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_machine_destroy_reference, block, mach->env));
+		sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, block, mach->env));
 	}
 	mach->ret = NULL;
 	return(0);
 }
-
 
 

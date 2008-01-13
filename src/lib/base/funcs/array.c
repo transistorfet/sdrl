@@ -1,5 +1,5 @@
 /*
- * Builtin Name:	array.c
+ * Function Name:	array.c
  * Module Requirements:	(none)
  * Description:		Array Creation Expression
  */
@@ -10,12 +10,10 @@
  * Args:	<value>, ...
  * Description:	Returns the values passed to it (as a single list).
  */
-int sdrl_base_array(struct sdrl_machine *mach, struct sdrl_value *value)
+int sdrl_base_array(struct sdrl_machine *mach, struct sdrl_value *args)
 {
-	mach->ret = SDRL_MAKE_REFERENCE(value);
+	mach->ret = SDRL_MAKE_REFERENCE(args);
 	return(0);
 }
-
-
 
 

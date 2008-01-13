@@ -45,30 +45,21 @@ typedef unsigned int linenumber_t;
 
 typedef double number_t;
 
-/** Increments the count of a reference for values and so on. (destroy decrements) **/
-#define SDRL_MAKE_REFERENCE(datum)		\
-	( ((datum) && ++(datum)->refs) ?	\
-		(datum)				\
-		: NULL )
-
-/** Decrements the count of a reference for values and so on and calls destroy if the count is 0 **/
-#define SDRL_DESTROY_REFERENCE(datum, func)	\
-	( ((datum)->refs == 1) ?		\
-		( func(datum), 1 )		\
-		: ( --(datum)->refs, 0 ) )
-
 struct sdrl_heap;
 struct sdrl_expr;
+struct sdrl_type;
 struct sdrl_value;
 struct sdrl_input;
 struct sdrl_machine;
 
-typedef void *(*sdrl_create_t)(struct sdrl_machine *, struct sdrl_value *);
-typedef int (*sdrl_evaluate_t)(struct sdrl_machine *, ...);
-typedef void *(*sdrl_duplicate_t)(struct sdrl_heap *, void *);
-typedef int (*sdrl_destroy_t)(struct sdrl_heap *, void *);
+typedef struct sdrl_value *(*sdrl_create_t)(struct sdrl_machine *mach, struct sdrl_type *type, struct sdrl_value *args);
+typedef int (*sdrl_destroy_t)(struct sdrl_value *value);
+typedef struct sdrl_value *(*sdrl_duplicate_t)(struct sdrl_machine *mach, struct sdrl_value *value);
+typedef int (*sdrl_evaluate_t)(struct sdrl_machine *mach, struct sdrl_value *value, struct sdrl_value *args);
 
 typedef struct sdrl_expr *(*sdrl_parser_t)(struct sdrl_input *, void *);
+
+typedef int (*sdrl_func_t)(struct sdrl_machine *, struct sdrl_value *);
 
 #endif
 

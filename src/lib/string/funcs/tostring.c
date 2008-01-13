@@ -1,5 +1,5 @@
 /*
- * Builtin Name:	tostring.c
+ * Function Name:	tostring.c
  * Module Requirements:	string type
  * Description:		Convert numbers and strings to a single string
  */
@@ -14,7 +14,7 @@
  * Description:	Returns a string corresponding to the concatenation of the
  *		given numbers representing ASCII character and given strings.
  */
-int sdrl_string_tostring(struct sdrl_machine *mach, struct sdrl_value *value)
+int sdrl_string_tostring(struct sdrl_machine *mach, struct sdrl_value *args)
 {
 	int i = 0;
 	struct sdrl_value *cur;
@@ -25,12 +25,12 @@ int sdrl_string_tostring(struct sdrl_machine *mach, struct sdrl_value *value)
 	    || !(str_type = sdrl_find_binding(mach->type_env, "string")))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 
-	SDRL_FOREACH_VALUE(value, cur) {
+	for (cur = args; cur; cur = cur->next) {
 		if (cur->type == num_type)
-			buffer[i++] = (unsigned char) cur->data.num;
+			buffer[i++] = (unsigned char) SDRL_NUMBER(cur)->num;
 		else if (cur->type == str_type) {
-			strncpy(&buffer[i], cur->data.str, STRING_SIZE - i - 1);
-			i += strlen(cur->data.str);
+			strncpy(&buffer[i], SDRL_STRING(cur)->str, STRING_SIZE - i - 1);
+			i += SDRL_STRING(cur)->len;
 		}
 		else
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
@@ -40,7 +40,7 @@ int sdrl_string_tostring(struct sdrl_machine *mach, struct sdrl_value *value)
 	if (i >= STRING_SIZE)
 		i = STRING_SIZE - 1;
 	buffer[i] = '\0';
-	mach->ret = sdrl_make_value(mach->heap, str_type, (sdrl_data_t) buffer, i, NULL);
+	mach->ret = sdrl_make_string(mach->heap, str_type, buffer, i);
 	return(0);
 }
 

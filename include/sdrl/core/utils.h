@@ -22,7 +22,7 @@
  * the given machine.
  */
 #define SDRL_BIND_FUNCTION(mach, type, name, func) \
-	sdrl_add_binding(mach->env, name, sdrl_make_value(mach->heap, type, (sdrl_data_t) (void *) func, 0, NULL));
+	sdrl_add_binding(mach->env, name, sdrl_make_pointer(mach->heap, type, func))
 
 /**
  * Return the next available value and update the pointer to the next value.

@@ -41,7 +41,7 @@ int main(int argc, char **argv)
 	}
 
 	//sdrl_base_display_expr(code);
-sdrl_add_binding(mach->env, "*globals*", sdrl_make_value(mach->heap, sdrl_find_binding(mach->type_env, "env"), (sdrl_data_t) (void *) mach->env, 0, NULL));
+	sdrl_add_binding(mach->env, "*globals*", sdrl_make_reference(mach->heap, sdrl_find_binding(mach->type_env, "env"), SDRL_VALUE(mach->env)));
 	print_result(mach, sdrl_evaluate(mach, code));
 
 	sdrl_destroy_machine(mach);

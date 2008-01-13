@@ -9,20 +9,12 @@
 
 #include <sdrl/core/bindings.h>
 #include <sdrl/core/heap.h>
+#include <sdrl/core/value.h>
 #include <sdrl/globals.h>
 
 #define SDRL_ENV_INIT_SIZE		32
 #define SDRL_ENV_LOAD_FACTOR		0.75
 #define SDRL_ENV_GROWTH_FACTOR		1.75
-
-#define BINDINGS_DESTROY_DATA(env, data) {				\
-	if ((env)->destroy) {						\
-		if ((env)->heap)					\
-			(env)->destroy((env)->heap, (data));		\
-		else							\
-			((int (*)(void *)) (env)->destroy)((data));	\
-	}								\
-}
 
 #define BINDINGS_COMPARE(env, str1, str2) \
 	( SDRL_BF_IS_SET((env), SDRL_BBF_CASE_INSENSITIVE) ? !sdrl_stricmp((str1), (str2)) : !strcmp((str1), (str2)) )
@@ -35,10 +27,23 @@ static inline int sdrl_bindings_rehash(struct sdrl_environment *env, int newsize
 static int sdrl_stricmp(const char *, const char *);
 static inline unsigned int sdrl_hash(const char *);
 
+struct sdrl_type *sdrl_make_environment_type(void)
+{
+	return(sdrl_make_type(
+		sizeof(struct sdrl_environment),
+		0,
+		SDRL_BT_DATA,
+		NULL,
+		(sdrl_destroy_t) sdrl_retract_environment,
+		NULL,
+		NULL
+	));
+}
+
 /**
  * Allocate an environment for binding values to names.
  */
-struct sdrl_environment *sdrl_create_environment(short bitflags, struct sdrl_heap *heap, sdrl_destroy_t destroy)
+struct sdrl_environment *sdrl_create_environment(struct sdrl_heap *heap, struct sdrl_type *type, short bitflags, sdrl_destroy_t destroy)
 {
 	struct sdrl_binding **table;
 	struct sdrl_environment *env;
@@ -49,8 +54,10 @@ struct sdrl_environment *sdrl_create_environment(short bitflags, struct sdrl_hea
 		free(table);
 		return(NULL);
 	}
+	SDRL_VALUE(env)->refs = 1;
+	SDRL_VALUE(env)->type = type;
+	SDRL_VALUE(env)->next = NULL;
 	env->bitflags = bitflags;
-	env->refs = 1;
 	env->heap = heap;
 	env->destroy = destroy;
 	env->size = SDRL_ENV_INIT_SIZE;
@@ -68,7 +75,7 @@ struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *parent
 {
 	struct sdrl_environment *env;
 
-	if (!(env = sdrl_create_environment(parent->bitflags, parent->heap, parent->destroy)))
+	if (!(env = sdrl_create_environment(parent->heap, SDRL_VALUE(parent)->type, parent->bitflags, parent->destroy)))
 		return(NULL);
 	env->parent = SDRL_MAKE_REFERENCE(parent);
 	return(env);
@@ -88,22 +95,23 @@ struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *env)
 		return(NULL);
 
 	parent = env->parent;
-	if (--env->refs)
+	if (--SDRL_VALUE(env)->refs)
 		return(parent);
 
 	for (i = 0;i < env->size;i++) {
 		cur = env->table[i];
 		while (cur) {
 			next = cur->next;
-			BINDINGS_DESTROY_DATA(env, cur->data);
+			if (env->destroy)
+				env->destroy(cur->data);
 			free(cur);
 			cur = next;
 		}
 	}
 	free(env->table);
 	if (env->parent)
-		parent = SDRL_DESTROY_REFERENCE(env->parent, sdrl_retract_environment) ? NULL : env->parent;
-	sdrl_heap_free(env->heap, env);
+		parent = SDRL_DESTROY_REFERENCE(env->parent) ? NULL : env->parent;
+	sdrl_heap_free(env);
 	return(parent);
 }
 
@@ -159,7 +167,8 @@ int sdrl_replace_binding(struct sdrl_environment *env, const char *name, void *d
 	if (!name || !data || SDRL_BF_IS_SET(env, SDRL_BBF_NO_REPLACE))
 		return(-1);
 	if ((bind = sdrl_get_bindings(env, name, 1))) {
-		BINDINGS_DESTROY_DATA(env, bind->data);
+		if (env->destroy)
+			env->destroy(bind->data);
 		bind->data = data;
 		return(0);
 	}
@@ -185,7 +194,8 @@ int sdrl_remove_binding(struct sdrl_environment *env, const char *name)
 				prev = cur->next;
 			else
 				env->table[hash] = cur->next;
-			BINDINGS_DESTROY_DATA(env, cur->data);
+			if (env->destroy)
+				env->destroy(cur->data);
 			free(cur);
 			env->entries--;
 			return(0);

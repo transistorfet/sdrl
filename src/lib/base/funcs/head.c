@@ -1,5 +1,5 @@
 /*
- * Builtin Name:	head.c
+ * Function Name:	head.c
  * Module Requirements:	list type
  * Description:		Head Expression
  */
@@ -10,13 +10,11 @@
  * Args:	<value>, ...
  * Description:	Returns the first value passed to it.
  */
-int sdrl_base_head(struct sdrl_machine *mach, struct sdrl_value *value)
+int sdrl_base_head(struct sdrl_machine *mach, struct sdrl_value *args)
 {
-	if (value)
-		mach->ret = sdrl_duplicate_single_value(mach->heap, value);
+	if (args)
+		mach->ret = sdrl_duplicate_single_value(mach, args);
 	return(0);
 }
-
-
 
 

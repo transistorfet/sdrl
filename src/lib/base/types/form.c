@@ -1,35 +1,31 @@
 /*
- * Builtin Name:	form.c
+ * Type Name:		form.c
  * Module Requirements:	(none)
  * Description:		Form (C Form) Type
  */
 
 #include <sdrl/sdrl.h>
-
-static int sdrl_evaluate_form_type(struct sdrl_machine *, struct sdrl_value *, struct sdrl_expr *);
+#include <sdrl/lib/base.h>
 
 struct sdrl_type *sdrl_base_make_form_type(struct sdrl_machine *mach)
 {
 	return(sdrl_make_type(
-		mach->heap,
-		0,
-		SDRL_BT_POINTER | SDRL_TBF_PASS_EXPRS,
+		sizeof(struct sdrl_pointer),
+		SDRL_TBF_PASS_EXPRS,
+		SDRL_BT_POINTER,
 		NULL,
-		(sdrl_evaluate_t) sdrl_evaluate_form_type,
-		NULL,
-		NULL
+		(sdrl_destroy_t) sdrl_heap_free,
+		(sdrl_duplicate_t) sdrl_duplicate_pointer,
+		(sdrl_evaluate_t) sdrl_base_evaluate_form
 	));	
 }
 
 /*** Local Functions ***/
 
-/**
- * Evaluate function for the form type.
- */
-static int sdrl_evaluate_form_type(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_expr *params)
+int sdrl_base_evaluate_form(struct sdrl_machine *mach, struct sdrl_pointer *func, struct sdrl_value *args)
 {
-	sdrl_destroy_value(mach->heap, mach->ret);
+	SDRL_DESTROY_REFERENCE(mach->ret);
 	mach->ret = NULL;
-	return(((int (*)(struct sdrl_machine *, struct sdrl_expr *)) func->data.ptr)(mach, params));
+	return(((sdrl_func_t) func->ptr)(mach, args));
 }
 

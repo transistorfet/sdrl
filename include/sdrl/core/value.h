@@ -11,35 +11,31 @@
 #include <sdrl/core/heap.h>
 #include <sdrl/globals.h>
 
-#define sdrl_void_c	(sdrl_data_t) (void *)
-#define sdrl_char_c	(sdrl_data_t) (char *)
-
-typedef union sdrl_data {
-	number_t num;
-	char *str;
-	void *ptr;
-} sdrl_data_t;
+#define SDRL_VALUE(ptr)		( (struct sdrl_value *) (ptr) )
 
 struct sdrl_value {
+	int refs;
 	struct sdrl_type *type;
-	short refs;
-	sdrl_data_t data;
-	int size;
 	struct sdrl_value *next;
 };
 
-#define SDRL_FOREACH_VALUE(list, cur)	\
-	for (cur = list; cur; cur = cur->next)
+/** Increments the count of a reference for values and so on. (destroy decrements) **/
+#define SDRL_MAKE_REFERENCE(datum)				\
+	( ((datum) && ++SDRL_VALUE(datum)->refs) ?		\
+		(datum)						\
+		: NULL )
 
-#define SDRL_VALUE_IS_FALSE(value) \
-	((SDRL_BASE_TYPE((value)->type) == SDRL_BT_NUMBER) && (!(value)->data.num)) \
-	|| ((SDRL_BASE_TYPE((value)->type) == SDRL_BT_STRING) && (!(value)->data.str || (value)->data.str[0] == '\0')) \
-	|| ((SDRL_BASE_TYPE((value)->type) == SDRL_BT_POINTER) && (!(value)->data.ptr))
+/** Decrements the count of a reference for values and so on and calls destroy if the count is 0 **/
+#define SDRL_DESTROY_REFERENCE(datum)					\
+	( (datum) ?							\
+		( (SDRL_VALUE(datum)->refs == 1) ?			\
+			( sdrl_destroy_value(SDRL_VALUE(datum)), 1 )	\
+			: ( --SDRL_VALUE(datum)->refs, 0 ) )		\
+		: 0 )
 
-struct sdrl_value *sdrl_make_value(struct sdrl_heap *, struct sdrl_type *, sdrl_data_t, int, struct sdrl_value *);
-struct sdrl_value *sdrl_duplicate_value(struct sdrl_heap *, struct sdrl_value *);
-struct sdrl_value *sdrl_duplicate_single_value(struct sdrl_heap *, struct sdrl_value *);
-int sdrl_destroy_value(struct sdrl_heap *, struct sdrl_value *);
+struct sdrl_value *sdrl_duplicate_value(struct sdrl_machine *, struct sdrl_value *);
+struct sdrl_value *sdrl_duplicate_single_value(struct sdrl_machine *, struct sdrl_value *);
+int sdrl_destroy_value(struct sdrl_value *);
 
 int sdrl_push_value(struct sdrl_value **, struct sdrl_value *);
 struct sdrl_value *sdrl_pop_value(struct sdrl_value **);

@@ -68,7 +68,7 @@ struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, void *param,
 int sdrl_destroy_event(struct sdrl_event *event)
 {
 	if (event) {
-		SDRL_DESTROY_REFERENCE(event->env, sdrl_retract_environment);
+		SDRL_DESTROY_REFERENCE(event->env);
 		free(event);
 	}
 	return(0);

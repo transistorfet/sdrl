@@ -41,11 +41,11 @@ int sdrl_evaluate(struct sdrl_machine *, struct sdrl_expr *);
 int sdrl_evaluate_event(struct sdrl_machine *, struct sdrl_event *);
 int sdrl_evaluate_expr_list(struct sdrl_machine *, struct sdrl_expr *);
 int sdrl_evaluate_expr(struct sdrl_machine *, struct sdrl_expr *);
-int sdrl_call_value(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
+int sdrl_evaluate_value(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
 int sdrl_evaluate_params(struct sdrl_machine *, struct sdrl_expr *);
 
-int sdrl_destroy_reference(struct sdrl_machine *, struct sdrl_value *);
-int sdrl_merge_return(struct sdrl_machine *, struct sdrl_value *);
+int sdrl_machine_destroy_reference(struct sdrl_machine *, struct sdrl_value *);
+int sdrl_machine_merge_return(struct sdrl_machine *, struct sdrl_value *);
 
 #endif
 
