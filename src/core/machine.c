@@ -35,6 +35,7 @@ struct sdrl_machine *sdrl_create_machine(void)
 		sdrl_destroy_machine(mach);
 		return(NULL);
 	}
+	// TODO clean this up
 	if (!(type = sdrl_make_environment_type())
 	    || !(mach->type_env = sdrl_create_environment(mach->heap, type, SDRL_BBF_CONSTANT, (sdrl_destroy_t) sdrl_destroy_type))) {
 		if (type)
@@ -49,9 +50,8 @@ struct sdrl_machine *sdrl_create_machine(void)
 	}
 	mach->env = SDRL_MAKE_REFERENCE(mach->global);
 
-	// TODO this is all different now.  where will types implemented be and where will they be added?
-	sdrl_add_binding(mach->type_env, "number", sdrl_get_number_type());
-	sdrl_add_binding(mach->type_env, "string", sdrl_get_string_type());
+	sdrl_add_binding(mach->type_env, "number", sdrl_make_number_type());
+	sdrl_add_binding(mach->type_env, "string", sdrl_make_string_type());
 
 	return(mach);
 }
@@ -158,13 +158,13 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 				return(func->type->evaluate(mach, func, SDRL_VALUE(expr->data.expr->next)));
 			else {
 				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, func, mach->env));
-				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, expr->data.expr->next, mach->env));
+				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, expr->data.expr->next, mach->env));
 				return(0);
 			}
 		}
 		else if (expr->data.expr->type == SDRL_ET_CALL) {
 			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, NULL, mach->env));
-			sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, expr->data.expr, mach->env));
+			sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, expr->data.expr, mach->env));
 			return(0);
 		}
 		else
@@ -213,12 +213,12 @@ int sdrl_evaluate_value(struct sdrl_machine *mach, struct sdrl_value *func, stru
 /**
  * Evaluate all the exprs and build a list of the corresponding return values.
  */
-int sdrl_evaluate_params(struct sdrl_machine *mach, struct sdrl_expr *exprs)
+int sdrl_evaluate_args(struct sdrl_machine *mach, struct sdrl_expr *exprs)
 {
 	if (!exprs)
 		return(0);
 	if (exprs->next)
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_params, exprs->next, mach->env));
+		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, exprs->next, mach->env));
 	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_machine_merge_return, mach->ret, mach->env));
 	mach->ret = NULL;
 	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr, exprs, mach->env));

@@ -50,7 +50,7 @@ struct sdrl_environment *sdrl_create_environment(struct sdrl_heap *heap, struct 
 
 	if (!(table = (struct sdrl_binding **) malloc(SDRL_ENV_INIT_SIZE * sizeof(struct sdrl_binding *))))
 		return(NULL);
-	if (!(env = (struct sdrl_environment *) sdrl_heap_alloc(heap, sizeof(struct sdrl_environment)))) {
+	if (!(env = (struct sdrl_environment *) sdrl_heap_alloc(heap, type->size))) {
 		free(table);
 		return(NULL);
 	}

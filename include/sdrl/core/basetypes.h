@@ -37,11 +37,11 @@ struct sdrl_pointer {
 	void *ptr;
 };
 
-struct sdrl_type *sdrl_get_number_type(void);
+struct sdrl_type *sdrl_make_number_type(void);
 struct sdrl_value *sdrl_make_number(struct sdrl_heap *, struct sdrl_type *, number_t);
 struct sdrl_value *sdrl_duplicate_number(struct sdrl_machine *, struct sdrl_number *);
 
-struct sdrl_type *sdrl_get_string_type(void);
+struct sdrl_type *sdrl_make_string_type(void);
 struct sdrl_value *sdrl_make_string(struct sdrl_heap *, struct sdrl_type *, const char *, int);
 struct sdrl_value *sdrl_duplicate_string(struct sdrl_machine *, struct sdrl_string *);
 

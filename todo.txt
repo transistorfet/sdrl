@@ -1,17 +1,12 @@
 
 	* replace all the NULL assignments to the type in expr make functions.
 
-	* what do you do about the type sizeof for string type?
-	* if possible, move the number and string type creation to files in libbase
-	* should you move the remaining functions in basetypes to utils.c?
-
-	* review lookup, set and cleanup (convert to use new utils argument functions)
-
 	* make string functions: strcmp, uppercase, lowercase
 	* make equals command check any type instead of just number (just the primative types)
 
 	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
 	  ones)
+	* review lookup, set and cleanup (convert to use new utils argument functions)
 
 	* make libraries namespacable
 	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2)))
@@ -19,32 +14,22 @@
 	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
 	  that each library behaves in an expected way
 	* make the output of dispexpr.c more readable
-	* add the ability to make sdrl_value constant (modifier to value or bitflags in type?) (or do you
-	  really only need/want to make a binding constant?)
-	* add an easy way to make a value that refers to a static piece of data (that you don't call destroy
-	  on) without the need for 2 types for everything
+	* add the ability to make a reference constant
 	* make parser catch errors during a parse
-	* can we without too much trouble make the string type record the length as well?
 	* get an autodoc creator setup
 
 	* should you change the name of type "env" to "envref"? (same with expr)
 	* should retract_environment replace destroy_environment (in name)
-	* should you change sdrl_evaluate_params to sdrl_evaluate_args
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
 	* should you change SDRL_MAKE_REFERENCE (and DESTROY) to something shorter?
+	* should you move the number and string types to libbase and move the basetypes into utils?
 
-	* add a function to automatically check args based on min/max args allowed and types? (both in C and
-	  SDRL)
-	* what about expr type in relation to destroy() (creating an expr value that is not a function
-	  or mach->code)  (wtf was i talking about here?)
 	* can/should we simplify the semantics of set?  Perhaps making 2 different functions
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* allow multiple event stacks in a continuation (what is this actually for? a thread type of thing?)
 	* make the lambda parser support hex and octal number representation
-
-	* can we somehow perform the check for a string's length without the call the strlen in string:char?
 
 Tests:
 
@@ -55,19 +40,6 @@ Tests:
 
 Structural Issues:
 
-	* should you make a trackable_oject type struct that all objects that are trackable/garbage
-	  collectable such as values and environments (types too?) inherit so you can cast them and deal with
-	  them more nicely?  Would this also make it better for libraries that want to get in on the GC
-	  action?  Would this struct contain the pointer to the heap in addition to just the ref num?
-	* we need to be able to reference count/track the expr datatypes because we store pointers to them
-	  but in most situations, we will parse stuff into expr, evaluate the expr, and then throw it away
-	  but keep the same machine (and want any functions for example added to the system to stay).  This
-	  all seems really really complex overall because now you've got a special expr type that controls the
-	  expr itself and is in turn controlled by the value it belongs to.  Is it possible/desirable to
-	  unify everything such that everything that is tracked/refcounted/garbage collected inherits from
-	  the same superclass.  Do we/should we make it really easy to interface to this tracking system so
-	  that things can be tracked/refcounted/and possible garbage collected without being allocated from
-	  the heap?
 	* what do you do if a value being applied/evaluated is non-executable (does not have an evaluate
 	  function in it's type)?  Should you just return the value?  Should it be an error?  This "feature"
 	  is exploited by "if" such that it calls its params like a function but if they aren't (code ) blocks,
@@ -80,11 +52,6 @@ Structural Issues:
 	  to make a reference whenever you extend an env other than mach->env
 	* should we distinguish between bareword strings and quoted strings in exprs which would at least give
 	  us the choice to act differently (ie. always do a lookup on barewords)?
-	* the type system needs some redesigning.  The parameters are inconsistent.  You need to determine
-	  how the create function will truely work.  Should it return the value instead just a pointer? same
-	  with duplicate.  Destroy seems a bit funny just taking the heap (but that makes it easy to use the
-	  sdrl_destory_value function).  What about the parameters to the type create function?  Is that
-	  function primarily for direct calling from SDRL or direct calling from C?
 	* possibly add caching to environments.  The easiest way to allow full caching is to store a bitflag
 	  with a cache entry to signify it as such so that when you destroy the entry, you don't call the
 	  destroy function.  The trouble though is when the original entry is destroyed somehow for some

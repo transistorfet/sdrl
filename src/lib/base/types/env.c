@@ -25,7 +25,6 @@ struct sdrl_value *sdrl_base_create_env(struct sdrl_machine *mach, struct sdrl_t
 	struct sdrl_type *env_type;
 	struct sdrl_environment *env;
 
-	// TODO find the *env* type and pass it
 	if (!args) {
 		if (!(env_type = sdrl_find_binding(mach->type_env, "*env*")))
 			SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);

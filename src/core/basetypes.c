@@ -12,16 +12,11 @@
 #include <sdrl/core/basetypes.h>
 #include <sdrl/globals.h>
 
-static struct sdrl_type *num_type = NULL;
-static struct sdrl_type *str_type = NULL;
-
 /*** Number Type ***/
 
-struct sdrl_type *sdrl_get_number_type(void)
+struct sdrl_type *sdrl_make_number_type(void)
 {
-	if (num_type)
-		return(num_type);
-	num_type = sdrl_make_type(
+	return(sdrl_make_type(
 		sizeof(struct sdrl_number),
 		0,
 		SDRL_BT_NUMBER,
@@ -29,15 +24,14 @@ struct sdrl_type *sdrl_get_number_type(void)
 		(sdrl_destroy_t) sdrl_heap_free,
 		(sdrl_duplicate_t) sdrl_duplicate_number,
 		NULL
-	);
-	return(num_type);
+	));
 }
 
 struct sdrl_value *sdrl_make_number(struct sdrl_heap *heap, struct sdrl_type *type, number_t num)
 {
 	struct sdrl_number *value;
 
-	if (!(value = (struct sdrl_number *) sdrl_heap_alloc(heap, sizeof(struct sdrl_number))))
+	if (!(value = (struct sdrl_number *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
 	SDRL_VALUE(value)->refs = 1;
 	SDRL_VALUE(value)->type = type;
@@ -53,28 +47,24 @@ struct sdrl_value *sdrl_duplicate_number(struct sdrl_machine *mach, struct sdrl_
 
 /*** String Type ***/
 
-struct sdrl_type *sdrl_get_string_type(void)
+struct sdrl_type *sdrl_make_string_type(void)
 {
-	if (str_type)
-		return(str_type);
-	// TODO what do you put as the size of a string/variable size type?
-	str_type = sdrl_make_type(
-		0,
+	return(sdrl_make_type(
+		sizeof(struct sdrl_string),
 		0,
 		SDRL_BT_STRING,
 		NULL,
 		(sdrl_destroy_t) sdrl_heap_free,
 		(sdrl_duplicate_t) sdrl_duplicate_string,
 		NULL
-	);
-	return(str_type);
+	));
 }
 
 struct sdrl_value *sdrl_make_string(struct sdrl_heap *heap, struct sdrl_type *type, const char *str, int len)
 {
 	struct sdrl_string *value;
 
-	if (!(value = (struct sdrl_string *) sdrl_heap_alloc(heap, sizeof(struct sdrl_string) + len + 1)))
+	if (!(value = (struct sdrl_string *) sdrl_heap_alloc(heap, type->size + len + 1)))
 		return(NULL);
 	SDRL_VALUE(value)->refs = 1;
 	SDRL_VALUE(value)->type = type;
@@ -96,7 +86,7 @@ struct sdrl_value *sdrl_make_reference(struct sdrl_heap *heap, struct sdrl_type 
 {
 	struct sdrl_reference *value;
 
-	if (!(value = (struct sdrl_reference *) sdrl_heap_alloc(heap, sizeof(struct sdrl_reference))))
+	if (!(value = (struct sdrl_reference *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
 	SDRL_VALUE(value)->refs = 1;
 	SDRL_VALUE(value)->type = type;
@@ -122,7 +112,7 @@ struct sdrl_value *sdrl_make_pointer(struct sdrl_heap *heap, struct sdrl_type *t
 {
 	struct sdrl_pointer *value;
 
-	if (!(value = (struct sdrl_pointer *) sdrl_heap_alloc(heap, sizeof(struct sdrl_pointer))))
+	if (!(value = (struct sdrl_pointer *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
 	SDRL_VALUE(value)->refs = 1;
 	SDRL_VALUE(value)->type = type;
