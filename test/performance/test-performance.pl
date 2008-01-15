@@ -10,6 +10,7 @@ my $cmds = {
 	"sdrl" => "../../bin/sdrl",
 	"lua" => "lua",
 	"pl" => "perl",
+	"py" => "python",
 	"lsp" => "clisp",
 	"scm" => "guile -s"
 };
@@ -25,7 +26,7 @@ sub main {
 	closedir(DIR);
 
 	print_header();
-	foreach my $file (@files) {
+	foreach my $file (sort(@files)) {
 		if ($file =~ /^\Q$test\E\./i) {
 			test_file($file);
 		}
