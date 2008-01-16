@@ -1,13 +1,16 @@
 
+	* what do you do about the argument util functions with regards to the new type testing?
 	* rewrite event.c to use a preallocated set of events
 	* replace all the NULL assignments to the type in expr make functions.
 
+	* change string functions to use new typechecking and/or new args functions
 	* make string functions: strcmp, uppercase, lowercase
 	* make equals command check any type instead of just number (just the primative types)
 
 	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
 	  ones)
-	* review lookup, set and cleanup (convert to use new utils argument functions)
+	* review 'lookup' & 'set' and cleanup (convert to use new utils argument functions and new type
+	  checking)
 
 	* make libraries namespacable
 	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2)))

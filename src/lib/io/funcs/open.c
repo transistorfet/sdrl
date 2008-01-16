@@ -16,7 +16,7 @@ int sdrl_io_open(struct sdrl_machine *mach, struct sdrl_value *args)
 {
 	struct sdrl_type *type;
 
-	if (!args || (args->type != sdrl_find_binding(mach->type_env, "string")))
+	if (!args || (args->type->basetype != SDRL_BT_STRING))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	if (!(type = sdrl_find_binding(mach->type_env, "file")))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));

@@ -12,14 +12,11 @@
  */
 int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *args)
 {
-	struct sdrl_type *type;
 	struct sdrl_value *block = NULL;
 
 	if (sdrl_value_count(args) < 2)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
-	else if (!(type = sdrl_find_binding(mach->type_env, "number")))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
-	else if (args->type != type)
+	else if (args->type->basetype != SDRL_BT_NUMBER)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 	// TODO convert this to to more than just number comparison
 	else if (SDRL_NUMBER(args)->num)
