@@ -12,7 +12,7 @@ struct sdrl_type *sdrl_base_make_dblock_type(struct sdrl_machine *mach)
 	return(sdrl_make_type(
 		sizeof(struct sdrl_reference),
 		0,
-		SDRL_BT_POINTER,
+		SDRL_BT_REFERENCE,
 		NULL,
 		(sdrl_destroy_t) sdrl_destroy_reference,
 		(sdrl_duplicate_t) sdrl_duplicate_reference,

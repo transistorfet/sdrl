@@ -12,7 +12,7 @@ struct sdrl_type *sdrl_base_make_expr_type(struct sdrl_machine *mach)
 	return(sdrl_make_type(
 		sizeof(struct sdrl_reference),
 		0,
-		SDRL_BT_POINTER,
+		SDRL_BT_REFERENCE,
 		(sdrl_create_t) sdrl_base_create_expr,
 		(sdrl_destroy_t) sdrl_destroy_reference,
 		(sdrl_duplicate_t) sdrl_duplicate_reference,

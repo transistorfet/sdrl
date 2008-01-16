@@ -1,4 +1,5 @@
 
+	* rewrite event.c to use a preallocated set of events
 	* replace all the NULL assignments to the type in expr make functions.
 
 	* make string functions: strcmp, uppercase, lowercase
@@ -58,7 +59,10 @@ Structural Issues:
 	  reason (or is even reassigned).  The cache entry will then be invalid.  A less efficent alternative
 	  could be to store a pointer to the env containing the entry instead.  What about though if an
 	  inbetween env creates a new entry that overrides the previous one?
-	* can you change types somehow to make it easier to do type checking?
+	* can you change types somehow to make it easier to do type checking?  Can you simply use the basetype
+	  number and make the requirement that to use it, the value must be castable to that basetype
+	* should we make the parameter to an event be an sdrl_value (require it) and then do reference
+	  management on it in event.c itself?
 
 Features:
 

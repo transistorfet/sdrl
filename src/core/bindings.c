@@ -32,7 +32,7 @@ struct sdrl_type *sdrl_make_environment_type(void)
 	return(sdrl_make_type(
 		sizeof(struct sdrl_environment),
 		0,
-		SDRL_BT_DATA,
+		SDRL_BT_ENVIRONMENT,
 		NULL,
 		(sdrl_destroy_t) sdrl_retract_environment,
 		NULL,
