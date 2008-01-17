@@ -67,7 +67,7 @@ static struct sdrl_expr *lambda_parse_expr(struct sdrl_input *input)
 	else if (ch == '(') {
 		if(!(expr = sdrl_base_parse_lambda_input(input, NULL)))
 			return(NULL);
-		expr = sdrl_make_call_expr(line, expr, NULL);
+		expr = sdrl_make_call_expr(NULL, line, expr, NULL);
 	}
 	else {
 		if (!(expr = lambda_parse_identifier(input, ch, line)))
@@ -90,7 +90,7 @@ static struct sdrl_expr *lambda_parse_number(struct sdrl_input *input, char firs
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_number_expr(line, strtod(buffer, NULL), NULL));
+	return(sdrl_make_number_expr(NULL, line, strtod(buffer, NULL), NULL));
 }
 
 static struct sdrl_expr *lambda_parse_string(struct sdrl_input *input, char first, linenumber_t line)
@@ -109,7 +109,7 @@ static struct sdrl_expr *lambda_parse_string(struct sdrl_input *input, char firs
 			break;
 	}
 	buffer[i] = '\0';
-	return(sdrl_make_string_expr(line, buffer, NULL));
+	return(sdrl_make_string_expr(NULL, line, buffer, NULL));
 }
 
 static struct sdrl_expr *lambda_parse_identifier(struct sdrl_input *input, char first, linenumber_t line)
@@ -125,7 +125,7 @@ static struct sdrl_expr *lambda_parse_identifier(struct sdrl_input *input, char 
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_string_expr(line, buffer, NULL));
+	return(sdrl_make_string_expr(NULL, line, buffer, NULL));
 }
 
 static int lambda_get_next_char(struct sdrl_input *input)

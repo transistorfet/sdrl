@@ -27,9 +27,9 @@ struct sdrl_expr {
 	struct sdrl_expr *next;
 };
 
-struct sdrl_expr *sdrl_make_number_expr(linenumber_t, number_t, struct sdrl_expr *);
-struct sdrl_expr *sdrl_make_string_expr(linenumber_t, const char *, struct sdrl_expr *);
-struct sdrl_expr *sdrl_make_call_expr(linenumber_t, struct sdrl_expr *, struct sdrl_expr *);
+struct sdrl_expr *sdrl_make_number_expr(struct sdrl_type *, linenumber_t, number_t, struct sdrl_expr *);
+struct sdrl_expr *sdrl_make_string_expr(struct sdrl_type *, linenumber_t, const char *, struct sdrl_expr *);
+struct sdrl_expr *sdrl_make_call_expr(struct sdrl_type *, linenumber_t, struct sdrl_expr *, struct sdrl_expr *);
 struct sdrl_expr *sdrl_duplicate_expr(struct sdrl_expr *);
 int sdrl_destroy_expr(struct sdrl_expr *);
 
