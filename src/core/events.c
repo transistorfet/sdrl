@@ -47,7 +47,7 @@ int sdrl_destroy_continuation(struct sdrl_continuation *cont)
 /**
  * Allocate and initialize a new sdrl_event (to be added to a continuation).
  */
-struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, void *param, struct sdrl_environment *env)
+struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, struct sdrl_value *param, struct sdrl_environment *env)
 {
 	struct sdrl_event *event;
 
@@ -55,7 +55,7 @@ struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, void *param,
 		return(NULL);
 	event->bitflags = bitflags;
 	event->func = func;
-	event->param = param;
+	event->param = SDRL_MAKE_REFERENCE(param);
 	event->env = SDRL_MAKE_REFERENCE(env);
 	event->next = NULL;
 
@@ -68,6 +68,7 @@ struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, void *param,
 int sdrl_destroy_event(struct sdrl_event *event)
 {
 	if (event) {
+		SDRL_DESTROY_REFERENCE(event->param);
 		SDRL_DESTROY_REFERENCE(event->env);
 		free(event);
 	}

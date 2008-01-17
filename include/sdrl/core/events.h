@@ -19,7 +19,7 @@ typedef int (*sdrl_event_t)(struct sdrl_machine *, ...);
 struct sdrl_event {
 	int bitflags;
 	sdrl_event_t func;
-	void *param;
+	struct sdrl_value *param;
 	struct sdrl_environment *env;
 	struct sdrl_event *next;
 };
@@ -31,7 +31,7 @@ struct sdrl_continuation {
 struct sdrl_continuation *sdrl_create_continuation(void);
 int sdrl_destroy_continuation(struct sdrl_continuation *);
 
-struct sdrl_event *sdrl_make_event(int, sdrl_event_t, void *, struct sdrl_environment *);
+struct sdrl_event *sdrl_make_event(int, sdrl_event_t, struct sdrl_value *, struct sdrl_environment *);
 int sdrl_destroy_event(struct sdrl_event *);
 int sdrl_push_event(struct sdrl_continuation *, struct sdrl_event *);
 struct sdrl_event *sdrl_pop_event(struct sdrl_continuation *);

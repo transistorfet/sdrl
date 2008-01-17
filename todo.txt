@@ -1,11 +1,13 @@
 
+	* split 'set' into 2 functions (set and setlist)
+	* make error a value
+	* move the make_type function from bindings to basetypes
 	* what do you do about the argument util functions with regards to the new type testing?
 	* rewrite event.c to use a preallocated set of events
 	* replace all the NULL assignments to the type in expr make functions.
 
 	* change string functions to use new typechecking and/or new args functions
 	* make string functions: strcmp, uppercase, lowercase
-	* make equals command check any type instead of just number (just the primative types)
 
 	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
 	  ones)
@@ -17,11 +19,21 @@
 	* add a 'load' command that (somehow) calls the library loading function that adds all the library
 	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
 	  that each library behaves in an expected way
+
 	* make the output of dispexpr.c more readable
-	* add the ability to make a reference constant
 	* make parser catch errors during a parse
+	* make the lambda parser support hex and octal number representation
+
+	* make equals and nequals more generic
+	* machine value type with a pointer to a machine structure (for calling a function in another machine)
+	* optimize the hash function
+	* add the ability to make a reference constant
+
 	* get an autodoc creator setup
 
+Refactoring:
+
+	* change the name of bindings.c to env.c (but what do we do about the functions with the name bindings)
 	* should you change the name of type "env" to "envref"? (same with expr)
 	* should retract_environment replace destroy_environment (in name)
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
@@ -29,11 +41,6 @@
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
 	* should you change SDRL_MAKE_REFERENCE (and DESTROY) to something shorter?
 	* should you move the number and string types to libbase and move the basetypes into utils?
-
-	* can/should we simplify the semantics of set?  Perhaps making 2 different functions
-	* machine value type with a pointer to a machine structure (for calling a function in another machine)
-	* allow multiple event stacks in a continuation (what is this actually for? a thread type of thing?)
-	* make the lambda parser support hex and octal number representation
 
 Tests:
 
@@ -48,8 +55,6 @@ Structural Issues:
 	  function in it's type)?  Should you just return the value?  Should it be an error?  This "feature"
 	  is exploited by "if" such that it calls its params like a function but if they aren't (code ) blocks,
 	  it expects that the call will result in the value passed being returned.
-	* you need to come up with a namemangle or something that is reserved for interpreter use such that
-	  special variables are named that way (like the global environment, the error handling function, etc)
 	* re-evaluate the reference tracking in the environment functions (extend/retract) particuarily with
 	  respect to the fact that extending mach->env needs to take into account that mach->env's reference
 	  needs to be destoyed.  Should extend steal the environment reference it's given (thus you just need
@@ -62,10 +67,12 @@ Structural Issues:
 	  reason (or is even reassigned).  The cache entry will then be invalid.  A less efficent alternative
 	  could be to store a pointer to the env containing the entry instead.  What about though if an
 	  inbetween env creates a new entry that overrides the previous one?
-	* can you change types somehow to make it easier to do type checking?  Can you simply use the basetype
-	  number and make the requirement that to use it, the value must be castable to that basetype
-	* should we make the parameter to an event be an sdrl_value (require it) and then do reference
-	  management on it in event.c itself?
+	* should you make a different dedicated hash table implementation for types to speed up type
+	  discovery?  We shouldn't make types be values since we can instead make a 'type' type that is a
+	  pointer to the type and use that as the actual value
+	* should values be treated as individual and only an actual list if they are a reference for example?
+	  this would mean that in destroy_value, it would destroy next references as if they were not a
+	  critical part of the value referencing them through 'next'
 
 Features:
 

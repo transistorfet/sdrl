@@ -24,12 +24,8 @@ int sdrl_base_if(struct sdrl_machine *mach, struct sdrl_value *args)
 	else if (args->next->next)
 		block = sdrl_duplicate_single_value(mach, args->next->next);
 
-	if (block) {
-		// TODO if you can make the event arg a value, you can make a reference in the event make
-		//	function and then you wont need this destroy event
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_machine_destroy_reference, block, mach->env));
+	if (block)
 		sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, block, mach->env));
-	}
 	mach->ret = NULL;
 	return(0);
 }
