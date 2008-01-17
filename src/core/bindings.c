@@ -27,19 +27,6 @@ static inline int sdrl_bindings_rehash(struct sdrl_environment *env, int newsize
 static int sdrl_stricmp(const char *, const char *);
 static inline unsigned int sdrl_hash(const char *);
 
-struct sdrl_type *sdrl_make_environment_type(void)
-{
-	return(sdrl_make_type(
-		sizeof(struct sdrl_environment),
-		0,
-		SDRL_BT_ENVIRONMENT,
-		NULL,
-		(sdrl_destroy_t) sdrl_retract_environment,
-		NULL,
-		NULL
-	));
-}
-
 /**
  * Allocate an environment for binding values to names.
  */

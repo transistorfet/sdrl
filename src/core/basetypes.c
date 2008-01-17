@@ -127,3 +127,31 @@ struct sdrl_value *sdrl_duplicate_pointer(struct sdrl_machine *mach, struct sdrl
 }
 
 
+struct sdrl_type *sdrl_make_expression_type(void)
+{
+	return(sdrl_make_type(
+		sizeof(struct sdrl_expr),
+		0,
+		SDRL_BT_EXPRESSION,
+		NULL,
+		(sdrl_destroy_t) sdrl_destroy_expr,
+		NULL,
+		NULL
+	));
+}
+
+
+struct sdrl_type *sdrl_make_environment_type(void)
+{
+	return(sdrl_make_type(
+		sizeof(struct sdrl_environment),
+		0,
+		SDRL_BT_ENVIRONMENT,
+		NULL,
+		(sdrl_destroy_t) sdrl_retract_environment,
+		NULL,
+		NULL
+	));
+}
+
+

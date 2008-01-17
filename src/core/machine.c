@@ -52,6 +52,7 @@ struct sdrl_machine *sdrl_create_machine(void)
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_number_type());
 	sdrl_add_binding(mach->type_env, "string", sdrl_make_string_type());
+	sdrl_add_binding(mach->type_env, "*expr*", sdrl_make_expression_type());
 
 	return(mach);
 }

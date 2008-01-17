@@ -52,5 +52,8 @@ struct sdrl_value *sdrl_duplicate_reference(struct sdrl_machine *, struct sdrl_r
 struct sdrl_value *sdrl_make_pointer(struct sdrl_heap *, struct sdrl_type *, void *);
 struct sdrl_value *sdrl_duplicate_pointer(struct sdrl_machine *, struct sdrl_pointer *);
 
+struct sdrl_type *sdrl_make_expression_type(void);
+struct sdrl_type *sdrl_make_environment_type(void);
+
 #endif
 

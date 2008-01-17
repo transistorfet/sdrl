@@ -36,7 +36,6 @@ struct sdrl_environment {
 
 #define SDRL_ENVIRONMENT(ptr)	( (struct sdrl_environment *) (ptr) )
 
-struct sdrl_type *sdrl_make_environment_type(void);
 struct sdrl_environment *sdrl_create_environment(struct sdrl_heap *, struct sdrl_type *, short, sdrl_destroy_t);
 struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *);
 struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *);
