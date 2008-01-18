@@ -11,7 +11,7 @@
 /**
  * Parse a file and return an expression given its name and the parser to use.
  */
-struct sdrl_expr *sdrl_base_parse_file(const char *filename, sdrl_parser_t parser, void *param)
+struct sdrl_expr *sdrl_base_parse_file(struct sdrl_machine *mach, sdrl_parser_t parser, const char *filename)
 {
 	struct sdrl_expr *expr;
 	struct sdrl_input *input;
@@ -22,9 +22,7 @@ struct sdrl_expr *sdrl_base_parse_file(const char *filename, sdrl_parser_t parse
 		sdrl_destroy_input(input);
 		return(NULL);
 	}
-
-	expr = parser(input, param);
-
+	expr = parser(mach, input);
 	sdrl_destroy_input(input);
 	return(expr);
 }

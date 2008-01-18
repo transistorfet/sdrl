@@ -3,7 +3,6 @@
 	* make error a value
 	* what do you do about the argument util functions with regards to the new type testing?
 	* rewrite event.c to use a preallocated set of events
-	* replace all the NULL args to the make-expr functions in the lambda parser.
 
 	* change string functions to use new typechecking and/or new args functions
 	* make string functions: strcmp, uppercase, lowercase

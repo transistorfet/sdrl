@@ -67,7 +67,7 @@ struct sdrl_value *sdrl_base_create_list(struct sdrl_machine *, struct sdrl_type
 
 
 /*** Parsers ***/
-struct sdrl_expr *sdrl_base_parse_lambda_input(struct sdrl_input *, void *);
+struct sdrl_expr *sdrl_base_parse_lambda_input(struct sdrl_machine *, struct sdrl_input *);
 
 /*** Types ***/
 struct sdrl_type *sdrl_base_make_dblock_type(struct sdrl_machine *);
@@ -119,8 +119,8 @@ int sdrl_base_print(struct sdrl_machine *, struct sdrl_value *);
 /*** Utilities ***/
 int sdrl_base_display_error(struct sdrl_error *);
 int sdrl_base_display_expr(struct sdrl_expr *);
-struct sdrl_expr *sdrl_base_parse_file(const char *, sdrl_parser_t, void *);
-struct sdrl_expr *sdrl_base_parse_string(const char *, int, sdrl_parser_t, void *);
+struct sdrl_expr *sdrl_base_parse_file(struct sdrl_machine *, sdrl_parser_t, const char *);
+struct sdrl_expr *sdrl_base_parse_string(struct sdrl_machine *, sdrl_parser_t, const char *, int);
 
 #endif
 
