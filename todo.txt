@@ -1,17 +1,16 @@
 
 	* split 'set' into 2 functions (set and setlist)
 	* make error a value
-	* what do you do about the argument util functions with regards to the new type testing?
-	* rewrite event.c to use a preallocated set of events
 
+	* what do you do about the argument util functions with regards to the new type testing?
+	* review 'lookup' & 'set' and cleanup (convert to use new utils argument functions and new type
+	  checking)
 	* change string functions to use new typechecking and/or new args functions
-	* make string functions: strcmp, uppercase, lowercase
 
 	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
 	  ones)
-	* review 'lookup' & 'set' and cleanup (convert to use new utils argument functions and new type
-	  checking)
 
+	* make string functions: strcmp, uppercase, lowercase
 	* make libraries namespacable
 	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2)))
 	* add a 'load' command that (somehow) calls the library loading function that adds all the library
@@ -22,6 +21,7 @@
 	* make parser catch errors during a parse
 	* make the lambda parser support hex and octal number representation
 
+	* rewrite event.c to use a preallocated set of events
 	* make equals and nequals more generic
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* optimize the hash function
@@ -69,9 +69,6 @@ Structural Issues:
 	* should you make a different dedicated hash table implementation for types to speed up type
 	  discovery?  We shouldn't make types be values since we can instead make a 'type' type that is a
 	  pointer to the type and use that as the actual value
-	* should values be treated as individual and only an actual list if they are a reference for example?
-	  this would mean that in destroy_value, it would destroy next references as if they were not a
-	  critical part of the value referencing them through 'next'
 
 Features:
 

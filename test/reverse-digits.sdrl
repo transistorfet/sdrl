@@ -10,7 +10,7 @@
 	(reverse-digits-helper ($ _) 0)))
 
 (set reverse-digits-helper (lblock
-	(set (list n sum) ($ _))
+	(setlist (list n sum) ($ _))
 	(if (< ($ n) 1)
 		($ sum)
 		(code (reverse-digits-helper (/ ($ n) 10) (+ (* ($ sum) 10) (mod ($ n) 10)))))))

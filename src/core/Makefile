@@ -16,8 +16,8 @@ OBJS =	bindings.o	\
 	machine.o	\
 	type.o	\
 	value.o	\
-	utils.o	\
-	basetypes.o
+	basetypes.o	\
+	utils.o
 
 include $(ROOT)/config.mk
 
@@ -73,17 +73,17 @@ value.o: value.c ../../include/sdrl/core/value.h \
   ../../include/sdrl/core/type.h ../../include/sdrl/globals.h \
   ../../include/sdrl/core/heap.h
 
-utils.o: utils.c ../../include/sdrl/core/utils.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/core/expr.h \
-  ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
-  ../../include/sdrl/globals.h ../../include/sdrl/core/error.h \
-  ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
-  ../../include/sdrl/core/machine.h
-
 basetypes.o: basetypes.c ../../include/sdrl/core/heap.h \
   ../../include/sdrl/core/type.h ../../include/sdrl/globals.h \
   ../../include/sdrl/core/value.h ../../include/sdrl/core/machine.h \
   ../../include/sdrl/core/expr.h ../../include/sdrl/core/error.h \
   ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
   ../../include/sdrl/core/basetypes.h
+
+utils.o: utils.c ../../include/sdrl/core/utils.h \
+  ../../include/sdrl/core/heap.h ../../include/sdrl/core/expr.h \
+  ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
+  ../../include/sdrl/globals.h ../../include/sdrl/core/error.h \
+  ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
+  ../../include/sdrl/core/machine.h
 

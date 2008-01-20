@@ -37,6 +37,7 @@ OBJS =	load.o	\
 	funcs/tail.o	\
 	funcs/unlist.o	\
 	funcs/modulo.o	\
+	funcs/setlist.o	\
 	parsers/lambda.o	\
 	types/env.o	\
 	types/expr.o	\
@@ -326,6 +327,15 @@ unlist.o: funcs/unlist.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/basetypes.h
 
 modulo.o: funcs/modulo.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
+  ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/bindings.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h
+
+setlist.o: funcs/setlist.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \

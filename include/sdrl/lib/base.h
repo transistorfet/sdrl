@@ -84,6 +84,7 @@ int sdrl_base_lblock(struct sdrl_machine *, struct sdrl_expr *);
 
 /*** Functions ***/
 int sdrl_base_set(struct sdrl_machine *, struct sdrl_value *);
+int sdrl_base_setlist(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_if(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_list(struct sdrl_machine *, struct sdrl_value *);
 int sdrl_base_unlist(struct sdrl_machine *, struct sdrl_value *);

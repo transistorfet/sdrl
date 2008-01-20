@@ -35,6 +35,7 @@ int sdrl_load_base(struct sdrl_machine *mach)
 
 	/** Bind functions */
 	SDRL_BIND_FUNCTION(mach, func, "set", sdrl_base_set);
+	SDRL_BIND_FUNCTION(mach, func, "setlist", sdrl_base_setlist);
 	SDRL_BIND_FUNCTION(mach, func, "if", sdrl_base_if);
 
 	SDRL_BIND_FUNCTION(mach, func, "$", sdrl_base_resolve);

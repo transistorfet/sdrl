@@ -9,7 +9,7 @@
 # END EXPECTED OUTPUT
 
 (set move-tower (lblock
-	(set (list from to discs) ($ _))
+	(setlist (list from to discs) ($ _))
 	(if (= ($ discs) 1)
 		(code
 			(move-disc ($ from) ($ to)))
@@ -19,7 +19,7 @@
 			(move-tower (- 6 ($ from) ($ to)) ($ to) (- ($ discs) 1))))))
 
 (set move-disc (lblock
-	(set (list from to) ($ _))
+	(setlist (list from to) ($ _))
 	(print "Moved disc from " ($ from) " to " ($ to) "\n")))
 
 (move-tower 1 3 3)
