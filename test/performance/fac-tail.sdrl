@@ -1,6 +1,6 @@
 
 (set fac (lblock
-	(set (list n sum) ($ _))
+	(setlist (list n sum) ($ _))
 	(if (= ($ n) 0)
 		sum
 		(code (fac (- ($ n) 1) (* ($ n) ($ sum)))))))

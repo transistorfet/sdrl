@@ -1,6 +1,6 @@
 
 (set fac (lblock
-	(set (list n) ($ _))
+	(setlist (list n) ($ _))
 	(if (= ($ n) 0)
 		1
 		(code (* ($ n) (fac (- ($ n) 1)))))))

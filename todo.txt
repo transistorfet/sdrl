@@ -1,10 +1,8 @@
 
-	* split 'set' into 2 functions (set and setlist)
 	* make error a value
 
 	* what do you do about the argument util functions with regards to the new type testing?
-	* review 'lookup' & 'set' and cleanup (convert to use new utils argument functions and new type
-	  checking)
+	* review 'lookup', 'set', & 'setlist' and cleanup
 	* change string functions to use new typechecking and/or new args functions
 
 	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
@@ -69,6 +67,10 @@ Structural Issues:
 	* should you make a different dedicated hash table implementation for types to speed up type
 	  discovery?  We shouldn't make types be values since we can instead make a 'type' type that is a
 	  pointer to the type and use that as the actual value
+	* how will set and setlist work with regards to the value/args? Should it duplicate the arg before
+	  assigning it, steal the reference (clobber the args) or make a reference?  The make reference
+	  method didn't seem to work in setlist because we actually need to clobber the args given the
+	  way we use the next field =(
 
 Features:
 
