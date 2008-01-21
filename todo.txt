@@ -5,9 +5,6 @@
 	* review 'lookup', 'set', & 'setlist' and cleanup
 	* change string functions to use new typechecking and/or new args functions
 
-	* make as many of machine's evaluate functions static as possible (all the dangerous intermediate type
-	  ones)
-
 	* make string functions: strcmp, uppercase, lowercase
 	* make libraries namespacable
 	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2)))

@@ -18,6 +18,8 @@
 #include <sdrl/core/basetypes.h>
 #include <sdrl/globals.h>
 
+static int sdrl_machine_merge_return(struct sdrl_machine *, struct sdrl_value *);
+
 /**
  * Create a machine for executing code
  */
@@ -232,7 +234,7 @@ int sdrl_evaluate_args(struct sdrl_machine *mach, struct sdrl_expr *exprs)
  * Append the current value of mach->ret to the end of ret and store the whole
  * thing in mach->ret.
  */
-int sdrl_machine_merge_return(struct sdrl_machine *mach, struct sdrl_value *ret)
+static int sdrl_machine_merge_return(struct sdrl_machine *mach, struct sdrl_value *ret)
 {
 	sdrl_push_value(&ret, mach->ret);
 	mach->ret = ret;
