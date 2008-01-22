@@ -21,7 +21,7 @@
  * If a type is given, then check that the type of the value matches the given
  * type or generate an invalid type error.
  */
-struct sdrl_value *sdrl_next_arg_checked(struct sdrl_machine *mach, struct sdrl_value **next, struct sdrl_type *type)
+struct sdrl_value *sdrl_next_arg(struct sdrl_machine *mach, struct sdrl_value **next, int basetype, struct sdrl_type *type)
 {
 	struct sdrl_value *value;
 
@@ -30,7 +30,7 @@ struct sdrl_value *sdrl_next_arg_checked(struct sdrl_machine *mach, struct sdrl_
 		return(NULL);
 	}
 	*next = value->next;
-	if (type && (value->type != type)) {
+	if ((basetype && (value->type->basetype != basetype)) || (type && (value->type != type))) {
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
@@ -43,13 +43,13 @@ struct sdrl_value *sdrl_next_arg_checked(struct sdrl_machine *mach, struct sdrl_
  * type or generate an invalid type error.  If an error occurs, the pointer to
  * the next will not be updated allowing for a simple test for failure.
  */
-struct sdrl_value *sdrl_next_arg_optional(struct sdrl_machine *mach, struct sdrl_value **next, struct sdrl_type *type)
+struct sdrl_value *sdrl_next_optional_arg(struct sdrl_machine *mach, struct sdrl_value **next, int basetype, struct sdrl_type *type)
 {
 	struct sdrl_value *value;
 
 	if (!(value = *next))
 		return(NULL);
-	if (type && (value->type != type)) {
+	if ((basetype && (value->type->basetype != basetype)) || (type && (value->type != type))) {
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
