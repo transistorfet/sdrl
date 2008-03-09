@@ -173,7 +173,8 @@ sub generate_makefile {
 
 	## Output the file depend rules
 	foreach my $source (@{ $config->{'sources'} }) {
-		print FILE `cd $config->{'dir'}; gcc -MM -I$config->{'root'}/include $source` . "\n";
+		my $object = get_object_file($source);
+		print FILE `cd $config->{'dir'}; gcc -MM -I$config->{'root'}/include -MT $object $source` . "\n";
 	}
 
 	close(FILE);
