@@ -35,7 +35,7 @@ sub parse_config {
 	$file =~ /(.*)(\/|\\)(.*?)/;
 	my $dir = defined($1) ? $1 : "";
 	my ($linenum, $thisline) = (1, 1);
-	my $config = { 'file' => $file, 'dir' => $dir, 'root' => get_path_to_root($dir), 'sources' => [ ], 'libraries' => [ ], 'builds' => [ ] };
+	my $config = { 'file' => $file, 'dir' => $dir, 'root' => get_path_to_root($dir), 'sources' => [ ], 'libraries' => [ ], 'configs' => [ ], 'builds' => [ ] };
 
 	(my $fd = new IO::File("$file", "r")) or (print "Error: Unable to open $file\n" and return(-1));
 	while (defined(my $line = read_line($fd, \$linenum))) {
@@ -63,6 +63,10 @@ sub parse_config {
 		elsif ($line =~ /^\s*library\s+(.*?)\s*$/i) {
 			my ($name) = ($1);
 			push(@{ $config->{'libraries'} }, $name);
+		}
+		elsif ($line =~ /^\s*config\s+(.*?)\s*$/i) {
+			my ($name) = ($1);
+			push(@{ $config->{'configs'} }, $name);
 		}
 		elsif ($line =~ /^\s*root\s+(.*?)\s*$/i) {
 			my ($name) = ($1);
@@ -129,8 +133,14 @@ sub generate_makefile {
 		print FILE "\n\n";
 	}
 
-	## Output main rule
+	## Output configs (raw makefile statements)
 	print FILE "include \$(ROOT)/config.mk\n\n";
+	if (scalar(@{ $config->{'configs'} })) {
+		print FILE join("\n", @{ $config->{'configs'} });
+		print FILE "\n\n";
+	}
+
+	## Output main rule
 	print FILE "all: builds \$(TARGET) \$(LIB_TARGET)\n\n";
 
 	## Output the rule to build all the things we depend on
@@ -194,7 +204,7 @@ sub get_source_files {
 			push(@files, $source);
 		}
 	}
-	return(@files);
+	return(sort(@files));
 }
 
 sub get_path_to_root {

@@ -1,4 +1,8 @@
 
+	* make a hash string value (type?) and modify bindings to take a precalculated hash and then
+	  use those functions as often as possible and make language bindings to support it so you can use
+	  the values directly in order to speed up accesses when you know the hash will not otherwise be
+	  preserved
 	* make error a value
 	* review 'lookup', 'set', & 'setlist' and cleanup
 
