@@ -46,7 +46,7 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/basetypes.h \
   ../../../include/sdrl/lib/string.h
 
-char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
+funcs/char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
@@ -55,7 +55,7 @@ char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h
 
-length.o: funcs/length.c ../../../include/sdrl/sdrl.h \
+funcs/length.o: funcs/length.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
@@ -64,7 +64,7 @@ length.o: funcs/length.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h
 
-substr.o: funcs/substr.c ../../../include/sdrl/sdrl.h \
+funcs/substr.o: funcs/substr.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
@@ -74,7 +74,7 @@ substr.o: funcs/substr.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/basetypes.h \
   ../../../include/sdrl/lib/string.h
 
-tostring.o: funcs/tostring.c ../../../include/sdrl/sdrl.h \
+funcs/tostring.o: funcs/tostring.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \

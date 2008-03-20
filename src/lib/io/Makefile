@@ -44,7 +44,7 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/io.h
 
-open.o: funcs/open.c ../../../include/sdrl/sdrl.h \
+funcs/open.o: funcs/open.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
@@ -53,7 +53,7 @@ open.o: funcs/open.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h
 
-print.o: funcs/print.c ../../../include/sdrl/sdrl.h \
+funcs/print.o: funcs/print.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
@@ -62,7 +62,7 @@ print.o: funcs/print.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h
 
-file.o: types/file.c ../../../include/sdrl/sdrl.h \
+types/file.o: types/file.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \

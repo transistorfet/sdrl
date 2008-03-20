@@ -7,6 +7,7 @@
 #ifndef _SDRL_CORE_ERROR_H
 #define _SDRL_CORE_ERROR_H
 
+#include <sdrl/core/value.h>
 #include <sdrl/globals.h>
 
 #define SDRL_EBF_STATIC		0x0001

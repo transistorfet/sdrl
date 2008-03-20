@@ -68,6 +68,7 @@ struct sdrl_value *sdrl_base_create_list(struct sdrl_machine *, struct sdrl_type
 
 /*** Parsers ***/
 struct sdrl_expr *sdrl_base_parse_lambda_input(struct sdrl_machine *, struct sdrl_input *);
+struct sdrl_expr *sdrl_base_parse_lispy_input(struct sdrl_machine *, struct sdrl_input *);
 
 /*** Types ***/
 struct sdrl_type *sdrl_base_make_dblock_type(struct sdrl_machine *);
