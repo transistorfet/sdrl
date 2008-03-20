@@ -19,7 +19,7 @@ int sdrl_string_substr(struct sdrl_machine *mach, struct sdrl_value *args)
 {
 	int i = 0, j, len;
 	struct sdrl_string *str;
-	char buffer[STRING_SIZE];
+	char buffer[SDRL_STRING_SIZE];
 	struct sdrl_number *from, *to;
 
 	if (!args)
@@ -37,7 +37,7 @@ int sdrl_string_substr(struct sdrl_machine *mach, struct sdrl_value *args)
 		j = len;
 	if (to && ((j + (int) to->num) < len))
 		len = j + (int) to->num;
-	for (;(i < STRING_SIZE) && (j < len);i++, j++)
+	for (;(i < SDRL_STRING_SIZE) && (j < len);i++, j++)
 		buffer[i] = str->str[j];
 	buffer[i] = '\0';
 	mach->ret = sdrl_make_string(mach->heap, SDRL_VALUE(str)->type, buffer, i);

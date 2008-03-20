@@ -18,7 +18,7 @@ int sdrl_string_tostring(struct sdrl_machine *mach, struct sdrl_value *args)
 {
 	int i = 0;
 	struct sdrl_value *cur;
-	char buffer[STRING_SIZE];
+	char buffer[SDRL_STRING_SIZE];
 	struct sdrl_type *str_type;
 
 	if (!(str_type = sdrl_find_binding(mach->type_env, "string")))
@@ -28,16 +28,16 @@ int sdrl_string_tostring(struct sdrl_machine *mach, struct sdrl_value *args)
 		if (cur->type->basetype == SDRL_BT_NUMBER)
 			buffer[i++] = (unsigned char) SDRL_NUMBER(cur)->num;
 		else if (cur->type->basetype == SDRL_BT_STRING) {
-			strncpy(&buffer[i], SDRL_STRING(cur)->str, STRING_SIZE - i - 1);
+			strncpy(&buffer[i], SDRL_STRING(cur)->str, SDRL_STRING_SIZE - i - 1);
 			i += SDRL_STRING(cur)->len;
 		}
 		else
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-		if (i >= STRING_SIZE - 1)
+		if (i >= SDRL_STRING_SIZE - 1)
 			break;
 	}
-	if (i >= STRING_SIZE)
-		i = STRING_SIZE - 1;
+	if (i >= SDRL_STRING_SIZE)
+		i = SDRL_STRING_SIZE - 1;
 	buffer[i] = '\0';
 	mach->ret = sdrl_make_string(mach->heap, str_type, buffer, i);
 	return(0);

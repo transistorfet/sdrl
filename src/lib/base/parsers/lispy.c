@@ -12,8 +12,8 @@
 #define LISPY_MAX_NUMBER		128
 #define LISPY_MAX_STRING		1024
 
-static struct sdrl_expr *lispy_parse_input(struct sdrl_type *, struct sdrl_input *);
-static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *, struct sdrl_input *);
+static struct sdrl_expr *lispy_parse_input(struct sdrl_type *, int, struct sdrl_input *);
+static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *, int, struct sdrl_input *);
 static struct sdrl_expr *lispy_parse_number(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
 static struct sdrl_expr *lispy_parse_string(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
 static struct sdrl_expr *lispy_parse_identifier(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
@@ -33,7 +33,7 @@ struct sdrl_expr *sdrl_base_parse_lispy_input(struct sdrl_machine *mach, struct 
 
 	if (!(expr_type = sdrl_find_binding(mach->type_env, "*expr*")))
 		return(NULL);
-	return(lispy_parse_input(expr_type, input));
+	return(lispy_parse_input(expr_type, 0, input));
 }
 
 /*** Local Functions ***/
@@ -41,13 +41,13 @@ struct sdrl_expr *sdrl_base_parse_lispy_input(struct sdrl_machine *mach, struct 
 /**
  * Parse input stream.
  */
-struct sdrl_expr *lispy_parse_input(struct sdrl_type *type, struct sdrl_input *input)
+struct sdrl_expr *lispy_parse_input(struct sdrl_type *type, int openfunc, struct sdrl_input *input)
 {
 	struct sdrl_expr *head, *cur;
 
-	head = cur = lispy_parse_expr(type, input);
+	head = cur = lispy_parse_expr(type, openfunc, input);
 	while (cur) {
-		cur->next = lispy_parse_expr(type, input);
+		cur->next = lispy_parse_expr(type, 0, input);
 		cur = cur->next;
 	}
 	return(head);
@@ -56,7 +56,7 @@ struct sdrl_expr *lispy_parse_input(struct sdrl_type *type, struct sdrl_input *i
 /**
  * Parse a single expression.
  */
-static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *type, struct sdrl_input *input)
+static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *type, int openfunc, struct sdrl_input *input)
 {
 	char ch;
 	linenumber_t line;
@@ -78,13 +78,18 @@ static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *type, struct sdrl_in
 			return(NULL);
 	}
 	else if (ch == '(') {
-		if(!(expr = lispy_parse_input(type, input)))
+		if(!(expr = lispy_parse_input(type, 1, input)))
 			return(NULL);
 		expr = sdrl_make_call_expr(type, line, expr, NULL);
 	}
 	else {
 		if (!(expr = lispy_parse_identifier(type, input, ch, line)))
 			return(NULL);
+		if (!openfunc) {
+			if (!(expr = sdrl_make_string_expr(type, line, "$", expr))
+			    || !(expr = sdrl_make_call_expr(type, line, expr, NULL)))
+				return(NULL);
+		}
 	}
 	return(expr);
 }
@@ -128,7 +133,6 @@ static struct sdrl_expr *lispy_parse_string(struct sdrl_type *type, struct sdrl_
 static struct sdrl_expr *lispy_parse_identifier(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
 {
 	int i;
-	struct sdrl_expr *expr;
 	char buffer[LISPY_MAX_STRING];
 
 	buffer[0] = first;
@@ -139,10 +143,7 @@ static struct sdrl_expr *lispy_parse_identifier(struct sdrl_type *type, struct s
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-
-	if (!(expr = sdrl_make_string_expr(type, line, "$", sdrl_make_string_expr(type, line, buffer, NULL))))
-		return(NULL);
-	return(sdrl_make_call_expr(type, line, expr, NULL));
+	return(sdrl_make_string_expr(type, line, buffer, NULL));
 }
 
 static int lispy_get_next_char(struct sdrl_input *input)

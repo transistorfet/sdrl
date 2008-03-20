@@ -9,7 +9,7 @@
 
 #include <sdrl/sdrl.h>
 
-#define STRING_SIZE		1024
+#define SDRL_STRING_SIZE		1024
 
 int sdrl_load_string(struct sdrl_machine *);
 
