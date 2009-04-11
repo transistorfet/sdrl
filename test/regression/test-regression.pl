@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-my $sdrlcmd = "../bin/sdrl";
+my $sdrlcmd = "../../bin/sdrl";
 
 my $max_width = 30;
 
