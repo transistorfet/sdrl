@@ -1,5 +1,5 @@
 #
-# Script Name:	test-sdrl.pl
+# Script Name:	test-regression.pl
 # Description:	Automatic testing program for the sdrl interpreter
 #
 
