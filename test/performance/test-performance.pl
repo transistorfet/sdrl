@@ -1,3 +1,4 @@
+#!/usr/bin/perl
 #
 # Script Name:	test-performance.pl
 # Description:	Automatic testing program for comparing language performances
@@ -21,6 +22,11 @@ exit(0);
 sub main {
 	my ($test) = @ARGV;
 
+	if (!$test) {
+		print "Usage: test-performance.pl <test-name>\n";
+		exit(0);
+	}
+
 	opendir(DIR, ".") or die "Failed to open the current directory for reading\n";
 	my @files = readdir(DIR);
 	closedir(DIR);
@@ -28,6 +34,7 @@ sub main {
 	print_header();
 	foreach my $file (sort(@files)) {
 		if ($file =~ /^\Q$test\E\./i) {
+			sleep(1);
 			test_file($file);
 		}
 	}
