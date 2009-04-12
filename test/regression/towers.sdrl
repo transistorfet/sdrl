@@ -8,7 +8,7 @@
 # Moved disc from 1.000000 to 3.000000
 # END EXPECTED OUTPUT
 
-(set move-tower (lblock
+(set move-tower (lexblock
 	(setlist (list from to discs) ($ _))
 	(if (= ($ discs) 1)
 		(code
@@ -18,7 +18,7 @@
 			(move-disc ($ from) ($ to))
 			(move-tower (- 6 ($ from) ($ to)) ($ to) (- ($ discs) 1))))))
 
-(set move-disc (lblock
+(set move-disc (lexblock
 	(setlist (list from to) ($ _))
 	(print "Moved disc from " ($ from) " to " ($ to) "\n")))
 

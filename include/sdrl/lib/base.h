@@ -27,8 +27,8 @@ int sdrl_base_evaluate_expr(struct sdrl_machine *, struct sdrl_reference *, stru
 
 /** Dynamic Block Type **/
 
-struct sdrl_type *sdrl_base_make_dblock(struct sdrl_machine *);
-int sdrl_base_evaluate_dblock(struct sdrl_machine *, struct sdrl_reference *, struct sdrl_value *);
+struct sdrl_type *sdrl_base_make_dynblock(struct sdrl_machine *);
+int sdrl_base_evaluate_dynblock(struct sdrl_machine *, struct sdrl_reference *, struct sdrl_value *);
 
 /** C Function Type **/
 
@@ -43,18 +43,18 @@ int sdrl_base_evaluate_form(struct sdrl_machine *, struct sdrl_pointer *, struct
 /** Lexical Block Type **/
 
 // TODO should you make this inherit from expr which would allow for awesomeness
-struct sdrl_lblock {
+struct sdrl_lexblock {
 	struct sdrl_value value;
 	struct sdrl_expr *code;
 	struct sdrl_environment *env;
 };
 
-#define SDRL_LBLOCK(ptr)		( (struct sdrl_lblock *) (ptr) )
-struct sdrl_type *sdrl_base_make_lblock_type(struct sdrl_machine *);
-struct sdrl_value *sdrl_base_create_lblock(struct sdrl_machine *, struct sdrl_type *, struct sdrl_value *);
-int sdrl_base_destroy_lblock(struct sdrl_lblock *);
-struct sdrl_value *sdrl_base_duplicate_lblock(struct sdrl_machine *, struct sdrl_lblock *);
-int sdrl_base_evaluate_lblock(struct sdrl_machine *, struct sdrl_lblock *, struct sdrl_value *);
+#define SDRL_LEXBLOCK(ptr)		( (struct sdrl_lexblock *) (ptr) )
+struct sdrl_type *sdrl_base_make_lexblock_type(struct sdrl_machine *);
+struct sdrl_value *sdrl_base_create_lexblock(struct sdrl_machine *, struct sdrl_type *, struct sdrl_value *);
+int sdrl_base_destroy_lexblock(struct sdrl_lexblock *);
+struct sdrl_value *sdrl_base_duplicate_lexblock(struct sdrl_machine *, struct sdrl_lexblock *);
+int sdrl_base_evaluate_lexblock(struct sdrl_machine *, struct sdrl_lexblock *, struct sdrl_value *);
 
 /** List (Reference) Type **/
 
@@ -71,17 +71,17 @@ struct sdrl_expr *sdrl_base_parse_lambda_input(struct sdrl_machine *, struct sdr
 struct sdrl_expr *sdrl_base_parse_lispy_input(struct sdrl_machine *, struct sdrl_input *);
 
 /*** Types ***/
-struct sdrl_type *sdrl_base_make_dblock_type(struct sdrl_machine *);
+struct sdrl_type *sdrl_base_make_dynblock_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_expr_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_form_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_func_type(struct sdrl_machine *);
-struct sdrl_type *sdrl_base_make_lblock_type(struct sdrl_machine *);
+struct sdrl_type *sdrl_base_make_lexblock_type(struct sdrl_machine *);
 struct sdrl_type *sdrl_base_make_list_type(struct sdrl_machine *);
 
 /*** Forms ***/
 int sdrl_base_code(struct sdrl_machine *, struct sdrl_expr *);
-int sdrl_base_dblock(struct sdrl_machine *, struct sdrl_expr *);
-int sdrl_base_lblock(struct sdrl_machine *, struct sdrl_expr *);
+int sdrl_base_dynblock(struct sdrl_machine *, struct sdrl_expr *);
+int sdrl_base_lexblock(struct sdrl_machine *, struct sdrl_expr *);
 
 /*** Functions ***/
 int sdrl_base_set(struct sdrl_machine *, struct sdrl_value *);

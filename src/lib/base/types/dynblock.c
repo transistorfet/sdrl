@@ -1,5 +1,5 @@
 /*
- * Type Name:		dblock.c
+ * Type Name:		dynblock.c
  * Module Requirements:	(none)
  * Description:		Code Block Type using Dynamic Scoping
  */
@@ -7,7 +7,7 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-struct sdrl_type *sdrl_base_make_dblock_type(struct sdrl_machine *mach)
+struct sdrl_type *sdrl_base_make_dynblock_type(struct sdrl_machine *mach)
 {
 	return(sdrl_make_type(
 		sizeof(struct sdrl_reference),
@@ -16,11 +16,11 @@ struct sdrl_type *sdrl_base_make_dblock_type(struct sdrl_machine *mach)
 		NULL,
 		(sdrl_destroy_t) sdrl_destroy_reference,
 		(sdrl_duplicate_t) sdrl_duplicate_reference,
-		(sdrl_evaluate_t) sdrl_base_evaluate_dblock
+		(sdrl_evaluate_t) sdrl_base_evaluate_dynblock
 	));
 }
 
-int sdrl_base_evaluate_dblock(struct sdrl_machine *mach, struct sdrl_reference *expr, struct sdrl_value *args)
+int sdrl_base_evaluate_dynblock(struct sdrl_machine *mach, struct sdrl_reference *expr, struct sdrl_value *args)
 {
 	struct sdrl_environment *env;
 

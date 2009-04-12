@@ -1,4 +1,21 @@
 
+	* write an IRC client/bot that uses SDRL quite integrally 
+
+	* add AST traversers that convert "if" and various other syntactic "features" into pure "SDRL"
+	  format (verbose).  This prevents the need for a special parser but still has a lot of benifits
+	  and is much more configurable, even though it probably would be slower (a custom parser would be
+	  for speed and for complex syntax)
+
+	* should the conversion functions take a type at all (instead just check SDRL_BT_NUMBER for example)?
+	* add flags to the machine or something such that a program can change certain (what might be compiled
+	  in atm) options, such as treating "namespace.name" type names as special (causing a recursive
+	  (lookup).
+	* should it be possible to set the parser on the command line or somethnig?
+	* make regression tests to test all aspects of the base library extensively
+	* make (if there isn't one already) a function that takes a string and evaluates it as code
+
+	* add a basic object oriented system
+
 	* make a hash string value (type?) and modify bindings to take a precalculated hash and then
 	  use those functions as often as possible and make language bindings to support it so you can use
 	  the values directly in order to speed up accesses when you know the hash will not otherwise be
@@ -11,14 +28,14 @@
 	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2)))
 	* add a 'load' command that (somehow) calls the library loading function that adds all the library
 	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
-	  that each library behaves in an expected way
+	  that each library behaves in an expected way.  Doing it like python might be good
 
 	* make the output of dispexpr.c more readable
 	* make parser catch errors during a parse
 	* make the lambda parser support hex and octal number representation
 
-	* rewrite event.c to use a preallocated set of events
-	* make equals and nequals more generic
+	* rewrite event.c to use a preallocated set of events (???)
+	* make equals and nequals more generic (not just numbers)
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* optimize the hash function
 	* add the ability to make a reference constant
@@ -27,6 +44,7 @@
 
 Refactoring:
 
+	* make names less verbose for easier coding/implementation (use camelcase if it looks weird otherwise)
 	* make '*expr*' and '*env*' into 'expr' and 'env' and make the libbase ones 'exprref' and 'envref'
 	* change the name of bindings.c to env.c (but what do we do about the functions with the name bindings)
 	* should you change the name of type "env" to "envref"? (same with expr)
@@ -34,7 +52,7 @@ Refactoring:
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
-	* should you change SDRL_MAKE_REFERENCE (and DESTROY) to something shorter?
+	* should you change SDRL_MAKE_REFERENCE (and DESTROY) to something shorter? (SDRL_MAKEREF)
 	* should you move the number and string types to libbase and move the basetypes into utils?
 
 Tests:
@@ -46,6 +64,10 @@ Tests:
 
 Structural Issues:
 
+	* should things like sdrl_find_binding and other "basic" functions produce (or optionally produce
+	  by way of calling a macro that encapsulates the actual basic function call) an error in the
+	  machine.  This would allow direct use of the SDRL_TRY() macro to test the success of a lookup while
+	  also allowing exception handling in the program for such failures.
 	* what do you do if a value being applied/evaluated is non-executable (does not have an evaluate
 	  function in it's type)?  Should you just return the value?  Should it be an error?  This "feature"
 	  is exploited by "if" such that it calls its params like a function but if they aren't (code ) blocks,
@@ -61,7 +83,8 @@ Structural Issues:
 	  destroy function.  The trouble though is when the original entry is destroyed somehow for some
 	  reason (or is even reassigned).  The cache entry will then be invalid.  A less efficent alternative
 	  could be to store a pointer to the env containing the entry instead.  What about though if an
-	  inbetween env creates a new entry that overrides the previous one?
+	  inbetween env creates a new entry that overrides the previous one?  Why wouldn't a reference work in
+	  this case? (maybe it will)
 	* should you make a different dedicated hash table implementation for types to speed up type
 	  discovery?  We shouldn't make types be values since we can instead make a 'type' type that is a
 	  pointer to the type and use that as the actual value
@@ -74,7 +97,7 @@ Features:
 
 	* add support for threads (either in the core or in a lib)
 	* add garbage collection
-	* a parser that supports various syntactic sugar
+	* a parser that supports various syntactic sugar (using yacc/bison?)
 	* cross-cutting language constructs (aspects?) (can you do aspects using the continuation stack or
 	  should you do it by modifying the expr tree)
 

@@ -10,8 +10,8 @@ LIB_TARGET = ../../../lib/libbase.a
 
 OBJS =	load.o	\
 	forms/code.o	\
-	forms/dblock.o	\
-	forms/lblock.o	\
+	forms/dynblock.o	\
+	forms/lexblock.o	\
 	funcs/add.o	\
 	funcs/and.o	\
 	funcs/array.o	\
@@ -40,12 +40,12 @@ OBJS =	load.o	\
 	funcs/unlist.o	\
 	parsers/lambda.o	\
 	parsers/lispy.o	\
-	types/dblock.o	\
+	types/dynblock.o	\
 	types/env.o	\
 	types/expr.o	\
 	types/form.o	\
 	types/func.o	\
-	types/lblock.o	\
+	types/lexblock.o	\
 	types/list.o	\
 	utils/disperr.o	\
 	utils/dispexpr.o	\
@@ -93,7 +93,7 @@ forms/code.o: forms/code.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h
 
-forms/dblock.o: forms/dblock.c ../../../include/sdrl/sdrl.h \
+forms/dynblock.o: forms/dynblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
@@ -102,7 +102,7 @@ forms/dblock.o: forms/dblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h
 
-forms/lblock.o: forms/lblock.c ../../../include/sdrl/sdrl.h \
+forms/lexblock.o: forms/lexblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
@@ -365,7 +365,7 @@ parsers/lispy.o: parsers/lispy.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/input.h
 
-types/dblock.o: types/dblock.c ../../../include/sdrl/sdrl.h \
+types/dynblock.o: types/dynblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \
@@ -410,7 +410,7 @@ types/func.o: types/func.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h
 
-types/lblock.o: types/lblock.c ../../../include/sdrl/sdrl.h \
+types/lexblock.o: types/lexblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/core/expr.h \
   ../../../include/sdrl/core/value.h ../../../include/sdrl/core/type.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/error.h \

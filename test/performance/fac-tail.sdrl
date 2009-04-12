@@ -1,5 +1,5 @@
 
-(set fac (lblock
+(set fac (lexblock
 	(setlist (list n sum) ($ _))
 	(if (= ($ n) 0)
 		sum

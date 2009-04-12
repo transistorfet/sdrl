@@ -1,5 +1,5 @@
 
-(set fac (lblock
+(set fac (lexblock
 	(setlist (list n) ($ _))
 	(if (= ($ n) 0)
 		1
