@@ -34,6 +34,14 @@ static inline int SDRL_ERROR(struct sdrl_machine *mach, short severity, int err,
 	return(err);
 }
 
+/*** Try a piece of code and jump to a failure point if it produces an error.  This assumes that
+     there is an sdrl_machine pointer called "mach" in the current scope and a label called "FAIL". */
+#define SDRL_TRY(CODE) {	\
+	(CODE);			\
+	if (mach->error)	\
+		goto FAIL;	\
+}
+
 struct sdrl_machine *sdrl_create_machine(void);
 int sdrl_destroy_machine(struct sdrl_machine *);
 
