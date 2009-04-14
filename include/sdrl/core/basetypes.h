@@ -93,5 +93,12 @@ static inline void *sdrl_check_pointer(struct sdrl_machine *mach, struct sdrl_va
 	return(SDRL_POINTER(cur)->ptr);
 }
 
+static inline int sdrl_check_end(struct sdrl_machine *mach, struct sdrl_value *cur) {
+	if (!cur)
+		return(0);
+	SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+	return(-1);
+}
+
 #endif
 
