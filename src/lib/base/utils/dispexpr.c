@@ -36,6 +36,8 @@ static int dispexpr_display_expr(struct sdrl_expr *expr)
 		printf("<%f>", expr->data.num);
 	else if (expr->type == SDRL_ET_STRING)
 		printf("\"%s\"", expr->data.str);
+	else if (expr->type == SDRL_ET_IDENTIFIER)
+		printf("%s", expr->data.str);
 	else if (expr->type == SDRL_ET_CALL) {
 		printf("[");
 		sdrl_base_display_expr(expr->data.expr);

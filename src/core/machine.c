@@ -148,13 +148,13 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 	mach->current_line = expr->line;
 	if (expr->type == SDRL_ET_NUMBER)
 		mach->ret = sdrl_make_number(mach->heap, sdrl_find_binding(mach->type_env, "number"), expr->data.num);
-	else if (expr->type == SDRL_ET_STRING)
+	else if (expr->type == SDRL_ET_STRING || expr->type == SDRL_ET_IDENTIFIER)
 		mach->ret = sdrl_make_string(mach->heap, sdrl_find_binding(mach->type_env, "string"), expr->data.str, strlen(expr->data.str));
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
 		mach->current_line = expr->data.expr->line;
-		if (expr->data.expr->type == SDRL_ET_STRING) {
+		if (expr->data.expr->type == SDRL_ET_STRING || expr->data.expr->type == SDRL_ET_IDENTIFIER) {
 			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str)))
 				return(SDRL_ERROR(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
 			else if (func->type->evaluate && SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS))

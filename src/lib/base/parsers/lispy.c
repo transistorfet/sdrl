@@ -1,6 +1,7 @@
 /*
  * Parser Name:		lispy.c
- * Description:		Lambda Calculus Parser (Bracketed)
+ * Description:		Lambda Calculus Parser (Bracketed).  The primary difference of this parser is
+ *			that barewords are converted to variable lookups.
  */
 
 #include <stdlib.h>
@@ -80,14 +81,14 @@ static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *type, int openfunc, 
 	else if (ch == '(') {
 		if(!(expr = lispy_parse_input(type, 1, input)))
 			return(NULL);
-		expr = sdrl_make_call_expr(type, line, expr, NULL);
+		expr = sdrl_make_call_expr(type, SDRL_ET_CALL, line, expr, NULL);
 	}
 	else {
 		if (!(expr = lispy_parse_identifier(type, input, ch, line)))
 			return(NULL);
 		if (!openfunc) {
-			if (!(expr = sdrl_make_string_expr(type, line, "$", expr))
-			    || !(expr = sdrl_make_call_expr(type, line, expr, NULL)))
+			if (!(expr = sdrl_make_string_expr(type, SDRL_ET_IDENTIFIER, line, "$", expr))
+			    || !(expr = sdrl_make_call_expr(type, SDRL_ET_CALL, line, expr, NULL)))
 				return(NULL);
 		}
 	}
@@ -108,7 +109,7 @@ static struct sdrl_expr *lispy_parse_number(struct sdrl_type *type, struct sdrl_
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_number_expr(type, line, strtod(buffer, NULL), NULL));
+	return(sdrl_make_number_expr(type, SDRL_ET_NUMBER, line, strtod(buffer, NULL), NULL));
 }
 
 static struct sdrl_expr *lispy_parse_string(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
@@ -127,7 +128,7 @@ static struct sdrl_expr *lispy_parse_string(struct sdrl_type *type, struct sdrl_
 			break;
 	}
 	buffer[i] = '\0';
-	return(sdrl_make_string_expr(type, line, buffer, NULL));
+	return(sdrl_make_string_expr(type, SDRL_ET_STRING, line, buffer, NULL));
 }
 
 static struct sdrl_expr *lispy_parse_identifier(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
@@ -143,7 +144,7 @@ static struct sdrl_expr *lispy_parse_identifier(struct sdrl_type *type, struct s
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_string_expr(type, line, buffer, NULL));
+	return(sdrl_make_string_expr(type, SDRL_ET_IDENTIFIER, line, buffer, NULL));
 }
 
 static int lispy_get_next_char(struct sdrl_input *input)
