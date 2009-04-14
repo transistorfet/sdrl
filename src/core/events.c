@@ -47,7 +47,7 @@ int sdrl_destroy_continuation(struct sdrl_continuation *cont)
 /**
  * Allocate and initialize a new sdrl_event (to be added to a continuation).
  */
-struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, struct sdrl_value *param, struct sdrl_environment *env)
+struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, struct sdrl_value *arg, struct sdrl_environment *env)
 {
 	struct sdrl_event *event;
 
@@ -55,7 +55,7 @@ struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, struct sdrl_
 		return(NULL);
 	event->bitflags = bitflags;
 	event->func = func;
-	event->param = SDRL_MAKE_REFERENCE(param);
+	event->arg = SDRL_MAKE_REFERENCE(arg);
 	event->env = SDRL_MAKE_REFERENCE(env);
 	event->next = NULL;
 
@@ -68,7 +68,7 @@ struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, struct sdrl_
 int sdrl_destroy_event(struct sdrl_event *event)
 {
 	if (event) {
-		SDRL_DESTROY_REFERENCE(event->param);
+		SDRL_DESTROY_REFERENCE(event->arg);
 		SDRL_DESTROY_REFERENCE(event->env);
 		free(event);
 	}
@@ -129,19 +129,19 @@ int sdrl_count_events(struct sdrl_continuation *cont)
 /*
 
 sdrl_eval_expr:
-	if number or string set mach->ret
+	if number or string then set mach->ret
 	if call then sdrl_eval_value
 
 sdrl_eval_value:
 	if no eval
 		push-cont <func> <exprs>
-	if eval params
+	if eval args
 		push-cont <func> <mach->ret>
-		push-cont sdrl_apply_params <exprs>
+		push-cont sdrl_apply_args <exprs>
 
-sdrl_apply_params:
+sdrl_apply_args:
 	pop-cont exprs
-	push-cont sdrl_apply_params tail(exprs)
+	push-cont sdrl_apply_args tail(exprs)
 	push-cont stack-oprs <mach-ret> current-ret
 	push-cont sdrl_eval_expr head(exprs)
 

@@ -111,11 +111,11 @@ int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
 	if (SDRL_BF_IS_SET(event, SDRL_EBF_USE_RET)) {
 		args = mach->ret;
 		mach->ret = NULL;
-		ret = event->func(mach, event->param, args);
+		ret = event->func(mach, event->arg, args);
 		SDRL_DESTROY_REFERENCE(args);
 	}
 	else 
-		ret = event->func(mach, event->param);
+		ret = event->func(mach, event->arg);
 	return(ret);
 }
 

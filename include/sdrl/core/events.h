@@ -19,7 +19,7 @@ typedef int (*sdrl_event_t)(struct sdrl_machine *, ...);
 struct sdrl_event {
 	int bitflags;
 	sdrl_event_t func;
-	struct sdrl_value *param;
+	struct sdrl_value *arg;
 	struct sdrl_environment *env;
 	struct sdrl_event *next;
 };
