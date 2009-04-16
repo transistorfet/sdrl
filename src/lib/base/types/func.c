@@ -24,7 +24,7 @@ sdType *sdrl_base_make_func_type(sdMachine *mach)
 
 int sdrl_base_evaluate_func(sdMachine *mach, sdPointer *func, sdValue *args)
 {
-	SDRL_DESTROY_REFERENCE(mach->ret);
+	SDRL_DECREF(mach->ret);
 	mach->ret = NULL;
 	return(((sdrl_func_t) func->ptr)(mach, args));
 }

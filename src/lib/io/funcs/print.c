@@ -36,7 +36,7 @@ int sdrl_io_print(sdMachine *mach, sdValue *args)
 		}
 		cur = cur->next;
 	}
-	mach->ret = SDRL_MAKE_REFERENCE(args);
+	mach->ret = SDRL_INCREF(args);
 	return(0);
 }
 

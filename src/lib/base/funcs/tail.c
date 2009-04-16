@@ -13,7 +13,7 @@
 int sdrl_base_tail(sdMachine *mach, sdValue *args)
 {
 	if (args && args->next)
-		mach->ret = SDRL_MAKE_REFERENCE(args->next);
+		mach->ret = SDRL_INCREF(args->next);
 	else
 		mach->ret = NULL;
 	return(0);

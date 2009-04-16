@@ -12,7 +12,7 @@
  */
 int sdrl_base_array(sdMachine *mach, sdValue *args)
 {
-	mach->ret = SDRL_MAKE_REFERENCE(args);
+	mach->ret = SDRL_INCREF(args);
 	return(0);
 }
 

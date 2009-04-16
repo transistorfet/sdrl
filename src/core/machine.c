@@ -50,7 +50,7 @@ sdMachine *sdrl_create_machine(void)
 		sdrl_destroy_machine(mach);
 		return(NULL);
 	}
-	mach->env = SDRL_MAKE_REFERENCE(mach->global);
+	mach->env = SDRL_INCREF(mach->global);
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_number_type());
 	sdrl_add_binding(mach->type_env, "string", sdrl_make_string_type());
@@ -66,7 +66,7 @@ int sdrl_destroy_machine(sdMachine *mach)
 {
 	sdrl_destroy_value(mach->ret);
 	sdrl_destroy_continuation(mach->cont);
-	SDRL_DESTROY_REFERENCE(mach->env);
+	SDRL_DECREF(mach->env);
 	sdrl_destroy_environment(mach->global);
 	sdrl_destroy_environment(mach->type_env);
 	sdrl_destroy_error(mach->error);
@@ -105,14 +105,14 @@ int sdrl_evaluate_event(sdMachine *mach, sdEvent *event)
 	int ret = 0;
 	sdValue *args;
 
-	SDRL_DESTROY_REFERENCE(mach->env);
-	mach->env = SDRL_MAKE_REFERENCE(event->env);
+	SDRL_DECREF(mach->env);
+	mach->env = SDRL_INCREF(event->env);
 
 	if (SDRL_BF_IS_SET(event, SDRL_EBF_USE_RET)) {
 		args = mach->ret;
 		mach->ret = NULL;
 		ret = event->func(mach, event->arg, args);
-		SDRL_DESTROY_REFERENCE(args);
+		SDRL_DECREF(args);
 	}
 	else 
 		ret = event->func(mach, event->arg);
@@ -139,7 +139,7 @@ int sdrl_evaluate_expr(sdMachine *mach, sdExpr *expr)
 {
 	sdValue *func;
 
-	SDRL_DESTROY_REFERENCE(mach->ret);
+	SDRL_DECREF(mach->ret);
 	mach->ret = NULL;
 
 	if (!expr)
@@ -199,7 +199,7 @@ int sdrl_evaluate_value(sdMachine *mach, sdValue *func, sdValue *args)
 		else {
 			// TODO what are the advantages and disadvantages of these two ways of execution?
 			//mach->ret = args;
-			//sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, SDRL_MAKE_REFERENCE(func), mach->env));
+			//sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, SDRL_INCREF(func), mach->env));
 			ret = func->type->evaluate(mach, func, args);
 		}
 	}

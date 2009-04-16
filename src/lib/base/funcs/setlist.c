@@ -31,7 +31,7 @@ int sdrl_base_setlist(sdMachine *mach, sdValue *args)
 		cur_name = cur_name->next;
 		cur_value = tmp;
 	}
-	//mach->ret = SDRL_MAKE_REFERENCE(args->next);
+	//mach->ret = SDRL_INCREF(args->next);
 	return(0);
 }
 

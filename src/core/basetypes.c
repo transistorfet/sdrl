@@ -91,13 +91,13 @@ sdValue *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
 	SDVALUE(value)->next = NULL;
-	value->ref = SDRL_MAKE_REFERENCE(ref);
+	value->ref = SDRL_INCREF(ref);
 	return(SDVALUE(value));
 }
 
 int sdrl_destroy_reference(sdReference *value)
 {
-	SDRL_DESTROY_REFERENCE(value->ref);
+	SDRL_DECREF(value->ref);
 	sdrl_heap_free(value);
 	return(0);
 }

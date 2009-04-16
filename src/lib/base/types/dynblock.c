@@ -26,9 +26,9 @@ int sdrl_base_evaluate_dynblock(sdMachine *mach, sdReference *expr, sdValue *arg
 
 	if (!(env = sdrl_extend_environment(mach->env)))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_OUT_OF_MEMORY, NULL));
-	sdrl_add_binding(env, "_", SDRL_MAKE_REFERENCE(args));
+	sdrl_add_binding(env, "_", SDRL_INCREF(args));
 	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr->ref, env));
-	SDRL_DESTROY_REFERENCE(env);
+	SDRL_DECREF(env);
 	return(0);
 }
 

@@ -1,6 +1,5 @@
 
 	* why is there expr and env types in the base library?
-	* change SDRL_MAKE_REFERENCE (and DESTROY) to something shorter? (SDRL_MAKEREF or SDRL_INCREF)
 	* should SDRL_ERROR become an actual function, sdrl_set_error or sdrl_throw_error or somethnig
 	* reduce length/verbosity of some function names (as per api.txt?)
 	* make error a value

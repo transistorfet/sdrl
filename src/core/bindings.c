@@ -64,7 +64,7 @@ sdEnv *sdrl_extend_environment(sdEnv *parent)
 
 	if (!(env = sdrl_create_environment(parent->heap, SDVALUE(parent)->type, parent->bitflags, parent->destroy)))
 		return(NULL);
-	env->parent = SDRL_MAKE_REFERENCE(parent);
+	env->parent = SDRL_INCREF(parent);
 	return(env);
 }
 
@@ -97,7 +97,7 @@ sdEnv *sdrl_retract_environment(sdEnv *env)
 	}
 	free(env->table);
 	if (env->parent)
-		parent = SDRL_DESTROY_REFERENCE(env->parent) ? NULL : env->parent;
+		parent = SDRL_DECREF(env->parent) ? NULL : env->parent;
 	sdrl_heap_free(env);
 	return(parent);
 }

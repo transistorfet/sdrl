@@ -55,8 +55,8 @@ sdEvent *sdrl_make_event(int bitflags, sdrl_event_t func, sdValue *arg, sdEnv *e
 		return(NULL);
 	event->bitflags = bitflags;
 	event->func = func;
-	event->arg = SDRL_MAKE_REFERENCE(arg);
-	event->env = SDRL_MAKE_REFERENCE(env);
+	event->arg = SDRL_INCREF(arg);
+	event->env = SDRL_INCREF(env);
 	event->next = NULL;
 
 	return(event);
@@ -68,8 +68,8 @@ sdEvent *sdrl_make_event(int bitflags, sdrl_event_t func, sdValue *arg, sdEnv *e
 int sdrl_destroy_event(sdEvent *event)
 {
 	if (event) {
-		SDRL_DESTROY_REFERENCE(event->arg);
-		SDRL_DESTROY_REFERENCE(event->env);
+		SDRL_DECREF(event->arg);
+		SDRL_DECREF(event->env);
 		free(event);
 	}
 	return(0);
