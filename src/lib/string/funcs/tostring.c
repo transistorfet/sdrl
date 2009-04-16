@@ -22,7 +22,7 @@ int sdrl_string_tostring(sdMachine *mach, sdValue *args)
 	sdType *str_type;
 
 	if (!(str_type = sdrl_find_binding(mach->type_env, "string")))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 
 	for (cur = args; cur; cur = cur->next) {
 		if (cur->type->basetype == SDRL_BT_NUMBER)
@@ -32,7 +32,7 @@ int sdrl_string_tostring(sdMachine *mach, sdValue *args)
 			i += SDSTRING(cur)->len;
 		}
 		else
-			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 		if (i >= SDRL_STRING_SIZE - 1)
 			break;
 	}

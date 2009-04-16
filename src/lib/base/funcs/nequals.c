@@ -16,12 +16,12 @@ int sdrl_base_not_equals(sdMachine *mach, sdValue *args)
 	sdValue *cur;
 
 	if (!args)
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	if (args->type->basetype != SDRL_BT_NUMBER)
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 	for (cur = args->next; cur; cur = cur->next) {
 		if (cur->type->basetype != SDRL_BT_NUMBER)
-			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 		if (SDNUMBER(cur)->num == SDNUMBER(args)->num) {
 			result = 0;
 			break;

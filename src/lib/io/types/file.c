@@ -31,19 +31,19 @@ sdValue *sdrl_io_create_file(sdMachine *mach, sdType *type, sdValue *args)
 	sdType *str_type;
 
 	if (!args) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		return(NULL);
 	}
 	else if (!(str_type = sdrl_find_binding(mach->type_env, "string"))) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
 		return(NULL);
 	}
 	else if (args->type != str_type) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
 	else if (!(fptr = fopen(SDSTRING(args)->str, "r"))) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, "Error opening file");
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, "Error opening file");
 		return(NULL);
 	}
 	return(sdrl_make_pointer(mach->heap, type, fptr));

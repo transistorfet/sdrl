@@ -27,11 +27,11 @@ sdValue *sdrl_base_create_env(sdMachine *mach, sdType *type, sdValue *args)
 
 	if (!args) {
 		if (!(env_type = sdrl_find_binding(mach->type_env, "*env*")))
-			SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
+			sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
 		env = sdrl_create_environment(mach->heap, env_type, 0, (sdrl_destroy_t) sdrl_destroy_value);
 	}
 	else if (args->type != type) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
 	else

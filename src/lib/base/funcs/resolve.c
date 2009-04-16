@@ -15,9 +15,9 @@ int sdrl_base_resolve(sdMachine *mach, sdValue *args)
 	sdValue *bind;
 
 	if (!args || (args->type->basetype != SDRL_BT_STRING))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 	else if (!(bind = sdrl_find_binding(mach->env, SDSTRING(args)->str)))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	// TODO what should the "default" behaviour be?
 	mach->ret = sdrl_duplicate_value(mach, bind);
 	return(0);

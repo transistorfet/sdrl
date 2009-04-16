@@ -19,7 +19,7 @@ int sdrl_string_length(sdMachine *mach, sdValue *args)
 	sdType *num_type;
 
 	if (!(num_type = sdrl_find_binding(mach->type_env, "number")))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	if (!(str = SDSTRING(sdrl_next_arg(mach, &args, SDRL_BT_STRING, NULL))))
 		return(mach->error->err);
 	mach->ret = sdrl_make_number(mach->heap, num_type, (number_t) str->len);

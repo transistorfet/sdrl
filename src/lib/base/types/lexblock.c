@@ -63,7 +63,7 @@ int sdrl_base_evaluate_lexblock(sdMachine *mach, sdLexBlock *func, sdValue *args
 	sdEnv *env;
 
 	if (!(env = sdrl_extend_environment(func->env)))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_OUT_OF_MEMORY, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_OUT_OF_MEMORY, NULL));
 	sdrl_add_binding(env, "_", SDRL_INCREF(args));
 	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(func->code), env));
 	SDRL_DECREF(env);

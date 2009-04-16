@@ -26,12 +26,12 @@ sdValue *sdrl_next_arg(sdMachine *mach, sdValue **next, int basetype, sdType *ty
 	sdValue *value;
 
 	if (!(value = *next)) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		return(NULL);
 	}
 	*next = value->next;
 	if ((basetype && (value->type->basetype != basetype)) || (type && (value->type != type))) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
 	return(value);
@@ -50,7 +50,7 @@ sdValue *sdrl_next_optional_arg(sdMachine *mach, sdValue **next, int basetype, s
 	if (!(value = *next))
 		return(NULL);
 	if ((basetype && (value->type->basetype != basetype)) || (type && (value->type != type))) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
 	*next = value->next;

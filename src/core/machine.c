@@ -84,7 +84,7 @@ int sdrl_evaluate(sdMachine *mach, sdExpr *expr)
 	sdEvent *event;
 
 	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr), mach->env)))
-		return(SDRL_ERROR(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 	do {
 		ret = sdrl_evaluate_event(mach, event);
 		sdrl_destroy_event(event);
@@ -152,11 +152,11 @@ int sdrl_evaluate_expr(sdMachine *mach, sdExpr *expr)
 		mach->ret = sdrl_make_string(mach->heap, sdrl_find_binding(mach->type_env, "string"), expr->data.str, strlen(expr->data.str));
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
-			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
+			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
 		mach->current_line = expr->data.expr->line;
 		if (expr->data.expr->type == SDRL_ET_STRING || expr->data.expr->type == SDRL_ET_IDENTIFIER) {
 			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str)))
-				return(SDRL_ERROR(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
+				return(sdrl_set_error(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
 			else if (func->type->evaluate && SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS))
 				return(func->type->evaluate(mach, func, SDVALUE(expr->data.expr->next)));
 			else {
@@ -171,10 +171,10 @@ int sdrl_evaluate_expr(sdMachine *mach, sdExpr *expr)
 			return(0);
 		}
 		else
-			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
+			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
 	}
 	else
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_AST_TYPE, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_AST_TYPE, NULL));
 	return(0);
 }
 
@@ -192,10 +192,10 @@ int sdrl_evaluate_value(sdMachine *mach, sdValue *func, sdValue *args)
 	}
 
 	if (!func)
-		ret = SDRL_ERROR(mach, SDRL_ES_LOW, SDRL_ERR_NOT_FOUND, NULL);
+		ret = sdrl_set_error(mach, SDRL_ES_LOW, SDRL_ERR_NOT_FOUND, NULL);
 	else if (func->type->evaluate) {
 		if (SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS))
-			ret = SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+			ret = sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		else {
 			// TODO what are the advantages and disadvantages of these two ways of execution?
 			//mach->ret = args;
@@ -206,7 +206,7 @@ int sdrl_evaluate_value(sdMachine *mach, sdValue *func, sdValue *args)
 	else {
 		// TODO what do we do if the function is not evaluatable?
 		if (args)
-			ret = SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+			ret = sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		else
 			mach->ret = sdrl_duplicate_value(mach, func);
 	}

@@ -23,7 +23,7 @@ int sdrl_string_substr(sdMachine *mach, sdValue *args)
 	sdNumber *from, *to;
 
 	if (!args)
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	if (!(str = SDSTRING(sdrl_next_arg(mach, &args, SDRL_BT_STRING, NULL)))
 	    || !(from = SDNUMBER(sdrl_next_arg(mach, &args, SDRL_BT_NUMBER, NULL)))
 	    || (!(to = SDNUMBER(sdrl_next_optional_arg(mach, &args, SDRL_BT_NUMBER, NULL))) && args))

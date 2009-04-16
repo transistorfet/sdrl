@@ -1,6 +1,5 @@
 
 	* why is there expr and env types in the base library?
-	* should SDRL_ERROR become an actual function, sdrl_set_error or sdrl_throw_error or somethnig
 	* reduce length/verbosity of some function names (as per api.txt?)
 	* make error a value
 	* make '*expr*' and '*env*' into 'expr' and 'env' and make the libbase ones 'exprref' and 'envref'

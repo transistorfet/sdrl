@@ -24,7 +24,7 @@ sdType *sdrl_base_make_expr_type(sdMachine *mach)
 sdValue *sdrl_base_create_expr(sdMachine *mach, sdType *type, sdValue *args)
 {
 	if (!args) {
-		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
 	// TODO check that args is an expr type

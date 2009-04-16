@@ -17,7 +17,7 @@ int sdrl_base_and(sdMachine *mach, sdValue *args)
 
 	for (cur = args; cur; cur = cur->next) {
 		if (cur->type->basetype != SDRL_BT_NUMBER)
-			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 		if (!SDNUMBER(cur)->num) {
 			result = 0;
 			break;

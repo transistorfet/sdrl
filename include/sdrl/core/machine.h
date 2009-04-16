@@ -27,7 +27,7 @@ struct sdMachine {
 };
 
 /*** Generate an error and set it in the current machine. ***/
-static inline int SDRL_ERROR(sdMachine *mach, short severity, int err, const char *msg) {
+static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const char *msg) {
 	if (mach->error)
 		sdrl_destroy_error(mach->error);
 	mach->error = sdrl_make_error(mach->current_line, severity, err, msg);

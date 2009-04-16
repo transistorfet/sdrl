@@ -15,7 +15,7 @@ int sdrl_base_null(sdMachine *mach, sdValue *args)
 	sdType *type;
 
 	if (!(type = sdrl_find_binding(mach->type_env, "number")))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	if (!args)
 		mach->ret = sdrl_make_number(mach->heap, type, -1);
 	else

@@ -17,13 +17,13 @@ int sdrl_io_open(sdMachine *mach, sdValue *args)
 	sdType *type;
 
 	if (!args || (args->type->basetype != SDRL_BT_STRING))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	if (!(type = sdrl_find_binding(mach->type_env, "file")))
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	else if (type->create)
 		mach->ret = type->create(mach, type, args);
 	else
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, NULL));
 	return(0);
 }
 

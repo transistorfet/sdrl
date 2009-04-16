@@ -15,9 +15,9 @@ int sdrl_base_if(sdMachine *mach, sdValue *args)
 	sdValue *block = NULL;
 
 	if (sdrl_value_count(args) < 2)
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	else if (args->type->basetype != SDRL_BT_NUMBER)
-		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 	// TODO convert this to to more than just number comparison
 	else if (SDNUMBER(args)->num)
 		block = sdrl_duplicate_single_value(mach, args->next);
