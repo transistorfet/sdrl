@@ -15,19 +15,19 @@
 #include <sdrl/core/bindings.h>
 #include <sdrl/globals.h>
 
-struct sdrl_machine {
+struct sdMachine {
 	linenumber_t current_line;
-	struct sdrl_heap *heap;
-	struct sdrl_value *ret;
-	struct sdrl_error *error;
-	struct sdrl_continuation *cont;
-	struct sdrl_environment *type_env;
-	struct sdrl_environment *global;
-	struct sdrl_environment *env;
+	sdHeap *heap;
+	sdValue *ret;
+	sdError *error;
+	sdCont *cont;
+	sdEnv *type_env;
+	sdEnv *global;
+	sdEnv *env;
 };
 
 /*** Generate an error and set it in the current machine. ***/
-static inline int SDRL_ERROR(struct sdrl_machine *mach, short severity, int err, const char *msg) {
+static inline int SDRL_ERROR(sdMachine *mach, short severity, int err, const char *msg) {
 	if (mach->error)
 		sdrl_destroy_error(mach->error);
 	mach->error = sdrl_make_error(mach->current_line, severity, err, msg);
@@ -42,15 +42,15 @@ static inline int SDRL_ERROR(struct sdrl_machine *mach, short severity, int err,
 		goto FAIL;	\
 }
 
-struct sdrl_machine *sdrl_create_machine(void);
-int sdrl_destroy_machine(struct sdrl_machine *);
+sdMachine *sdrl_create_machine(void);
+int sdrl_destroy_machine(sdMachine *);
 
-int sdrl_evaluate(struct sdrl_machine *, struct sdrl_expr *);
-int sdrl_evaluate_event(struct sdrl_machine *, struct sdrl_event *);
-int sdrl_evaluate_expr_list(struct sdrl_machine *, struct sdrl_expr *);
-int sdrl_evaluate_expr(struct sdrl_machine *, struct sdrl_expr *);
-int sdrl_evaluate_value(struct sdrl_machine *, struct sdrl_value *, struct sdrl_value *);
-int sdrl_evaluate_args(struct sdrl_machine *, struct sdrl_expr *);
+int sdrl_evaluate(sdMachine *, sdExpr *);
+int sdrl_evaluate_event(sdMachine *, sdEvent *);
+int sdrl_evaluate_expr_list(sdMachine *, sdExpr *);
+int sdrl_evaluate_expr(sdMachine *, sdExpr *);
+int sdrl_evaluate_value(sdMachine *, sdValue *, sdValue *);
+int sdrl_evaluate_args(sdMachine *, sdExpr *);
 
 #endif
 

@@ -19,9 +19,9 @@
 
 #define SDRL_BT_USER_BASETYPE	0x1000
 
-#define SDRL_TBF_PASS_EXPRS	0x0001		/** Pass the expressions (unevaluated) to evaluate function */
+#define SDRL_TBF_PASS_EXPRS	0x0001		/** Pass the (unevaluated) expressions to evaluate function */
 
-struct sdrl_type {
+struct sdType {
 	int size;
 	short bitflags;
 	short basetype;
@@ -31,8 +31,8 @@ struct sdrl_type {
 	sdrl_evaluate_t evaluate;
 };
 
-struct sdrl_type *sdrl_make_type(int, short, short, sdrl_create_t, sdrl_destroy_t, sdrl_duplicate_t, sdrl_evaluate_t);
-int sdrl_destroy_type(struct sdrl_type *);
+sdType *sdrl_make_type(int, short, short, sdrl_create_t, sdrl_destroy_t, sdrl_duplicate_t, sdrl_evaluate_t);
+int sdrl_destroy_type(sdType *);
 
 /**
  * Notes on sdrl_type:

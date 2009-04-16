@@ -17,35 +17,37 @@
 #define SDRL_BBF_CONSTANT		0x0006			/** No bindings can be replaced or removed */
 #define SDRL_BBF_CASE_INSENSITIVE	0x0008			/** Ignore case when looking up bindings */
 
-struct sdrl_binding {
+typedef struct sdBinding sdBinding;
+
+struct sdBinding {
 	char *name;
 	void *data;
-	struct sdrl_binding *next;
+	sdBinding *next;
 };
 
-struct sdrl_environment {
-	struct sdrl_value value;
+struct sdEnv {
+	sdValue value;
 	int bitflags;
-	struct sdrl_heap *heap;
+	sdHeap *heap;
 	sdrl_destroy_t destroy;
 	int size;
 	int entries;
-	struct sdrl_binding **table;
-	struct sdrl_environment *parent;
+	sdBinding **table;
+	sdEnv *parent;
 };
 
-#define SDRL_ENVIRONMENT(ptr)	( (struct sdrl_environment *) (ptr) )
+#define SDENV(ptr)		( (sdEnv *) (ptr) )
 
-struct sdrl_environment *sdrl_create_environment(struct sdrl_heap *, struct sdrl_type *, short, sdrl_destroy_t);
-struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *);
-struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *);
-int sdrl_destroy_environment(struct sdrl_environment *);
+sdEnv *sdrl_create_environment(sdHeap *, sdType *, short, sdrl_destroy_t);
+sdEnv *sdrl_extend_environment(sdEnv *);
+sdEnv *sdrl_retract_environment(sdEnv *);
+int sdrl_destroy_environment(sdEnv *);
 
-int sdrl_add_binding(struct sdrl_environment *, const char *, void *);
-int sdrl_replace_binding(struct sdrl_environment *, const char *, void *);
-int sdrl_remove_binding(struct sdrl_environment *, const char *);
+int sdrl_add_binding(sdEnv *, const char *, void *);
+int sdrl_replace_binding(sdEnv *, const char *, void *);
+int sdrl_remove_binding(sdEnv *, const char *);
 
-void *sdrl_find_binding(struct sdrl_environment *, const char *);
+void *sdrl_find_binding(sdEnv *, const char *);
 
 #endif
 

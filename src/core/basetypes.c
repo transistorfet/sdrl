@@ -14,10 +14,10 @@
 
 /*** Number Type ***/
 
-struct sdrl_type *sdrl_make_number_type(void)
+sdType *sdrl_make_number_type(void)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_number),
+		sizeof(sdNumber),
 		0,
 		SDRL_BT_NUMBER,
 		NULL,
@@ -27,30 +27,30 @@ struct sdrl_type *sdrl_make_number_type(void)
 	));
 }
 
-struct sdrl_value *sdrl_make_number(struct sdrl_heap *heap, struct sdrl_type *type, number_t num)
+sdValue *sdrl_make_number(sdHeap *heap, sdType *type, number_t num)
 {
-	struct sdrl_number *value;
+	sdNumber *value;
 
-	if (!(value = (struct sdrl_number *) sdrl_heap_alloc(heap, type->size)))
+	if (!(value = (sdNumber *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
-	SDRL_VALUE(value)->refs = 1;
-	SDRL_VALUE(value)->type = type;
-	SDRL_VALUE(value)->next = NULL;
+	SDVALUE(value)->refs = 1;
+	SDVALUE(value)->type = type;
+	SDVALUE(value)->next = NULL;
 	value->num = num;
-	return(SDRL_VALUE(value));
+	return(SDVALUE(value));
 }
 
-struct sdrl_value *sdrl_duplicate_number(struct sdrl_machine *mach, struct sdrl_number *org)
+sdValue *sdrl_duplicate_number(sdMachine *mach, sdNumber *org)
 {
-	return(sdrl_make_number(mach->heap, SDRL_VALUE(org)->type, org->num));
+	return(sdrl_make_number(mach->heap, SDVALUE(org)->type, org->num));
 }
 
 /*** String Type ***/
 
-struct sdrl_type *sdrl_make_string_type(void)
+sdType *sdrl_make_string_type(void)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_string),
+		sizeof(sdString),
 		0,
 		SDRL_BT_STRING,
 		NULL,
@@ -60,77 +60,77 @@ struct sdrl_type *sdrl_make_string_type(void)
 	));
 }
 
-struct sdrl_value *sdrl_make_string(struct sdrl_heap *heap, struct sdrl_type *type, const char *str, int len)
+sdValue *sdrl_make_string(sdHeap *heap, sdType *type, const char *str, int len)
 {
-	struct sdrl_string *value;
+	sdString *value;
 
-	if (!(value = (struct sdrl_string *) sdrl_heap_alloc(heap, type->size + len + 1)))
+	if (!(value = (sdString *) sdrl_heap_alloc(heap, type->size + len + 1)))
 		return(NULL);
-	SDRL_VALUE(value)->refs = 1;
-	SDRL_VALUE(value)->type = type;
-	SDRL_VALUE(value)->next = NULL;
+	SDVALUE(value)->refs = 1;
+	SDVALUE(value)->type = type;
+	SDVALUE(value)->next = NULL;
 	value->len = len;
-	value->str = (char *) (SDRL_STRING(value) + 1);
+	value->str = (char *) (SDSTRING(value) + 1);
 	memcpy(value->str, str, len);
 	value->str[len] = '\0';		/** Just in case someone uses unbounded cstring functions */
-	return(SDRL_VALUE(value));
+	return(SDVALUE(value));
 }
 
-struct sdrl_value *sdrl_duplicate_string(struct sdrl_machine *mach, struct sdrl_string *org)
+sdValue *sdrl_duplicate_string(sdMachine *mach, sdString *org)
 {
-	return(sdrl_make_string(mach->heap, SDRL_VALUE(org)->type, org->str, org->len));
+	return(sdrl_make_string(mach->heap, SDVALUE(org)->type, org->str, org->len));
 }
 
 
-struct sdrl_value *sdrl_make_reference(struct sdrl_heap *heap, struct sdrl_type *type, struct sdrl_value *ref)
+sdValue *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 {
-	struct sdrl_reference *value;
+	sdReference *value;
 
-	if (!(value = (struct sdrl_reference *) sdrl_heap_alloc(heap, type->size)))
+	if (!(value = (sdReference *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
-	SDRL_VALUE(value)->refs = 1;
-	SDRL_VALUE(value)->type = type;
-	SDRL_VALUE(value)->next = NULL;
+	SDVALUE(value)->refs = 1;
+	SDVALUE(value)->type = type;
+	SDVALUE(value)->next = NULL;
 	value->ref = SDRL_MAKE_REFERENCE(ref);
-	return(SDRL_VALUE(value));
+	return(SDVALUE(value));
 }
 
-int sdrl_destroy_reference(struct sdrl_reference *value)
+int sdrl_destroy_reference(sdReference *value)
 {
 	SDRL_DESTROY_REFERENCE(value->ref);
 	sdrl_heap_free(value);
 	return(0);
 }
 
-struct sdrl_value *sdrl_duplicate_reference(struct sdrl_machine *mach, struct sdrl_reference *org)
+sdValue *sdrl_duplicate_reference(sdMachine *mach, sdReference *org)
 {
-	return(sdrl_make_reference(mach->heap, SDRL_VALUE(org)->type, org->ref));
+	return(sdrl_make_reference(mach->heap, SDVALUE(org)->type, org->ref));
 }
 
 
-struct sdrl_value *sdrl_make_pointer(struct sdrl_heap *heap, struct sdrl_type *type, void *ptr)
+sdValue *sdrl_make_pointer(sdHeap *heap, sdType *type, void *ptr)
 {
-	struct sdrl_pointer *value;
+	sdPointer *value;
 
-	if (!(value = (struct sdrl_pointer *) sdrl_heap_alloc(heap, type->size)))
+	if (!(value = (sdPointer *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
-	SDRL_VALUE(value)->refs = 1;
-	SDRL_VALUE(value)->type = type;
-	SDRL_VALUE(value)->next = NULL;
+	SDVALUE(value)->refs = 1;
+	SDVALUE(value)->type = type;
+	SDVALUE(value)->next = NULL;
 	value->ptr = ptr;
-	return(SDRL_VALUE(value));
+	return(SDVALUE(value));
 }
 
-struct sdrl_value *sdrl_duplicate_pointer(struct sdrl_machine *mach, struct sdrl_pointer *org)
+sdValue *sdrl_duplicate_pointer(sdMachine *mach, sdPointer *org)
 {
-	return(sdrl_make_pointer(mach->heap, SDRL_VALUE(org)->type, org->ptr));
+	return(sdrl_make_pointer(mach->heap, SDVALUE(org)->type, org->ptr));
 }
 
 
-struct sdrl_type *sdrl_make_expression_type(void)
+sdType *sdrl_make_expression_type(void)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_expr),
+		sizeof(sdExpr),
 		0,
 		SDRL_BT_EXPRESSION,
 		NULL,
@@ -141,10 +141,10 @@ struct sdrl_type *sdrl_make_expression_type(void)
 }
 
 
-struct sdrl_type *sdrl_make_environment_type(void)
+sdType *sdrl_make_environment_type(void)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_environment),
+		sizeof(sdEnv),
 		0,
 		SDRL_BT_ENVIRONMENT,
 		NULL,

@@ -12,52 +12,57 @@
 #include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
 
-#define SDRL_NUMBER(ptr)	( (struct sdrl_number *) (ptr) )
-#define SDRL_STRING(ptr)	( (struct sdrl_string *) (ptr) )
-#define SDRL_REFERENCE(ptr)	( (struct sdrl_reference *) (ptr) )
-#define SDRL_POINTER(ptr)	( (struct sdrl_pointer *) (ptr) )
+#define SDNUMBER(ptr)		( (sdNumber *) (ptr) )
+#define SDSTRING(ptr)		( (sdString *) (ptr) )
+#define SDREFERENCE(ptr)	( (sdReference *) (ptr) )
+#define SDPOINTER(ptr)		( (sdPointer *) (ptr) )
 
-struct sdrl_number {
-	struct sdrl_value value;
+typedef struct sdNumber sdNumber;
+typedef struct sdString sdString;
+typedef struct sdReference sdReference;
+typedef struct sdPointer sdPointer;
+
+struct sdNumber {
+	sdValue value;
 	number_t num;
 };
 
-struct sdrl_string {
-	struct sdrl_value value;
+struct sdString {
+	sdValue value;
 	int len;
 	char *str;
 };
 
-struct sdrl_reference {
-	struct sdrl_value value;
-	struct sdrl_value *ref;
+struct sdReference {
+	sdValue value;
+	sdValue *ref;
 };
 
-struct sdrl_pointer {
-	struct sdrl_value value;
+struct sdPointer {
+	sdValue value;
 	void *ptr;
 };
 
-struct sdrl_type *sdrl_make_number_type(void);
-struct sdrl_value *sdrl_make_number(struct sdrl_heap *, struct sdrl_type *, number_t);
-struct sdrl_value *sdrl_duplicate_number(struct sdrl_machine *, struct sdrl_number *);
+sdType *sdrl_make_number_type(void);
+sdValue *sdrl_make_number(sdHeap *, sdType *, number_t);
+sdValue *sdrl_duplicate_number(sdMachine *, sdNumber *);
 
-struct sdrl_type *sdrl_make_string_type(void);
-struct sdrl_value *sdrl_make_string(struct sdrl_heap *, struct sdrl_type *, const char *, int);
-struct sdrl_value *sdrl_duplicate_string(struct sdrl_machine *, struct sdrl_string *);
+sdType *sdrl_make_string_type(void);
+sdValue *sdrl_make_string(sdHeap *, sdType *, const char *, int);
+sdValue *sdrl_duplicate_string(sdMachine *, sdString *);
 
-struct sdrl_value *sdrl_make_reference(struct sdrl_heap *, struct sdrl_type *, struct sdrl_value *);
-int sdrl_destroy_reference(struct sdrl_reference *);
-struct sdrl_value *sdrl_duplicate_reference(struct sdrl_machine *, struct sdrl_reference *);
+sdValue *sdrl_make_reference(sdHeap *, sdType *, sdValue *);
+int sdrl_destroy_reference(sdReference *);
+sdValue *sdrl_duplicate_reference(sdMachine *, sdReference *);
 
-struct sdrl_value *sdrl_make_pointer(struct sdrl_heap *, struct sdrl_type *, void *);
-struct sdrl_value *sdrl_duplicate_pointer(struct sdrl_machine *, struct sdrl_pointer *);
+sdValue *sdrl_make_pointer(sdHeap *, sdType *, void *);
+sdValue *sdrl_duplicate_pointer(sdMachine *, sdPointer *);
 
-struct sdrl_type *sdrl_make_expression_type(void);
-struct sdrl_type *sdrl_make_environment_type(void);
+sdType *sdrl_make_expression_type(void);
+sdType *sdrl_make_environment_type(void);
 
 
-static inline number_t sdrl_check_number(struct sdrl_machine *mach, struct sdrl_value *cur, short basetype, struct sdrl_type *type) {
+static inline number_t sdrl_check_number(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
 	if (!cur) {
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		return(0);
@@ -66,10 +71,10 @@ static inline number_t sdrl_check_number(struct sdrl_machine *mach, struct sdrl_
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(0);
 	}
-	return(SDRL_NUMBER(cur)->num);
+	return(SDNUMBER(cur)->num);
 }
 
-static inline const char *sdrl_check_string(struct sdrl_machine *mach, struct sdrl_value *cur, short basetype, struct sdrl_type *type) {
+static inline const char *sdrl_check_string(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
 	if (!cur) {
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		return(NULL);
@@ -78,10 +83,10 @@ static inline const char *sdrl_check_string(struct sdrl_machine *mach, struct sd
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
-	return(SDRL_STRING(cur)->str);
+	return(SDSTRING(cur)->str);
 }
 
-static inline void *sdrl_check_pointer(struct sdrl_machine *mach, struct sdrl_value *cur, short basetype, struct sdrl_type *type) {
+static inline void *sdrl_check_pointer(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
 	if (!cur) {
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		return(NULL);
@@ -90,10 +95,10 @@ static inline void *sdrl_check_pointer(struct sdrl_machine *mach, struct sdrl_va
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
-	return(SDRL_POINTER(cur)->ptr);
+	return(SDPOINTER(cur)->ptr);
 }
 
-static inline int sdrl_check_end(struct sdrl_machine *mach, struct sdrl_value *cur) {
+static inline int sdrl_check_end(sdMachine *mach, sdValue *cur) {
 	if (!cur)
 		return(0);
 	SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);

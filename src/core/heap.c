@@ -8,25 +8,27 @@
 #include <stdlib.h>
 #include <sdrl/core/heap.h>
 
-struct sdrl_heap_entry {
-	struct sdrl_heap_entry *next;
-	struct sdrl_heap_entry *prev;
+typedef struct sdHeapEntry sdHeapEntry;
+
+struct sdHeapEntry {
+	sdHeapEntry *next;
+	sdHeapEntry *prev;
 };
 
-struct sdrl_heap {
-	struct sdrl_heap_entry node;		/** This is an actual node */
+struct sdHeap {
+	sdHeapEntry node;		/** This is an actual node */
 };
 
-static void sdrl_heap_report(struct sdrl_heap *heap);
+static void sdrl_heap_report(sdHeap *heap);
 
 /**
  * Create a new heap for objects of the given size using the given page size.
  */
-struct sdrl_heap *sdrl_create_heap(void)
+sdHeap *sdrl_create_heap(void)
 {
-	struct sdrl_heap *heap;
+	sdHeap *heap;
 
-	if (!(heap = (struct sdrl_heap *) malloc(sizeof(struct sdrl_heap))))
+	if (!(heap = (sdHeap *) malloc(sizeof(sdHeap))))
 		return(NULL);
 	heap->node.prev = NULL;
 	heap->node.next = NULL;
@@ -36,9 +38,9 @@ struct sdrl_heap *sdrl_create_heap(void)
 /**
  * Free all the memory allocated by the heap
  */
-int sdrl_destroy_heap(struct sdrl_heap *heap)
+int sdrl_destroy_heap(sdHeap *heap)
 {
-	struct sdrl_heap_entry *cur, *next;
+	sdHeapEntry *cur, *next;
 
 	if (!heap)
 		return(-1);
@@ -58,11 +60,11 @@ int sdrl_destroy_heap(struct sdrl_heap *heap)
  * Allocate a new object from the heap of the given size and return a pointer
  * to it or NULL if out of memory.
  */
-void *sdrl_heap_alloc(struct sdrl_heap *heap, unsigned int size)
+void *sdrl_heap_alloc(sdHeap *heap, unsigned int size)
 {
-	struct sdrl_heap_entry *entry;
+	sdHeapEntry *entry;
 
-	if (!(entry = (struct sdrl_heap_entry *) malloc(sizeof(struct sdrl_heap_entry) + size)))
+	if (!(entry = (sdHeapEntry *) malloc(sizeof(sdHeapEntry) + size)))
 		return(NULL);
 	/** The heap itself is a node in the list which allows us to free a node
 	    without a pointer to the heap itself. */
@@ -80,9 +82,9 @@ void *sdrl_heap_alloc(struct sdrl_heap *heap, unsigned int size)
  */
 int sdrl_heap_free(void *addr)
 {
-	struct sdrl_heap_entry *entry;
+	sdHeapEntry *entry;
 
-	entry = (struct sdrl_heap_entry *) (((struct sdrl_heap_entry *) addr) - 1);
+	entry = (sdHeapEntry *) (((sdHeapEntry *) addr) - 1);
 	/** Since the heap struct itself is a node and we will obviously never
 	    remove that node from the list, we don't need a pointer to the heap
 	    in order to remove a node.  Therefore, if we encounter a NULL prev
@@ -98,9 +100,9 @@ int sdrl_heap_free(void *addr)
 
 /*** Local Functions ***/
 
-static void sdrl_heap_report(struct sdrl_heap *heap)
+static void sdrl_heap_report(sdHeap *heap)
 {
-	struct sdrl_heap_entry *cur;
+	sdHeapEntry *cur;
 
 	cur = heap->node.next;
 	while (cur) {

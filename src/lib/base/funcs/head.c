@@ -10,7 +10,7 @@
  * Args:	<value>, ...
  * Description:	Returns the first value passed to it.
  */
-int sdrl_base_head(struct sdrl_machine *mach, struct sdrl_value *args)
+int sdrl_base_head(sdMachine *mach, sdValue *args)
 {
 	if (args)
 		mach->ret = sdrl_duplicate_single_value(mach, args);

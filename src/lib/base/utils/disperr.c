@@ -9,7 +9,7 @@
 /**
  * Print an error message based on the error report.
  */
-int sdrl_base_display_error(struct sdrl_error *error)
+int sdrl_base_display_error(sdError *error)
 {
 	if (error->msg)
 		printf("Error %d,%d: %s\n", SDRL_GET_LINE_NUMBER(error->line), SDRL_GET_COLUMN_NUMBER(error->line), error->msg);

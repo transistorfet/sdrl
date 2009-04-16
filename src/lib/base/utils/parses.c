@@ -11,10 +11,10 @@
 /**
  * Parse a string and return an expression given its name and the parser to use.
  */
-struct sdrl_expr *sdrl_base_parse_string(struct sdrl_machine *mach, sdrl_parser_t parser, const char *str, int size)
+sdExpr *sdrl_base_parse_string(sdMachine *mach, sdrl_parser_t parser, const char *str, int size)
 {
-	struct sdrl_expr *expr;
-	struct sdrl_input *input;
+	sdExpr *expr;
+	sdInput *input;
 
 	if (!(input = sdrl_create_input()))
 		return(NULL);

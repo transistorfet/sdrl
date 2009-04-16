@@ -13,31 +13,30 @@
 #define SDRL_EBF_USE_RET		0x0001		/** Pass mach->ret as the second parameter */
 #define SDRL_EBF_PRESERVE_RET		0x0002		/** Don't clear mach->ret before calling function */
 
-struct sdrl_machine;
-typedef int (*sdrl_event_t)(struct sdrl_machine *, ...);
+typedef int (*sdrl_event_t)(sdMachine *, ...);
 
-struct sdrl_event {
+struct sdEvent {
 	int bitflags;
 	sdrl_event_t func;
-	struct sdrl_value *arg;
-	struct sdrl_environment *env;
-	struct sdrl_event *next;
+	sdValue *arg;
+	sdEnv *env;
+	sdEvent *next;
 };
 
-struct sdrl_continuation {
-	struct sdrl_event *top;
+struct sdCont {
+	sdEvent *top;
 };
 
-struct sdrl_continuation *sdrl_create_continuation(void);
-int sdrl_destroy_continuation(struct sdrl_continuation *);
+sdCont *sdrl_create_continuation(void);
+int sdrl_destroy_continuation(sdCont *);
 
-struct sdrl_event *sdrl_make_event(int, sdrl_event_t, struct sdrl_value *, struct sdrl_environment *);
-int sdrl_destroy_event(struct sdrl_event *);
-int sdrl_push_event(struct sdrl_continuation *, struct sdrl_event *);
-struct sdrl_event *sdrl_pop_event(struct sdrl_continuation *);
-struct sdrl_event *sdrl_peek_event(struct sdrl_continuation *);
+sdEvent *sdrl_make_event(int, sdrl_event_t, sdValue *, sdEnv *);
+int sdrl_destroy_event(sdEvent *);
+int sdrl_push_event(sdCont *, sdEvent *);
+sdEvent *sdrl_pop_event(sdCont *);
+sdEvent *sdrl_peek_event(sdCont *);
 
-int sdrl_count_events(struct sdrl_continuation *);
+int sdrl_count_events(sdCont *);
 
 #endif
 

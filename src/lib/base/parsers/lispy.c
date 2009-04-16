@@ -13,12 +13,12 @@
 #define LISPY_MAX_NUMBER		128
 #define LISPY_MAX_STRING		1024
 
-static struct sdrl_expr *lispy_parse_input(struct sdrl_type *, int, struct sdrl_input *);
-static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *, int, struct sdrl_input *);
-static struct sdrl_expr *lispy_parse_number(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
-static struct sdrl_expr *lispy_parse_string(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
-static struct sdrl_expr *lispy_parse_identifier(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
-static int lispy_get_next_char(struct sdrl_input *);
+static sdExpr *lispy_parse_input(sdType *, int, sdInput *);
+static sdExpr *lispy_parse_expr(sdType *, int, sdInput *);
+static sdExpr *lispy_parse_number(sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lispy_parse_string(sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lispy_parse_identifier(sdType *, sdInput *, char, linenumber_t);
+static int lispy_get_next_char(sdInput *);
 static inline int lispy_is_identifier(char);
 static inline int lispy_is_digit(char);
 static inline int lispy_is_whitespace(char);
@@ -28,9 +28,9 @@ static inline char lispy_escape_char(char);
 /**
  * Parse the input stream until EOF and return the expression tree
  */
-struct sdrl_expr *sdrl_base_parse_lispy_input(struct sdrl_machine *mach, struct sdrl_input *input)
+sdExpr *sdrl_base_parse_lispy_input(sdMachine *mach, sdInput *input)
 {
-	struct sdrl_type *expr_type;
+	sdType *expr_type;
 
 	if (!(expr_type = sdrl_find_binding(mach->type_env, "*expr*")))
 		return(NULL);
@@ -42,9 +42,9 @@ struct sdrl_expr *sdrl_base_parse_lispy_input(struct sdrl_machine *mach, struct 
 /**
  * Parse input stream.
  */
-struct sdrl_expr *lispy_parse_input(struct sdrl_type *type, int openfunc, struct sdrl_input *input)
+sdExpr *lispy_parse_input(sdType *type, int openfunc, sdInput *input)
 {
-	struct sdrl_expr *head, *cur;
+	sdExpr *head, *cur;
 
 	head = cur = lispy_parse_expr(type, openfunc, input);
 	while (cur) {
@@ -57,11 +57,11 @@ struct sdrl_expr *lispy_parse_input(struct sdrl_type *type, int openfunc, struct
 /**
  * Parse a single expression.
  */
-static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *type, int openfunc, struct sdrl_input *input)
+static sdExpr *lispy_parse_expr(sdType *type, int openfunc, sdInput *input)
 {
 	char ch;
 	linenumber_t line;
-	struct sdrl_expr *expr;
+	sdExpr *expr;
 
 	line = sdrl_get_linenumber(input);
 	ch = lispy_get_next_char(input);
@@ -95,7 +95,7 @@ static struct sdrl_expr *lispy_parse_expr(struct sdrl_type *type, int openfunc, 
 	return(expr);
 }
 
-static struct sdrl_expr *lispy_parse_number(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
+static sdExpr *lispy_parse_number(sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i = 0;
 	char buffer[LISPY_MAX_NUMBER];
@@ -112,7 +112,7 @@ static struct sdrl_expr *lispy_parse_number(struct sdrl_type *type, struct sdrl_
 	return(sdrl_make_number_expr(type, SDRL_ET_NUMBER, line, strtod(buffer, NULL), NULL));
 }
 
-static struct sdrl_expr *lispy_parse_string(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
+static sdExpr *lispy_parse_string(sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i;
 	char ch;
@@ -131,7 +131,7 @@ static struct sdrl_expr *lispy_parse_string(struct sdrl_type *type, struct sdrl_
 	return(sdrl_make_string_expr(type, SDRL_ET_STRING, line, buffer, NULL));
 }
 
-static struct sdrl_expr *lispy_parse_identifier(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
+static sdExpr *lispy_parse_identifier(sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i;
 	char buffer[LISPY_MAX_STRING];
@@ -147,7 +147,7 @@ static struct sdrl_expr *lispy_parse_identifier(struct sdrl_type *type, struct s
 	return(sdrl_make_string_expr(type, SDRL_ET_IDENTIFIER, line, buffer, NULL));
 }
 
-static int lispy_get_next_char(struct sdrl_input *input)
+static int lispy_get_next_char(sdInput *input)
 {
 	char ch;
 

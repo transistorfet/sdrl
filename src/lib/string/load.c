@@ -10,9 +10,9 @@
 /**
  * Load all of the forms, funcs and types into the given machine.
  */
-int sdrl_load_string(struct sdrl_machine *mach)
+int sdrl_load_string(sdMachine *mach)
 {
-	struct sdrl_type *func;
+	sdType *func;
 
 	if (!(func = sdrl_find_binding(mach->type_env, "func")))
 		return(-1);

@@ -1,4 +1,12 @@
 
+current:	* Renamed "builtins" to "funcs"
+		* Added a string manipulation library
+		* Modified environments to use a hashtable
+		* Modified the heap to just track memory for now
+		* Removed the "Exited Normally" message
+		* Added perl script to generate Makefiles
+		* ...
+
 v0.3:		* Changed bindings to store void * instead of specific struct pointers
 		* Changed bindings function names
 		* Added event.c continuation manager

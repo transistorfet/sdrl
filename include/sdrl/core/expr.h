@@ -19,24 +19,24 @@
 #define SDRL_ET_IDENTIFIER	0x2002
 #define SDRL_ET_CALL		0x4001
 
-struct sdrl_expr {
-	struct sdrl_value value;
+struct sdExpr {
+	sdValue value;
 	int type;
 	linenumber_t line;
 	union {
 		number_t num;
 		char *str;
-		struct sdrl_expr *expr;
+		sdExpr *expr;
 	} data;
 	// TODO should you use the value's next member instead?
-	struct sdrl_expr *next;
+	sdExpr *next;
 };
 
-struct sdrl_expr *sdrl_make_number_expr(struct sdrl_type *, int, linenumber_t, number_t, struct sdrl_expr *);
-struct sdrl_expr *sdrl_make_string_expr(struct sdrl_type *, int, linenumber_t, const char *, struct sdrl_expr *);
-struct sdrl_expr *sdrl_make_call_expr(struct sdrl_type *, int, linenumber_t, struct sdrl_expr *, struct sdrl_expr *);
-struct sdrl_expr *sdrl_duplicate_expr(struct sdrl_expr *);
-int sdrl_destroy_expr(struct sdrl_expr *);
+sdExpr *sdrl_make_number_expr(sdType *, int, linenumber_t, number_t, sdExpr *);
+sdExpr *sdrl_make_string_expr(sdType *, int, linenumber_t, const char *, sdExpr *);
+sdExpr *sdrl_make_call_expr(sdType *, int, linenumber_t, sdExpr *, sdExpr *);
+sdExpr *sdrl_duplicate_expr(sdExpr *);
+int sdrl_destroy_expr(sdExpr *);
 
 #endif
 

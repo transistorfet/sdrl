@@ -7,10 +7,10 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-struct sdrl_type *sdrl_base_make_list_type(struct sdrl_machine *mach)
+sdType *sdrl_base_make_list_type(sdMachine *mach)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_reference),
+		sizeof(sdReference),
 		0,
 		SDRL_BT_REFERENCE,
 		(sdrl_create_t) sdrl_base_create_list,
@@ -20,7 +20,7 @@ struct sdrl_type *sdrl_base_make_list_type(struct sdrl_machine *mach)
 	));
 }
 
-struct sdrl_value *sdrl_base_create_list(struct sdrl_machine *mach, struct sdrl_type *type, struct sdrl_value *args)
+sdValue *sdrl_base_create_list(sdMachine *mach, sdType *type, sdValue *args)
 {
 	return(sdrl_make_reference(mach->heap, type, args));
 }

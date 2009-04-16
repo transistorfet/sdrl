@@ -4,6 +4,7 @@
  */
 
 #include <stdio.h>
+#include <string.h>
 
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/io.h>
@@ -13,12 +14,14 @@
 char *infile = NULL;
 
 int parse_cmdline(int, char **);
-int print_result(struct sdrl_machine *, int);
+int print_result(sdMachine *, int);
+
+static int convert_ast(sdExpr *expr);
 
 int main(int argc, char **argv)
 {
-	struct sdrl_expr *code;
-	struct sdrl_machine *mach;
+	sdExpr *code;
+	sdMachine *mach;
 
 	if (parse_cmdline(argc, argv)) {
 		printf("Usage: %s [infile]\n", argv[0]);
@@ -41,7 +44,8 @@ int main(int argc, char **argv)
 	}
 
 	//sdrl_base_display_expr(code);
-	sdrl_add_binding(mach->env, "*globals*", sdrl_make_reference(mach->heap, sdrl_find_binding(mach->type_env, "env"), SDRL_VALUE(mach->env)));
+	sdrl_add_binding(mach->env, "*globals*", sdrl_make_reference(mach->heap, sdrl_find_binding(mach->type_env, "env"), SDVALUE(mach->env)));
+	convert_ast(code);
 	print_result(mach, sdrl_evaluate(mach, code));
 
 	sdrl_destroy_machine(mach);
@@ -76,7 +80,7 @@ int parse_cmdline(int argc, char **argv)
 
 }
 
-int print_result(struct sdrl_machine *mach, int exitcode)
+int print_result(sdMachine *mach, int exitcode)
 {
 	if (mach->error) {
 		printf("\n");
@@ -86,4 +90,55 @@ int print_result(struct sdrl_machine *mach, int exitcode)
 		printf("\nInternal Error %d\n", exitcode);
 	return(exitcode);
 }
+
+static int convert_ast(sdExpr *expr)
+{
+	sdExpr *call;
+
+	for (; expr; expr = expr->next) {
+		if (expr->type == SDRL_ET_CALL && (call = expr->data.expr) && call->type == SDRL_ET_STRING) {
+			if (!strcmp(call->data.str, "if")) {
+				// TODO check that there are exactly 2 or 3 argument expressions
+				// TODO convert call into (if <arg1> (code <arg2>) (code <arg3))
+				//if (!(expr = sdrl_make_string_expr(type, SDRL_ET_STRING, line, "$", expr))
+				//    || !(expr = sdrl_make_call_expr(type, SDRL_ET_CALL, line, expr, NULL)))
+				//	return(NULL);
+			}
+		}
+	}
+	return(0);
+}
+
+/*
+void init_macros(sdMachine *mach)
+{
+	sdType *expr_type;
+
+	if (!(expr_type = sdrl_find_binding(mach->type_env, "*expr*")))
+		return;
+	sdrl_add_macro("if", 2, 3,
+		sdrl_make_call_expr(type, SDRL_ET_CALL, 0, sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "if", sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "$1",
+			sdrl_make_call_expr(type, SDRL_ET_CALL, 0, sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "code", sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "$2", NULL)),
+				sdrl_make_call_expr(type, SDRL_ET_CALL, 0, sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "code", sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "$3", NULL)), NULL)
+			), NULL),
+		), NULL)
+	);
+}
+*/
+
+//struct sdrl_macro *macros = {
+//	{ "if", 2, 3, /* (if $1 (code $2) (code $3)) how do we record this? */ },
+//	{ "defun", 2, -1, /* (set $1 (dynblock (set $2 ($ _)) $...) */ }
+//};
+
+
+/*
+	(defmacro if (code
+		(if $1 (code $2) (code $3))))
+
+	// TODO how do you convert $2 from (n1 n2 ...) to (list n1 n2 ...)
+	// $: is assumed to be the remaining arguments
+	(defmacro defun (code
+		(set $1 (dynblock (setlist $2 ($ _)) $:))))
+*/
 

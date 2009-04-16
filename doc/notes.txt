@@ -2,6 +2,17 @@
 
 References:
 
+2009/04/14:
+
+The type system, by allocating a type struct for each type, allows for easy checking of identical types.
+For example, you have a bunch of structs in a program that embeds the interpreter which you pass back and
+forth from SDRL code using an sdrl_pointer type.  By having a different type struct for each type of pointer,
+you can easily compare the type of the value with a certain type struct and be sure that the stored pointer
+in the value is pointing to a certain type of struct without the need for making a special type for each
+struct.  You just need to do an sdrl_add_pointer_type("thing1"), sdrl_add_pointer_type("thing2"), etc.
+
+--------------------------------------------------------------------------------------------------------------
+
 All functions that return a pointer transfer ownership of that reference to the
 caller.  All functions that take a pointer assume that the reference is
 borrowed and that the caller is responsible for the reference unless otherwise
@@ -32,7 +43,7 @@ stated.  The following functions steal ownership of references:
 	sdrl_merge_return
 
 	
-	
+--------------------------------------------------------------------------------------------------------------
 
 SDRL 0.1 NOTES:
 

@@ -12,11 +12,11 @@
 /**
  * Make a new generic sdrl type.
  */
-struct sdrl_type *sdrl_make_type(int size, short bitflags, short basetype, sdrl_create_t create, sdrl_destroy_t destroy, sdrl_duplicate_t duplicate, sdrl_evaluate_t evaluate)
+sdType *sdrl_make_type(int size, short bitflags, short basetype, sdrl_create_t create, sdrl_destroy_t destroy, sdrl_duplicate_t duplicate, sdrl_evaluate_t evaluate)
 {
-	struct sdrl_type *type;
+	sdType *type;
 
-	if (!(type = (struct sdrl_type *) malloc(sizeof(struct sdrl_type))))
+	if (!(type = (sdType *) malloc(sizeof(sdType))))
 		return(NULL);
 	type->size = size;
 	type->bitflags = bitflags;
@@ -31,7 +31,7 @@ struct sdrl_type *sdrl_make_type(int size, short bitflags, short basetype, sdrl_
 /**
  * Frees resources used by type.
  */
-int sdrl_destroy_type(struct sdrl_type *type)
+int sdrl_destroy_type(sdType *type)
 {
 	free(type);
 	return(0);

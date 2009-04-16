@@ -10,10 +10,10 @@
  * Args:	<value>, ...
  * Description:	Returns 1 if number value is not equal to eachother, 0 otherwise.
  */
-int sdrl_base_not_equals(struct sdrl_machine *mach, struct sdrl_value *args)
+int sdrl_base_not_equals(sdMachine *mach, sdValue *args)
 {
 	number_t result = 1;
-	struct sdrl_value *cur;
+	sdValue *cur;
 
 	if (!args)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
@@ -22,7 +22,7 @@ int sdrl_base_not_equals(struct sdrl_machine *mach, struct sdrl_value *args)
 	for (cur = args->next; cur; cur = cur->next) {
 		if (cur->type->basetype != SDRL_BT_NUMBER)
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-		if (SDRL_NUMBER(cur)->num == SDRL_NUMBER(args)->num) {
+		if (SDNUMBER(cur)->num == SDNUMBER(args)->num) {
 			result = 0;
 			break;
 		}

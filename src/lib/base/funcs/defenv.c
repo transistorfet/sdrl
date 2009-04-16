@@ -10,9 +10,9 @@
  * Args:	<value>, ...
  * Description:	Returns a value pointing to a newly created environment.
  */
-int sdrl_base_defenv(struct sdrl_machine *mach, struct sdrl_value *args)
+int sdrl_base_defenv(sdMachine *mach, sdValue *args)
 {
-	struct sdrl_type *type;
+	sdType *type;
 
 	if (!(type = sdrl_find_binding(mach->type_env, "env")))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));

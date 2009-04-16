@@ -10,7 +10,7 @@
  * Args:	<value>, ...
  * Description:	Returns the values passed to it (as a single list).
  */
-int sdrl_base_array(struct sdrl_machine *mach, struct sdrl_value *args)
+int sdrl_base_array(sdMachine *mach, sdValue *args)
 {
 	mach->ret = SDRL_MAKE_REFERENCE(args);
 	return(0);

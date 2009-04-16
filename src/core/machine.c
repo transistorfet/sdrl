@@ -18,17 +18,17 @@
 #include <sdrl/core/basetypes.h>
 #include <sdrl/globals.h>
 
-static int sdrl_machine_merge_return(struct sdrl_machine *, struct sdrl_value *);
+static int sdrl_machine_merge_return(sdMachine *, sdValue *);
 
 /**
  * Create a machine for executing code
  */
-struct sdrl_machine *sdrl_create_machine(void)
+sdMachine *sdrl_create_machine(void)
 {
-	struct sdrl_type *type;
-	struct sdrl_machine *mach;
+	sdType *type;
+	sdMachine *mach;
 
-	if (!(mach = (struct sdrl_machine *) malloc(sizeof(struct sdrl_machine))))
+	if (!(mach = (sdMachine *) malloc(sizeof(sdMachine))))
 		return(NULL);
 	mach->current_line = 0;
 	mach->ret = NULL;
@@ -62,7 +62,7 @@ struct sdrl_machine *sdrl_create_machine(void)
 /**
  * Free the resources allocated to mach
  */
-int sdrl_destroy_machine(struct sdrl_machine *mach)
+int sdrl_destroy_machine(sdMachine *mach)
 {
 	sdrl_destroy_value(mach->ret);
 	sdrl_destroy_continuation(mach->cont);
@@ -78,12 +78,12 @@ int sdrl_destroy_machine(struct sdrl_machine *mach)
 /**
  * Evaluate all the exprs in the list, expr.
  */
-int sdrl_evaluate(struct sdrl_machine *mach, struct sdrl_expr *expr)
+int sdrl_evaluate(sdMachine *mach, sdExpr *expr)
 {
 	int ret = 0;
-	struct sdrl_event *event;
+	sdEvent *event;
 
-	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, SDRL_VALUE(expr), mach->env)))
+	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr), mach->env)))
 		return(SDRL_ERROR(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 	do {
 		ret = sdrl_evaluate_event(mach, event);
@@ -100,10 +100,10 @@ int sdrl_evaluate(struct sdrl_machine *mach, struct sdrl_expr *expr)
 /**
  * Evaluate the continuation event by calling the event function
  */
-int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
+int sdrl_evaluate_event(sdMachine *mach, sdEvent *event)
 {
 	int ret = 0;
-	struct sdrl_value *args;
+	sdValue *args;
 
 	SDRL_DESTROY_REFERENCE(mach->env);
 	mach->env = SDRL_MAKE_REFERENCE(event->env);
@@ -122,12 +122,12 @@ int sdrl_evaluate_event(struct sdrl_machine *mach, struct sdrl_event *event)
 /**
  * Evaluate the list of exprs
  */
-int sdrl_evaluate_expr_list(struct sdrl_machine *mach, struct sdrl_expr *expr)
+int sdrl_evaluate_expr_list(sdMachine *mach, sdExpr *expr)
 {
 	if (!expr)
 		return(0);
 	else if (expr->next)
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, SDRL_VALUE(expr->next), mach->env));
+		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr->next), mach->env));
 	return(sdrl_evaluate_expr(mach, expr));
 }
 
@@ -135,9 +135,9 @@ int sdrl_evaluate_expr_list(struct sdrl_machine *mach, struct sdrl_expr *expr)
  * Evaluate the single sdrl_expr and either return 0 with the result
  * stored in sdrl_machine.ret or return an error code.
  */
-int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
+int sdrl_evaluate_expr(sdMachine *mach, sdExpr *expr)
 {
-	struct sdrl_value *func;
+	sdValue *func;
 
 	SDRL_DESTROY_REFERENCE(mach->ret);
 	mach->ret = NULL;
@@ -158,16 +158,16 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
 			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str)))
 				return(SDRL_ERROR(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
 			else if (func->type->evaluate && SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS))
-				return(func->type->evaluate(mach, func, SDRL_VALUE(expr->data.expr->next)));
+				return(func->type->evaluate(mach, func, SDVALUE(expr->data.expr->next)));
 			else {
 				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, func, mach->env));
-				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDRL_VALUE(expr->data.expr->next), mach->env));
+				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDVALUE(expr->data.expr->next), mach->env));
 				return(0);
 			}
 		}
 		else if (expr->data.expr->type == SDRL_ET_CALL) {
 			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, NULL, mach->env));
-			sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDRL_VALUE(expr->data.expr), mach->env));
+			sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDVALUE(expr->data.expr), mach->env));
 			return(0);
 		}
 		else
@@ -182,7 +182,7 @@ int sdrl_evaluate_expr(struct sdrl_machine *mach, struct sdrl_expr *expr)
  * Call the function stored in the value and set the result
  * in mach->ret or store a duplicate of the value if it is not executable
  */
-int sdrl_evaluate_value(struct sdrl_machine *mach, struct sdrl_value *func, struct sdrl_value *args)
+int sdrl_evaluate_value(sdMachine *mach, sdValue *func, sdValue *args)
 {
 	int ret = 0;
 
@@ -216,15 +216,15 @@ int sdrl_evaluate_value(struct sdrl_machine *mach, struct sdrl_value *func, stru
 /**
  * Evaluate all the exprs and build a list of the corresponding return values.
  */
-int sdrl_evaluate_args(struct sdrl_machine *mach, struct sdrl_expr *exprs)
+int sdrl_evaluate_args(sdMachine *mach, sdExpr *exprs)
 {
 	if (!exprs)
 		return(0);
 	if (exprs->next)
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDRL_VALUE(exprs->next), mach->env));
+		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDVALUE(exprs->next), mach->env));
 	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_machine_merge_return, mach->ret, mach->env));
 	mach->ret = NULL;
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr, SDRL_VALUE(exprs), mach->env));
+	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr, SDVALUE(exprs), mach->env));
 	return(0);
 }
 
@@ -234,7 +234,7 @@ int sdrl_evaluate_args(struct sdrl_machine *mach, struct sdrl_expr *exprs)
  * Append the current value of mach->ret to the end of ret and store the whole
  * thing in mach->ret.
  */
-static int sdrl_machine_merge_return(struct sdrl_machine *mach, struct sdrl_value *ret)
+static int sdrl_machine_merge_return(sdMachine *mach, sdValue *ret)
 {
 	sdrl_push_value(&ret, mach->ret);
 	mach->ret = ret;

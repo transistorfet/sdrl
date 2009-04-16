@@ -7,10 +7,10 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-struct sdrl_type *sdrl_base_make_env_type(struct sdrl_machine *mach)
+sdType *sdrl_base_make_env_type(sdMachine *mach)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_reference),
+		sizeof(sdReference),
 		0,
 		SDRL_BT_REFERENCE,
 		(sdrl_create_t) sdrl_base_create_env,
@@ -20,10 +20,10 @@ struct sdrl_type *sdrl_base_make_env_type(struct sdrl_machine *mach)
 	));
 }
 
-struct sdrl_value *sdrl_base_create_env(struct sdrl_machine *mach, struct sdrl_type *type, struct sdrl_value *args)
+sdValue *sdrl_base_create_env(sdMachine *mach, sdType *type, sdValue *args)
 {
-	struct sdrl_type *env_type;
-	struct sdrl_environment *env;
+	sdEnv *env;
+	sdType *env_type;
 
 	if (!args) {
 		if (!(env_type = sdrl_find_binding(mach->type_env, "*env*")))
@@ -35,8 +35,8 @@ struct sdrl_value *sdrl_base_create_env(struct sdrl_machine *mach, struct sdrl_t
 		return(NULL);
 	}
 	else
-		env = sdrl_extend_environment((struct sdrl_environment *) SDRL_REFERENCE(args)->ref);
-	return(sdrl_make_reference(mach->heap, type, SDRL_VALUE(env)));
+		env = sdrl_extend_environment(SDENV(SDREFERENCE(args)->ref));
+	return(sdrl_make_reference(mach->heap, type, SDVALUE(env)));
 }
 
 

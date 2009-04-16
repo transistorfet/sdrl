@@ -14,11 +14,11 @@
 /**
  * Create a new continuation stack for sdrl_events.
  */
-struct sdrl_continuation *sdrl_create_continuation(void)
+sdCont *sdrl_create_continuation(void)
 {
-	struct sdrl_continuation *cont;
+	sdCont *cont;
 
-	if (!(cont = (struct sdrl_continuation *) malloc(sizeof(struct sdrl_continuation))))
+	if (!(cont = (sdCont *) malloc(sizeof(sdCont))))
 		return(NULL);
 	cont->top = NULL;
 	return(cont);
@@ -27,9 +27,9 @@ struct sdrl_continuation *sdrl_create_continuation(void)
 /**
  * Free the resources allocated to the continuation stack.
  */
-int sdrl_destroy_continuation(struct sdrl_continuation *cont)
+int sdrl_destroy_continuation(sdCont *cont)
 {
-	struct sdrl_event *cur, *tmp;
+	sdEvent *cur, *tmp;
 
 	if (!cont)
 		return(-1);
@@ -47,11 +47,11 @@ int sdrl_destroy_continuation(struct sdrl_continuation *cont)
 /**
  * Allocate and initialize a new sdrl_event (to be added to a continuation).
  */
-struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, struct sdrl_value *arg, struct sdrl_environment *env)
+sdEvent *sdrl_make_event(int bitflags, sdrl_event_t func, sdValue *arg, sdEnv *env)
 {
-	struct sdrl_event *event;
+	sdEvent *event;
 
-	if (!(event = (struct sdrl_event *) malloc(sizeof(struct sdrl_event))))
+	if (!(event = (sdEvent *) malloc(sizeof(sdEvent))))
 		return(NULL);
 	event->bitflags = bitflags;
 	event->func = func;
@@ -65,7 +65,7 @@ struct sdrl_event *sdrl_make_event(int bitflags, sdrl_event_t func, struct sdrl_
 /**
  * Free the resources used by an sdrl_event
  */
-int sdrl_destroy_event(struct sdrl_event *event)
+int sdrl_destroy_event(sdEvent *event)
 {
 	if (event) {
 		SDRL_DESTROY_REFERENCE(event->arg);
@@ -78,7 +78,7 @@ int sdrl_destroy_event(struct sdrl_event *event)
 /**
  * Push an sdrl_event onto the top of a continuation stack.
  */
-int sdrl_push_event(struct sdrl_continuation *cont, struct sdrl_event *event)
+int sdrl_push_event(sdCont *cont, sdEvent *event)
 {
 	event->next = cont->top;
 	cont->top = event;
@@ -88,9 +88,9 @@ int sdrl_push_event(struct sdrl_continuation *cont, struct sdrl_event *event)
 /**
  * Pop an sdrl_event off the top of a continuation stack.
  */
-struct sdrl_event *sdrl_pop_event(struct sdrl_continuation *cont)
+sdEvent *sdrl_pop_event(sdCont *cont)
 {
-	struct sdrl_event *event;
+	sdEvent *event;
 
 	if (!cont->top)
 		return(NULL);
@@ -103,7 +103,7 @@ struct sdrl_event *sdrl_pop_event(struct sdrl_continuation *cont)
 /**
  * Return the sdrl_event on the top of the continuation stack.
  */
-struct sdrl_event *sdrl_peek_event(struct sdrl_continuation *cont)
+sdEvent *sdrl_peek_event(sdCont *cont)
 {
 	if (!cont->top)
 		return(NULL);
@@ -113,10 +113,10 @@ struct sdrl_event *sdrl_peek_event(struct sdrl_continuation *cont)
 /**
  * Count the number of events on the continuation.
  */
-int sdrl_count_events(struct sdrl_continuation *cont)
+int sdrl_count_events(sdCont *cont)
 {
 	int i = 0;
-	struct sdrl_event *cur;
+	sdEvent *cur;
 
 	cur = cont->top;
 	while (cur) {

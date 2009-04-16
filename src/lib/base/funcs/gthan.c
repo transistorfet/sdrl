@@ -10,10 +10,10 @@
  * Args:	<value>, ...
  * Description:	Returns 1 if number value are greater than eachother, 0 otherwise.
  */
-int sdrl_base_greater_than(struct sdrl_machine *mach, struct sdrl_value *args)
+int sdrl_base_greater_than(sdMachine *mach, sdValue *args)
 {
 	number_t result = 1;
-	struct sdrl_value *cur, *prev;
+	sdValue *cur, *prev;
 
 	if (!args)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
@@ -23,7 +23,7 @@ int sdrl_base_greater_than(struct sdrl_machine *mach, struct sdrl_value *args)
 	for (cur = args->next; cur; cur = cur->next) {
 		if (cur->type->basetype != SDRL_BT_NUMBER)
 			return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-		if (SDRL_NUMBER(prev)->num <= SDRL_NUMBER(cur)->num) {
+		if (SDNUMBER(prev)->num <= SDNUMBER(cur)->num) {
 			result = 0;
 			break;
 		}

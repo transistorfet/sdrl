@@ -18,7 +18,7 @@
 #define SDRL_ES_LOW		4
 #define SDRL_ES_WARNING		5
 
-struct sdrl_error {
+struct sdError {
 	linenumber_t line;
 	short bitflags;
 	short severity;
@@ -26,9 +26,9 @@ struct sdrl_error {
 	const char *msg;
 };
 
-struct sdrl_error *sdrl_make_error(linenumber_t, short, int, const char *);
-int sdrl_destroy_error(struct sdrl_error *);
-struct sdrl_error *sdrl_duplicate_error(struct sdrl_error *);
+sdError *sdrl_make_error(linenumber_t, short, int, const char *);
+int sdrl_destroy_error(sdError *);
+sdError *sdrl_duplicate_error(sdError *);
 
 #endif
 

@@ -1,27 +1,47 @@
 
-	* write an IRC client/bot that uses SDRL quite integrally 
+	* why is there expr and env types in the base library?
+	* change SDRL_MAKE_REFERENCE (and DESTROY) to something shorter? (SDRL_MAKEREF or SDRL_INCREF)
+	* should SDRL_ERROR become an actual function, sdrl_set_error or sdrl_throw_error or somethnig
+	* reduce length/verbosity of some function names (as per api.txt?)
+	* make error a value
+	* make '*expr*' and '*env*' into 'expr' and 'env' and make the libbase ones 'exprref' and 'envref'
+
+	* make functions (inlines) for things like sdrl_find_binding that produce an error such that they
+	  can easily be used with SDRL_TRY()
+	* use SDRL_TRY everywhere you can, including the core
+	* can you/should you make a bunch of macros that hide a lot of complexity such as with types
+	  for example, making a macro of the sdrl_check_<type> functions that don't take the type args?
+	* make macros that automagically create and push/unshift/pop/shift values from C values
+	* should sdrl_make_call_expr really by called sdrl_make_expr_expr (despite it's strangity?)
+	* why the fuck is the type set to NULL in the expr make functions!?  What effect does this have?
+	* add cplusplus checks to headers that add an extern "C" { } block
+	* should you remove just the basetype from the conversion functions and check for a fixed basetype
+	  (SDRL_BT_STRING for sdrl_check_string, etc) (since we are casting the value to a certain basetype
+	  anyways).  If you do not remove the basetype, then you will *definitely* need to make a macro that
+	  hides the basetype and type parameters.
+
+	* rewrite lib functions to use the conversion/newfancy funcs
+
+------------
+
 
 	* add AST traversers that convert "if" and various other syntactic "features" into pure "SDRL"
 	  format (verbose).  This prevents the need for a special parser but still has a lot of benifits
 	  and is much more configurable, even though it probably would be slower (a custom parser would be
 	  for speed and for complex syntax)
+	* add a basic object oriented system
 
-	* should the conversion functions take a type at all (instead just check SDRL_BT_NUMBER for example)?
 	* add flags to the machine or something such that a program can change certain (what might be compiled
-	  in atm) options, such as treating "namespace.name" type names as special (causing a recursive
-	  (lookup).
+	  in atm) options, such as treating "namespace.name" type names as special (causing a recursive lookup)
 	* should it be possible to set the parser on the command line or somethnig?
 	* make regression tests to test all aspects of the base library extensively
 	* make (if there isn't one already) a function that takes a string and evaluates it as code
-
-	* add a basic object oriented system
+	* review 'lookup', 'set', & 'setlist' and cleanup
 
 	* make a hash string value (type?) and modify bindings to take a precalculated hash and then
 	  use those functions as often as possible and make language bindings to support it so you can use
 	  the values directly in order to speed up accesses when you know the hash will not otherwise be
 	  preserved
-	* make error a value
-	* review 'lookup', 'set', & 'setlist' and cleanup
 
 	* make string functions: strcmp, uppercase, lowercase
 	* make libraries namespacable
@@ -44,15 +64,11 @@
 
 Refactoring:
 
-	* make names less verbose for easier coding/implementation (use camelcase if it looks weird otherwise)
-	* make '*expr*' and '*env*' into 'expr' and 'env' and make the libbase ones 'exprref' and 'envref'
 	* change the name of bindings.c to env.c (but what do we do about the functions with the name bindings)
-	* should you change the name of type "env" to "envref"? (same with expr)
 	* should retract_environment replace destroy_environment (in name)
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
 	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
-	* should you change SDRL_MAKE_REFERENCE (and DESTROY) to something shorter? (SDRL_MAKEREF)
 	* should you move the number and string types to libbase and move the basetypes into utils?
 
 Tests:
@@ -61,23 +77,41 @@ Tests:
 	* implement a simple regular expression matcher as seen in beautiful code. It is simple, functional,
 	  and more importantly, it needs more builtin functions (the ability to get chars in a string)
 	* a brainfuck interpreter
+	* write an IRC client/bot that uses SDRL quite integrally (rather than as an extension like stutter)
 
 Structural Issues:
 
-	* should things like sdrl_find_binding and other "basic" functions produce (or optionally produce
-	  by way of calling a macro that encapsulates the actual basic function call) an error in the
-	  machine.  This would allow direct use of the SDRL_TRY() macro to test the success of a lookup while
-	  also allowing exception handling in the program for such failures.
+	* should you make types constant like you have done in sdm, stutter, and such? (see notes.txt)
+	* should you have a more robust object system with a proper "init/release" type function for each
+	  type?  It will allow for better inheritance in exchange for a slight performance loss.  There is a
+	  chance we will have problems with environment since the actual struct will first be allocated so
+	  there must be a way, after that's occurred, to create a new env or to extend an existing one.
+	  Another issue is strings.  We currently allocate strings as a single block since strings are not
+	  intended to be *directly* changed, instead a new string value will be created.
+	* a possible way to remove the string and number types from the core (allowing for alternate
+	  implementations) would be change expr to hold either an identifier, a value, or an expr, and
+	  have the parser convert all strings and numbers to values.  The downsides of this is that the
+	  parser would then have to know about the types somehow and also any identifiers in the expr would
+	  not be convertable into strings during interpretation.  One benifit of this however, is the
+	  ability of the parser to directly accept literals for things that are not numbers or strings such
+	  as lists of literals, complex numbers, etc.
+	* is there a benifit to having multiple event stacks?  Perhaps the ability to package up the current
+	  stack when an error has occured and start executing an exception handler function on a completely
+	  different stack.  Another possible use would be in multithreading however it might be more useful
+	  to make a completely different machine structure for each thread and give each machine a reference
+	  to the same global environment in order to achieve the "shared memory" of threads.
+	* should it be possible somehow (perhaps it's undesirable) to directly make new "types" via the
+	  language itself, as opposed to making "types" via an environment-based object system?  Is this
+	  even useful since the benifit to types is mostly in C.  Does this also mean that it's actually
+	  better to have *fewer* C-based types since we need extra support functions for manipulating them?
 	* what do you do if a value being applied/evaluated is non-executable (does not have an evaluate
 	  function in it's type)?  Should you just return the value?  Should it be an error?  This "feature"
 	  is exploited by "if" such that it calls its params like a function but if they aren't (code ) blocks,
 	  it expects that the call will result in the value passed being returned.
 	* re-evaluate the reference tracking in the environment functions (extend/retract) particuarily with
 	  respect to the fact that extending mach->env needs to take into account that mach->env's reference
-	  needs to be destoyed.  Should extend steal the environment reference it's given (thus you just need
+	  needs to be destroyed.  Should extend steal the environment reference it's given (thus you just need
 	  to make a reference whenever you extend an env other than mach->env
-	* should we distinguish between bareword strings and quoted strings in exprs which would at least give
-	  us the choice to act differently (ie. always do a lookup on barewords)?
 	* possibly add caching to environments.  The easiest way to allow full caching is to store a bitflag
 	  with a cache entry to signify it as such so that when you destroy the entry, you don't call the
 	  destroy function.  The trouble though is when the original entry is destroyed somehow for some

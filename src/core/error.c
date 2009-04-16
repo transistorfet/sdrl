@@ -29,18 +29,18 @@ static const char *error_msgs[] = {
 	"Divide by zero"
 };
 
-static struct sdrl_error memory_error = { 0, SDRL_EBF_STATIC, 1, SDRL_ERR_OUT_OF_MEMORY, "Out Of Memory" };
+static sdError memory_error = { 0, SDRL_EBF_STATIC, 1, SDRL_ERR_OUT_OF_MEMORY, "Out Of Memory" };
 
 /**
  * Allocate and initialize an error report.
  */
-struct sdrl_error *sdrl_make_error(linenumber_t line, short severity, int err, const char *msg)
+sdError *sdrl_make_error(linenumber_t line, short severity, int err, const char *msg)
 {
-	struct sdrl_error *error;
+	sdError *error;
 
 	if (err == SDRL_ERR_OUT_OF_MEMORY)
 		return(&memory_error);
-	if (!(error = (struct sdrl_error *) malloc(sizeof(struct sdrl_error))))
+	if (!(error = (sdError *) malloc(sizeof(sdError))))
 		return(&memory_error);
 	error->line = line;
 	error->bitflags = 0;
@@ -59,7 +59,7 @@ struct sdrl_error *sdrl_make_error(linenumber_t line, short severity, int err, c
 /**
  * Free the resources of an error report.
  */
-int sdrl_destroy_error(struct sdrl_error *error)
+int sdrl_destroy_error(sdError *error)
 {
 	if (error && !SDRL_BF_IS_SET(error, SDRL_EBF_STATIC))
 		free(error);
@@ -69,11 +69,11 @@ int sdrl_destroy_error(struct sdrl_error *error)
 /**
  * Duplicate the given error report.
  */
-struct sdrl_error *sdrl_duplicate_error(struct sdrl_error *org)
+sdError *sdrl_duplicate_error(sdError *org)
 {
-	struct sdrl_error *error;
+	sdError *error;
 
-	if (!(error = (struct sdrl_error *) malloc(sizeof(struct sdrl_error))))
+	if (!(error = (sdError *) malloc(sizeof(sdError))))
 		return(&memory_error);
 	error->line = org->line;
 	error->bitflags = org->bitflags;
@@ -82,5 +82,4 @@ struct sdrl_error *sdrl_duplicate_error(struct sdrl_error *org)
 	error->msg = org->msg;
 	return(error);
 }
-
 

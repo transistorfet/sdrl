@@ -43,23 +43,29 @@
 
 typedef unsigned int linenumber_t;
 
+// TODO should i change the name of this?
 typedef double number_t;
 
-struct sdrl_heap;
-struct sdrl_expr;
-struct sdrl_type;
-struct sdrl_value;
-struct sdrl_input;
-struct sdrl_machine;
+typedef struct sdEnv sdEnv;
+typedef struct sdCont sdCont;
+typedef struct sdHeap sdHeap;
+typedef struct sdExpr sdExpr;
+typedef struct sdType sdType;
+typedef struct sdError sdError;
+typedef struct sdEvent sdEvent;
+typedef struct sdValue sdValue;
+typedef struct sdInput sdInput;
+typedef struct sdMachine sdMachine;
 
-typedef struct sdrl_value *(*sdrl_create_t)(struct sdrl_machine *mach, struct sdrl_type *type, struct sdrl_value *args);
-typedef int (*sdrl_destroy_t)(struct sdrl_value *value);
-typedef struct sdrl_value *(*sdrl_duplicate_t)(struct sdrl_machine *mach, struct sdrl_value *value);
-typedef int (*sdrl_evaluate_t)(struct sdrl_machine *mach, struct sdrl_value *value, struct sdrl_value *args);
+typedef sdValue *(*sdrl_create_t)(sdMachine *mach, sdType *type, sdValue *args);
+typedef int (*sdrl_destroy_t)(sdValue *value);
+typedef sdValue *(*sdrl_duplicate_t)(sdMachine *mach, sdValue *value);
+typedef int (*sdrl_evaluate_t)(sdMachine *mach, sdValue *value, sdValue *args);
 
-typedef struct sdrl_expr *(*sdrl_parser_t)(struct sdrl_machine *, struct sdrl_input *);
+// TODO should that sdInput be there???
+typedef sdExpr *(*sdrl_parser_t)(sdMachine *, sdInput *);
 
-typedef int (*sdrl_func_t)(struct sdrl_machine *, struct sdrl_value *);
+typedef int (*sdrl_func_t)(sdMachine *, sdValue *);
 
 #endif
 

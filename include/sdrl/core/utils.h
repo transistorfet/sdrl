@@ -24,8 +24,8 @@
 #define SDRL_BIND_FUNCTION(mach, type, name, func) \
 	sdrl_add_binding(mach->env, name, sdrl_make_pointer(mach->heap, type, func))
 
-struct sdrl_value *sdrl_next_arg(struct sdrl_machine *, struct sdrl_value **, int, struct sdrl_type *);
-struct sdrl_value *sdrl_next_optional_arg(struct sdrl_machine *, struct sdrl_value **, int, struct sdrl_type *);
+sdValue *sdrl_next_arg(sdMachine *, sdValue **, int, sdType *);
+sdValue *sdrl_next_optional_arg(sdMachine *, sdValue **, int, sdType *);
 
 #endif
 

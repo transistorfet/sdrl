@@ -9,12 +9,12 @@
 
 #include <sdrl/sdrl.h>
 
-int sdrl_load_io(struct sdrl_machine *);
+int sdrl_load_io(sdMachine *);
 
 /*** Functions ***/
-int sdrl_io_print(struct sdrl_machine *, struct sdrl_value *);
+int sdrl_io_print(sdMachine *, sdValue *);
 
-int sdrl_io_open(struct sdrl_machine *, struct sdrl_value *);
+int sdrl_io_open(sdMachine *, sdValue *);
 
 #endif
 

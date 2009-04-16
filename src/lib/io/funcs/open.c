@@ -12,9 +12,9 @@
  * Args:	<filename>, <permissions>
  * Description:	Opens the file and returns a handle to it.
  */
-int sdrl_io_open(struct sdrl_machine *mach, struct sdrl_value *args)
+int sdrl_io_open(sdMachine *mach, sdValue *args)
 {
-	struct sdrl_type *type;
+	sdType *type;
 
 	if (!args || (args->type->basetype != SDRL_BT_STRING))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));

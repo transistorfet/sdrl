@@ -10,9 +10,9 @@
 /**
  * Load all of the forms, funcs and types of the base library into the given machine.
  */
-int sdrl_load_base(struct sdrl_machine *mach)
+int sdrl_load_base(sdMachine *mach)
 {
-	struct sdrl_type *form, *func;
+	sdType *form, *func;
 
 	/** Bind types */
 	sdrl_add_binding(mach->type_env, "dynblock", sdrl_base_make_dynblock_type(mach));

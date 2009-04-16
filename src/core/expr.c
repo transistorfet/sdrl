@@ -13,15 +13,15 @@
 /**
  * Return a newly allocated number expression
  */
-struct sdrl_expr *sdrl_make_number_expr(struct sdrl_type *type, int etype, linenumber_t line, number_t num, struct sdrl_expr *next)
+sdExpr *sdrl_make_number_expr(sdType *type, int etype, linenumber_t line, number_t num, sdExpr *next)
 {
-	struct sdrl_expr *expr;
+	sdExpr *expr;
 
-	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr))))
+	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr))))
 		return(NULL);
-	SDRL_VALUE(expr)->refs = 1;
-	SDRL_VALUE(expr)->type = NULL;
-	SDRL_VALUE(expr)->next = NULL;
+	SDVALUE(expr)->refs = 1;
+	SDVALUE(expr)->type = NULL;
+	SDVALUE(expr)->next = NULL;
 	expr->type = etype;
 	expr->line = line;
 	expr->data.num = num;
@@ -32,17 +32,17 @@ struct sdrl_expr *sdrl_make_number_expr(struct sdrl_type *type, int etype, linen
 /**
  * Return a newly allocated string expression using a malloc'd string, str.
  */
-struct sdrl_expr *sdrl_make_string_expr(struct sdrl_type *type, int etype, linenumber_t line, const char *str, struct sdrl_expr *next)
+sdExpr *sdrl_make_string_expr(sdType *type, int etype, linenumber_t line, const char *str, sdExpr *next)
 {
-	struct sdrl_expr *expr;
+	sdExpr *expr;
 
 	if (!str)
 		return(NULL);
-	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr) + strlen(str) + 1)))
+	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr) + strlen(str) + 1)))
 		return(NULL);
-	SDRL_VALUE(expr)->refs = 1;
-	SDRL_VALUE(expr)->type = NULL;
-	SDRL_VALUE(expr)->next = NULL;
+	SDVALUE(expr)->refs = 1;
+	SDVALUE(expr)->type = NULL;
+	SDVALUE(expr)->next = NULL;
 	expr->type = etype;
 	expr->line = line;
 	expr->data.str = (char *) (expr + 1);
@@ -54,15 +54,15 @@ struct sdrl_expr *sdrl_make_string_expr(struct sdrl_type *type, int etype, linen
 /**
  * Return a newly allocated call expression using a make'd expr, expr.
  */
-struct sdrl_expr *sdrl_make_call_expr(struct sdrl_type *type, int etype, linenumber_t line, struct sdrl_expr *call, struct sdrl_expr *next)
+sdExpr *sdrl_make_call_expr(sdType *type, int etype, linenumber_t line, sdExpr *call, sdExpr *next)
 {
-	struct sdrl_expr *expr;
+	sdExpr *expr;
 
-	if (!(expr = (struct sdrl_expr *) malloc(sizeof(struct sdrl_expr))))
+	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr))))
 		return(NULL);
-	SDRL_VALUE(expr)->refs = 1;
-	SDRL_VALUE(expr)->type = NULL;
-	SDRL_VALUE(expr)->next = NULL;
+	SDVALUE(expr)->refs = 1;
+	SDVALUE(expr)->type = NULL;
+	SDVALUE(expr)->next = NULL;
 	expr->type = etype;
 	expr->line = line;
 	expr->data.expr = call;
@@ -73,16 +73,16 @@ struct sdrl_expr *sdrl_make_call_expr(struct sdrl_type *type, int etype, linenum
 /**
  * Create a duplicate of the expr.
  */
-struct sdrl_expr *sdrl_duplicate_expr(struct sdrl_expr *expr)
+sdExpr *sdrl_duplicate_expr(sdExpr *expr)
 {
 	if (!expr)
 		return(NULL);
 	else if (expr->type & SDRL_ED_NUMBER)
-		return(sdrl_make_number_expr(SDRL_VALUE(expr)->type, expr->type, expr->line, expr->data.num, sdrl_duplicate_expr(expr->next)));
+		return(sdrl_make_number_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.num, sdrl_duplicate_expr(expr->next)));
 	else if (expr->type & SDRL_ED_STRING)
-		return(sdrl_make_string_expr(SDRL_VALUE(expr)->type, expr->type, expr->line, expr->data.str, sdrl_duplicate_expr(expr->next)));
+		return(sdrl_make_string_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.str, sdrl_duplicate_expr(expr->next)));
 	else if (expr->type & SDRL_ED_EXPR)
-		return(sdrl_make_call_expr(SDRL_VALUE(expr)->type, expr->type, expr->line, sdrl_duplicate_expr(expr->data.expr), sdrl_duplicate_expr(expr->next)));
+		return(sdrl_make_call_expr(SDVALUE(expr)->type, expr->type, expr->line, sdrl_duplicate_expr(expr->data.expr), sdrl_duplicate_expr(expr->next)));
 	else
 		return(NULL);
 }
@@ -90,9 +90,9 @@ struct sdrl_expr *sdrl_duplicate_expr(struct sdrl_expr *expr)
 /**
  * Free all memory associated with the sdrl_expr
  */
-int sdrl_destroy_expr(struct sdrl_expr *expr)
+int sdrl_destroy_expr(sdExpr *expr)
 {
-	struct sdrl_expr *tmp;
+	sdExpr *tmp;
 
 	// TODO should we check/decrement the refcounter since we are re-entering this function recursively
 	while (expr) {

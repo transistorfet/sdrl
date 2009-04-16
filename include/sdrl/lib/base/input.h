@@ -14,7 +14,9 @@
 #define SDRL_IT_FILE		0x01
 #define SDRL_IT_STRING		0x02
 
-struct sdrl_source {
+typedef struct sdSource sdSource;
+
+struct sdSource {
 	int type;
 	short line;
 	short col;
@@ -23,24 +25,24 @@ struct sdrl_source {
 		char *str;
 		FILE *fptr;
 	} ptr;
-	struct sdrl_source *next;
+	sdSource *next;
 };
 
-struct sdrl_input {
+struct sdInput {
 	char peek;
-	struct sdrl_source *stack;	
+	sdSource *stack;	
 };
 
-struct sdrl_input *sdrl_create_input(void);
-int sdrl_destroy_input(struct sdrl_input *);
-int sdrl_add_file(struct sdrl_input *, const char *);
-int sdrl_add_string(struct sdrl_input *, const char *, int);
+sdInput *sdrl_create_input(void);
+int sdrl_destroy_input(sdInput *);
+int sdrl_add_file(sdInput *, const char *);
+int sdrl_add_string(sdInput *, const char *, int);
 
-char sdrl_get_char(struct sdrl_input *);
-char sdrl_peek_char(struct sdrl_input *);
-void sdrl_unget_char(struct sdrl_input *, char);
+char sdrl_get_char(sdInput *);
+char sdrl_peek_char(sdInput *);
+void sdrl_unget_char(sdInput *, char);
 
-linenumber_t sdrl_get_linenumber(struct sdrl_input *);
+linenumber_t sdrl_get_linenumber(sdInput *);
 
 #endif
 

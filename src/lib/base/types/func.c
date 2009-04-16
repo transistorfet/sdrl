@@ -7,10 +7,10 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-struct sdrl_type *sdrl_base_make_func_type(struct sdrl_machine *mach)
+sdType *sdrl_base_make_func_type(sdMachine *mach)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_pointer),
+		sizeof(sdPointer),
 		0,
 		SDRL_BT_POINTER,
 		NULL,
@@ -22,7 +22,7 @@ struct sdrl_type *sdrl_base_make_func_type(struct sdrl_machine *mach)
 
 /*** Local Functions ***/
 
-int sdrl_base_evaluate_func(struct sdrl_machine *mach, struct sdrl_pointer *func, struct sdrl_value *args)
+int sdrl_base_evaluate_func(sdMachine *mach, sdPointer *func, sdValue *args)
 {
 	SDRL_DESTROY_REFERENCE(mach->ret);
 	mach->ret = NULL;

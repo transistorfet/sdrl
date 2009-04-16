@@ -12,12 +12,12 @@
 #define LAMBDA_MAX_NUMBER		128
 #define LAMBDA_MAX_STRING		1024
 
-static struct sdrl_expr *lambda_parse_input(struct sdrl_type *, struct sdrl_input *);
-static struct sdrl_expr *lambda_parse_expr(struct sdrl_type *, struct sdrl_input *);
-static struct sdrl_expr *lambda_parse_number(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
-static struct sdrl_expr *lambda_parse_string(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
-static struct sdrl_expr *lambda_parse_identifier(struct sdrl_type *, struct sdrl_input *, char, linenumber_t);
-static int lambda_get_next_char(struct sdrl_input *);
+static sdExpr *lambda_parse_input(sdType *, sdInput *);
+static sdExpr *lambda_parse_expr(sdType *, sdInput *);
+static sdExpr *lambda_parse_number(sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lambda_parse_string(sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lambda_parse_identifier(sdType *, sdInput *, char, linenumber_t);
+static int lambda_get_next_char(sdInput *);
 static inline int lambda_is_identifier(char);
 static inline int lambda_is_digit(char);
 static inline int lambda_is_whitespace(char);
@@ -27,9 +27,9 @@ static inline char lambda_escape_char(char);
 /**
  * Parse the input stream until EOF and return the expression tree
  */
-struct sdrl_expr *sdrl_base_parse_lambda_input(struct sdrl_machine *mach, struct sdrl_input *input)
+sdExpr *sdrl_base_parse_lambda_input(sdMachine *mach, sdInput *input)
 {
-	struct sdrl_type *expr_type;
+	sdType *expr_type;
 
 	if (!(expr_type = sdrl_find_binding(mach->type_env, "*expr*")))
 		return(NULL);
@@ -41,9 +41,9 @@ struct sdrl_expr *sdrl_base_parse_lambda_input(struct sdrl_machine *mach, struct
 /**
  * Parse input stream.
  */
-struct sdrl_expr *lambda_parse_input(struct sdrl_type *type, struct sdrl_input *input)
+sdExpr *lambda_parse_input(sdType *type, sdInput *input)
 {
-	struct sdrl_expr *head, *cur;
+	sdExpr *head, *cur;
 
 	head = cur = lambda_parse_expr(type, input);
 	while (cur) {
@@ -56,11 +56,11 @@ struct sdrl_expr *lambda_parse_input(struct sdrl_type *type, struct sdrl_input *
 /**
  * Parse a single expression.
  */
-static struct sdrl_expr *lambda_parse_expr(struct sdrl_type *type, struct sdrl_input *input)
+static sdExpr *lambda_parse_expr(sdType *type, sdInput *input)
 {
 	char ch;
 	linenumber_t line;
-	struct sdrl_expr *expr;
+	sdExpr *expr;
 
 	line = sdrl_get_linenumber(input);
 	ch = lambda_get_next_char(input);
@@ -89,7 +89,7 @@ static struct sdrl_expr *lambda_parse_expr(struct sdrl_type *type, struct sdrl_i
 	return(expr);
 }
 
-static struct sdrl_expr *lambda_parse_number(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
+static sdExpr *lambda_parse_number(sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i = 0;
 	char buffer[LAMBDA_MAX_NUMBER];
@@ -106,7 +106,7 @@ static struct sdrl_expr *lambda_parse_number(struct sdrl_type *type, struct sdrl
 	return(sdrl_make_number_expr(type, SDRL_ET_NUMBER, line, strtod(buffer, NULL), NULL));
 }
 
-static struct sdrl_expr *lambda_parse_string(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
+static sdExpr *lambda_parse_string(sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i;
 	char ch;
@@ -125,7 +125,7 @@ static struct sdrl_expr *lambda_parse_string(struct sdrl_type *type, struct sdrl
 	return(sdrl_make_string_expr(type, SDRL_ET_STRING, line, buffer, NULL));
 }
 
-static struct sdrl_expr *lambda_parse_identifier(struct sdrl_type *type, struct sdrl_input *input, char first, linenumber_t line)
+static sdExpr *lambda_parse_identifier(sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i;
 	char buffer[LAMBDA_MAX_STRING];
@@ -141,7 +141,7 @@ static struct sdrl_expr *lambda_parse_identifier(struct sdrl_type *type, struct 
 	return(sdrl_make_string_expr(type, SDRL_ET_IDENTIFIER, line, buffer, NULL));
 }
 
-static int lambda_get_next_char(struct sdrl_input *input)
+static int lambda_get_next_char(sdInput *input)
 {
 	char ch;
 

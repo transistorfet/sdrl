@@ -14,9 +14,9 @@
 /**
  * Duplicate the value.  Doesn't copy deep structure
  */
-struct sdrl_value *sdrl_duplicate_value(struct sdrl_machine *mach, struct sdrl_value *value)
+sdValue *sdrl_duplicate_value(sdMachine *mach, sdValue *value)
 {
-	struct sdrl_value *newvalue, *prev = NULL, *head = NULL;
+	sdValue *newvalue, *prev = NULL, *head = NULL;
 
 	while (value) {
 		if (!value->type->duplicate)
@@ -37,7 +37,7 @@ struct sdrl_value *sdrl_duplicate_value(struct sdrl_machine *mach, struct sdrl_v
  * Only the single address value is copied and not the values pointed to by
  * "next".
  */
-struct sdrl_value *sdrl_duplicate_single_value(struct sdrl_machine *mach, struct sdrl_value *value)
+sdValue *sdrl_duplicate_single_value(sdMachine *mach, sdValue *value)
 {
 	if (!value || !value->type->duplicate)
 		return(NULL);
@@ -47,9 +47,9 @@ struct sdrl_value *sdrl_duplicate_single_value(struct sdrl_machine *mach, struct
 /**
  * Frees memory of value and all of values links.
  */
-int sdrl_destroy_value(struct sdrl_value *value)
+int sdrl_destroy_value(sdValue *value)
 {
-	struct sdrl_value *tmp;
+	sdValue *tmp;
 
 	while (value) {
 		if (--value->refs)
@@ -66,9 +66,9 @@ int sdrl_destroy_value(struct sdrl_value *value)
 /**
  * Adds the value to the linked-list of values.
  */
-int sdrl_push_value(struct sdrl_value **array, struct sdrl_value *value)
+int sdrl_push_value(sdValue **array, sdValue *value)
 {
-	struct sdrl_value *cur;
+	sdValue *cur;
 
 	if (!array)
 		return(SDRL_ERR_NOT_FOUND);
@@ -86,9 +86,9 @@ int sdrl_push_value(struct sdrl_value **array, struct sdrl_value *value)
 /**
  * Removes the last value from the linked-list of values and returns it.
  */
-struct sdrl_value *sdrl_pop_value(struct sdrl_value **array)
+sdValue *sdrl_pop_value(sdValue **array)
 {
-	struct sdrl_value *cur, *value;
+	sdValue *cur, *value;
 
 	if (!array)
 		return(NULL);
@@ -112,7 +112,7 @@ struct sdrl_value *sdrl_pop_value(struct sdrl_value **array)
 /**
  * Add the value to the front of the array.
  */
-int sdrl_unshift_value(struct sdrl_value **array, struct sdrl_value *value)
+int sdrl_unshift_value(sdValue **array, sdValue *value)
 {
 	if (!array)
 		return(SDRL_ERR_NOT_FOUND);
@@ -124,9 +124,9 @@ int sdrl_unshift_value(struct sdrl_value **array, struct sdrl_value *value)
 /**
  * Removes the first value from the linked-list of values and returns it.
  */
-struct sdrl_value *sdrl_shift_value(struct sdrl_value **array)
+sdValue *sdrl_shift_value(sdValue **array)
 {
-	struct sdrl_value *value;
+	sdValue *value;
 
 	if (!array)
 		return(NULL);

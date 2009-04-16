@@ -8,12 +8,12 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-static int dispexpr_display_expr(struct sdrl_expr *);
+static int dispexpr_display_expr(sdExpr *);
 
 /**
  * Display the expression tree.
  */
-int sdrl_base_display_expr(struct sdrl_expr *expr)
+int sdrl_base_display_expr(sdExpr *expr)
 {
 	while (expr) {
 		dispexpr_display_expr(expr);
@@ -28,7 +28,7 @@ int sdrl_base_display_expr(struct sdrl_expr *expr)
 /**
  * Display a single expression.
  */
-static int dispexpr_display_expr(struct sdrl_expr *expr)
+static int dispexpr_display_expr(sdExpr *expr)
 {
 	if (!expr)
 		return(1);

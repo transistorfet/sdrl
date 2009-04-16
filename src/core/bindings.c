@@ -22,35 +22,35 @@
 #define LOWERCASE(ch) \
 	( (ch >= 0x41 && ch <= 0x5a) ? ch + 0x20 : ch )
 
-static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *, const char *, int);
-static inline int sdrl_bindings_rehash(struct sdrl_environment *env, int newsize);
+static sdBinding *sdrl_get_bindings(sdEnv *, const char *, int);
+static inline int sdrl_bindings_rehash(sdEnv *env, int newsize);
 static int sdrl_stricmp(const char *, const char *);
 static inline unsigned int sdrl_hash(const char *);
 
 /**
  * Allocate an environment for binding values to names.
  */
-struct sdrl_environment *sdrl_create_environment(struct sdrl_heap *heap, struct sdrl_type *type, short bitflags, sdrl_destroy_t destroy)
+sdEnv *sdrl_create_environment(sdHeap *heap, sdType *type, short bitflags, sdrl_destroy_t destroy)
 {
-	struct sdrl_binding **table;
-	struct sdrl_environment *env;
+	sdBinding **table;
+	sdEnv *env;
 
-	if (!(table = (struct sdrl_binding **) malloc(SDRL_ENV_INIT_SIZE * sizeof(struct sdrl_binding *))))
+	if (!(table = (sdBinding **) malloc(SDRL_ENV_INIT_SIZE * sizeof(sdBinding *))))
 		return(NULL);
-	if (!(env = (struct sdrl_environment *) sdrl_heap_alloc(heap, type->size))) {
+	if (!(env = (sdEnv *) sdrl_heap_alloc(heap, type->size))) {
 		free(table);
 		return(NULL);
 	}
-	SDRL_VALUE(env)->refs = 1;
-	SDRL_VALUE(env)->type = type;
-	SDRL_VALUE(env)->next = NULL;
+	SDVALUE(env)->refs = 1;
+	SDVALUE(env)->type = type;
+	SDVALUE(env)->next = NULL;
 	env->bitflags = bitflags;
 	env->heap = heap;
 	env->destroy = destroy;
 	env->size = SDRL_ENV_INIT_SIZE;
 	env->entries = 0;
 	env->table = table;
-	memset(env->table, '\0', SDRL_ENV_INIT_SIZE * sizeof(struct sdrl_binding *));
+	memset(env->table, '\0', SDRL_ENV_INIT_SIZE * sizeof(sdBinding *));
 	env->parent = NULL;
 	return(env);
 }
@@ -58,11 +58,11 @@ struct sdrl_environment *sdrl_create_environment(struct sdrl_heap *heap, struct 
 /**
  * Allocate an environment for binding values to names.
  */
-struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *parent)
+sdEnv *sdrl_extend_environment(sdEnv *parent)
 {
-	struct sdrl_environment *env;
+	sdEnv *env;
 
-	if (!(env = sdrl_create_environment(parent->heap, SDRL_VALUE(parent)->type, parent->bitflags, parent->destroy)))
+	if (!(env = sdrl_create_environment(parent->heap, SDVALUE(parent)->type, parent->bitflags, parent->destroy)))
 		return(NULL);
 	env->parent = SDRL_MAKE_REFERENCE(parent);
 	return(env);
@@ -72,17 +72,17 @@ struct sdrl_environment *sdrl_extend_environment(struct sdrl_environment *parent
  * Free resources allocated by the top most environment including all bindings and
  * return a pointer to the parent environment or NULL if env does not have a parent.
  */
-struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *env)
+sdEnv *sdrl_retract_environment(sdEnv *env)
 {
 	unsigned int i;
-	struct sdrl_binding *cur, *next;
-	struct sdrl_environment *parent;
+	sdBinding *cur, *next;
+	sdEnv *parent;
 
 	if (!env)
 		return(NULL);
 
 	parent = env->parent;
-	if (--SDRL_VALUE(env)->refs)
+	if (--SDVALUE(env)->refs)
 		return(parent);
 
 	for (i = 0;i < env->size;i++) {
@@ -105,7 +105,7 @@ struct sdrl_environment *sdrl_retract_environment(struct sdrl_environment *env)
 /**
  * Free resources allocated by the environment and all of its parents.
  */
-int sdrl_destroy_environment(struct sdrl_environment *env)
+int sdrl_destroy_environment(sdEnv *env)
 {
 	while (env)
 		env = sdrl_retract_environment(env);
@@ -116,10 +116,10 @@ int sdrl_destroy_environment(struct sdrl_environment *env)
 /**
  * Add a binding of name to environment.
  */
-int sdrl_add_binding(struct sdrl_environment *env, const char *name, void *data)
+int sdrl_add_binding(sdEnv *env, const char *name, void *data)
 {
 	unsigned int hash;
-	struct sdrl_binding *bind;
+	sdBinding *bind;
 
 	if (!name || !data || SDRL_BF_IS_SET(env, SDRL_BBF_NO_ADD))
 		return(-1);
@@ -130,7 +130,7 @@ int sdrl_add_binding(struct sdrl_environment *env, const char *name, void *data)
 			return(SDRL_ERR_IN_USE);
 	}
 
-	if (!(bind = (struct sdrl_binding *) malloc(sizeof(struct sdrl_binding) + strlen(name) + 1)))
+	if (!(bind = (sdBinding *) malloc(sizeof(sdBinding) + strlen(name) + 1)))
 		return(SDRL_ERR_OUT_OF_MEMORY);
 	bind->name = (char *) (bind + 1);
 	strcpy(bind->name, name);
@@ -147,9 +147,9 @@ int sdrl_add_binding(struct sdrl_environment *env, const char *name, void *data)
 /**
  * Replace the binding's data with data.
  */
-int sdrl_replace_binding(struct sdrl_environment *env, const char *name, void *data)
+int sdrl_replace_binding(sdEnv *env, const char *name, void *data)
 {
-	struct sdrl_binding *bind;
+	sdBinding *bind;
 
 	if (!name || !data || SDRL_BF_IS_SET(env, SDRL_BBF_NO_REPLACE))
 		return(-1);
@@ -165,10 +165,10 @@ int sdrl_replace_binding(struct sdrl_environment *env, const char *name, void *d
 /**
  * Remove a bindings of name from environment
  */
-int sdrl_remove_binding(struct sdrl_environment *env, const char *name)
+int sdrl_remove_binding(sdEnv *env, const char *name)
 {
 	unsigned int hash;
-	struct sdrl_binding *cur, *prev;
+	sdBinding *cur, *prev;
 
 	if (!name || SDRL_BF_IS_SET(env, SDRL_BBF_NO_REMOVE))
 		return(-1);
@@ -196,9 +196,9 @@ int sdrl_remove_binding(struct sdrl_environment *env, const char *name)
 /**
  * Find the value bound to name in env or its parents.
  */
-void *sdrl_find_binding(struct sdrl_environment *env, const char *name)
+void *sdrl_find_binding(sdEnv *env, const char *name)
 {
-	struct sdrl_binding *bind;
+	sdBinding *bind;
 
 	if ((bind = sdrl_get_bindings(env, name, 0)))
 		return(bind->data);
@@ -211,11 +211,11 @@ void *sdrl_find_binding(struct sdrl_environment *env, const char *name)
  * Returns binding of name in environment or one of environments parents
  * searching up to levels (0 to search all).
  */
-static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, const char *name, int levels)
+static sdBinding *sdrl_get_bindings(sdEnv *env, const char *name, int levels)
 {
 	unsigned int hash;
-	struct sdrl_binding *cur;
-	struct sdrl_environment *curenv;
+	sdBinding *cur;
+	sdEnv *curenv;
 
 	hash = sdrl_hash(name);
 	curenv = env;
@@ -233,15 +233,15 @@ static struct sdrl_binding *sdrl_get_bindings(struct sdrl_environment *env, cons
 /**
  * Increases the size of the hashtable and reinserts all of the elements.
  */
-static inline int sdrl_bindings_rehash(struct sdrl_environment *env, int newsize)
+static inline int sdrl_bindings_rehash(sdEnv *env, int newsize)
 {
 	unsigned int i, hash, oldsize;
-	struct sdrl_binding **newtable;
-	struct sdrl_binding *cur, *next;
+	sdBinding **newtable;
+	sdBinding *cur, *next;
 
-	if (!(newtable = (struct sdrl_binding **) malloc(newsize * sizeof(struct sdrl_binding *))))
+	if (!(newtable = (sdBinding **) malloc(newsize * sizeof(sdBinding *))))
 		return(-1);
-	memset(newtable, '\0', newsize * sizeof(struct sdrl_binding *));
+	memset(newtable, '\0', newsize * sizeof(sdBinding *));
 	oldsize = env->size;
 	env->size = newsize;
 	for (i = 0;i < oldsize;i++) {

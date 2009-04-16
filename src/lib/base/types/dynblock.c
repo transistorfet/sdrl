@@ -7,10 +7,10 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-struct sdrl_type *sdrl_base_make_dynblock_type(struct sdrl_machine *mach)
+sdType *sdrl_base_make_dynblock_type(sdMachine *mach)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_reference),
+		sizeof(sdReference),
 		0,
 		SDRL_BT_REFERENCE,
 		NULL,
@@ -20,9 +20,9 @@ struct sdrl_type *sdrl_base_make_dynblock_type(struct sdrl_machine *mach)
 	));
 }
 
-int sdrl_base_evaluate_dynblock(struct sdrl_machine *mach, struct sdrl_reference *expr, struct sdrl_value *args)
+int sdrl_base_evaluate_dynblock(sdMachine *mach, sdReference *expr, sdValue *args)
 {
-	struct sdrl_environment *env;
+	sdEnv *env;
 
 	if (!(env = sdrl_extend_environment(mach->env)))
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_OUT_OF_MEMORY, NULL));

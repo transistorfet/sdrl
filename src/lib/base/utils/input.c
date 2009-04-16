@@ -11,16 +11,16 @@
 #include <sdrl/globals.h>
 #include <sdrl/lib/base/input.h>
 
-static int input_free_source(struct sdrl_input *);
+static int input_free_source(sdInput *);
 
 /**
  * Create an initially empty input stack.
  */
-struct sdrl_input *sdrl_create_input(void)
+sdInput *sdrl_create_input(void)
 {
-	struct sdrl_input *input;
+	sdInput *input;
 
-	if (!(input = (struct sdrl_input *) malloc(sizeof(struct sdrl_input))))
+	if (!(input = (sdInput *) malloc(sizeof(sdInput))))
 		return(NULL);
 
 	input->peek = 0;
@@ -32,7 +32,7 @@ struct sdrl_input *sdrl_create_input(void)
 /**
  * Free the resources used by the input stack.
  */
-int sdrl_destroy_input(struct sdrl_input *input)
+int sdrl_destroy_input(sdInput *input)
 {
 	while (input->stack)
 		input_free_source(input);
@@ -43,14 +43,14 @@ int sdrl_destroy_input(struct sdrl_input *input)
 /**
  * Add a file to the top of the input stack.
  */
-int sdrl_add_file(struct sdrl_input *input, const char *filename)
+int sdrl_add_file(sdInput *input, const char *filename)
 {
 	FILE *fptr;
-	struct sdrl_source *source;
+	sdSource *source;
 
 	if (!(fptr = fopen(filename, "rb")))
 		return(SDRL_ERR_NOT_FOUND);
-	if (!(source = (struct sdrl_source *) malloc(sizeof(struct sdrl_source)))) {
+	if (!(source = (sdSource *) malloc(sizeof(sdSource)))) {
 		fclose(fptr);
 		return(SDRL_ERR_OUT_OF_MEMORY);
 	}
@@ -67,16 +67,16 @@ int sdrl_add_file(struct sdrl_input *input, const char *filename)
 /**
  * Add a copy of the string to the top of the input stack.
  */
-int sdrl_add_string(struct sdrl_input *input, const char *str, int size)
+int sdrl_add_string(sdInput *input, const char *str, int size)
 {
 	char *cpy_str;
-	struct sdrl_source *source;
+	sdSource *source;
 
 	if (!size)
 		size = strlen(str);
 	if (!(cpy_str = (char *) malloc(size + 1)))
 		return(SDRL_ERR_OUT_OF_MEMORY);
-	if (!(source = (struct sdrl_source *) malloc(sizeof(struct sdrl_source)))) {
+	if (!(source = (sdSource *) malloc(sizeof(sdSource)))) {
 		free(cpy_str);
 		return(SDRL_ERR_OUT_OF_MEMORY);
 	}
@@ -95,7 +95,7 @@ int sdrl_add_string(struct sdrl_input *input, const char *str, int size)
 /**
  * Get the next char from the input stream.
  */
-char sdrl_get_char(struct sdrl_input *input)
+char sdrl_get_char(sdInput *input)
 {
 	char ch = 0;
 
@@ -125,7 +125,7 @@ char sdrl_get_char(struct sdrl_input *input)
 /**
  * Returns the next character to be read from input (only one char ahead).
  */
-char sdrl_peek_char(struct sdrl_input *input)
+char sdrl_peek_char(sdInput *input)
 {
 	if (!input->peek)
 		input->peek = sdrl_get_char(input);
@@ -138,7 +138,7 @@ char sdrl_peek_char(struct sdrl_input *input)
  * done with one character.  Ungetting a second character will erase the
  * previously unget character.
  */
-void sdrl_unget_char(struct sdrl_input *input, char ch)
+void sdrl_unget_char(sdInput *input, char ch)
 {
 	input->peek = ch;
 }
@@ -146,7 +146,7 @@ void sdrl_unget_char(struct sdrl_input *input, char ch)
 /**
  * Return the current line/column number of the input stream.
  */
-linenumber_t sdrl_get_linenumber(struct sdrl_input *input)
+linenumber_t sdrl_get_linenumber(sdInput *input)
 {
 	if (input && input->stack)
 		return(SDRL_MAKE_LINENUMBER(input->stack->line, input->stack->col));
@@ -158,9 +158,9 @@ linenumber_t sdrl_get_linenumber(struct sdrl_input *input)
 /**
  * Free the current input source on the input stack
  */
-static int input_free_source(struct sdrl_input *input)
+static int input_free_source(sdInput *input)
 {
-	struct sdrl_source *tmp;
+	sdSource *tmp;
 
 	if (!input->stack)
 		return(-1);

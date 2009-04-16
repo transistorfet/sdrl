@@ -9,13 +9,13 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-struct sdrl_value *sdrl_io_create_file(struct sdrl_machine *, struct sdrl_type *, struct sdrl_value *);
-int sdrl_io_destroy_file(struct sdrl_value *);
+sdValue *sdrl_io_create_file(sdMachine *, sdType *, sdValue *);
+int sdrl_io_destroy_file(sdValue *);
 
-struct sdrl_type *sdrl_base_make_file_type(struct sdrl_machine *mach)
+sdType *sdrl_base_make_file_type(sdMachine *mach)
 {
 	return(sdrl_make_type(
-		sizeof(struct sdrl_pointer),
+		sizeof(sdPointer),
 		0,
 		SDRL_BT_POINTER,
 		(sdrl_create_t) sdrl_io_create_file,
@@ -25,10 +25,10 @@ struct sdrl_type *sdrl_base_make_file_type(struct sdrl_machine *mach)
 	));
 }
 
-struct sdrl_value *sdrl_io_create_file(struct sdrl_machine *mach, struct sdrl_type *type, struct sdrl_value *args)
+sdValue *sdrl_io_create_file(sdMachine *mach, sdType *type, sdValue *args)
 {
 	FILE *fptr;
-	struct sdrl_type *str_type;
+	sdType *str_type;
 
 	if (!args) {
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
@@ -42,16 +42,16 @@ struct sdrl_value *sdrl_io_create_file(struct sdrl_machine *mach, struct sdrl_ty
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
-	else if (!(fptr = fopen(SDRL_STRING(args)->str, "r"))) {
+	else if (!(fptr = fopen(SDSTRING(args)->str, "r"))) {
 		SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, "Error opening file");
 		return(NULL);
 	}
 	return(sdrl_make_pointer(mach->heap, type, fptr));
 }
 
-int sdrl_io_destroy_file(struct sdrl_value *value)
+int sdrl_io_destroy_file(sdValue *value)
 {
-	fclose((FILE *) SDRL_POINTER(value)->ptr);
+	fclose((FILE *) SDPOINTER(value)->ptr);
 	return(0);
 }
 

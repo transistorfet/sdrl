@@ -12,21 +12,21 @@
  * Args:	<value>, ...
  * Description:	Prints out each of the values in the list and returns the list.
  */
-int sdrl_io_print(struct sdrl_machine *mach, struct sdrl_value *args)
+int sdrl_io_print(sdMachine *mach, sdValue *args)
 {
-	struct sdrl_value *cur;
+	sdValue *cur;
 
 	cur = args;
 	while (cur) {
 		switch (cur->type->basetype) {
 			case SDRL_BT_NUMBER:
-				printf("%f", SDRL_NUMBER(cur)->num);
+				printf("%f", SDNUMBER(cur)->num);
 				break;
 			case SDRL_BT_STRING:
-				printf("%s", SDRL_STRING(cur)->str);
+				printf("%s", SDSTRING(cur)->str);
 				break;
 			case SDRL_BT_POINTER:
-				printf("0x%x", (unsigned int) SDRL_POINTER(cur)->ptr);
+				printf("0x%x", (unsigned int) SDPOINTER(cur)->ptr);
 				break;
 			case SDRL_BT_DATA:
 				printf("0x%x", (unsigned int) cur);

@@ -15,18 +15,18 @@
  *		the given offset and either of a length, if given, or to
  *		the end of the string otherwise.
  */
-int sdrl_string_substr(struct sdrl_machine *mach, struct sdrl_value *args)
+int sdrl_string_substr(sdMachine *mach, sdValue *args)
 {
 	int i = 0, j, len;
-	struct sdrl_string *str;
+	sdString *str;
 	char buffer[SDRL_STRING_SIZE];
-	struct sdrl_number *from, *to;
+	sdNumber *from, *to;
 
 	if (!args)
 		return(SDRL_ERROR(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
-	if (!(str = (struct sdrl_string *) sdrl_next_arg(mach, &args, SDRL_BT_STRING, NULL))
-	    || !(from = (struct sdrl_number *) sdrl_next_arg(mach, &args, SDRL_BT_NUMBER, NULL))
-	    || (!(to = (struct sdrl_number *) sdrl_next_optional_arg(mach, &args, SDRL_BT_NUMBER, NULL)) && args))
+	if (!(str = SDSTRING(sdrl_next_arg(mach, &args, SDRL_BT_STRING, NULL)))
+	    || !(from = SDNUMBER(sdrl_next_arg(mach, &args, SDRL_BT_NUMBER, NULL)))
+	    || (!(to = SDNUMBER(sdrl_next_optional_arg(mach, &args, SDRL_BT_NUMBER, NULL))) && args))
 		return(mach->error->err);
 
 	len = str->len;
@@ -40,7 +40,7 @@ int sdrl_string_substr(struct sdrl_machine *mach, struct sdrl_value *args)
 	for (;(i < SDRL_STRING_SIZE) && (j < len);i++, j++)
 		buffer[i] = str->str[j];
 	buffer[i] = '\0';
-	mach->ret = sdrl_make_string(mach->heap, SDRL_VALUE(str)->type, buffer, i);
+	mach->ret = sdrl_make_string(mach->heap, SDVALUE(str)->type, buffer, i);
 	return(0);
 }
 
