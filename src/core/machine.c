@@ -30,26 +30,19 @@ sdMachine *sdrl_create_machine(void)
 
 	if (!(mach = (sdMachine *) malloc(sizeof(sdMachine))))
 		return(NULL);
-	mach->current_line = 0;
-	mach->ret = NULL;
-	mach->error = NULL;
-	if (!(mach->heap = sdrl_create_heap()) || !(mach->cont = sdrl_create_continuation())) {
-		sdrl_destroy_machine(mach);
-		return(NULL);
-	}
+	memset(mach, '\0', sizeof(sdMachine));
+	if (!(mach->heap = sdrl_create_heap()) || !(mach->cont = sdrl_create_continuation()))
+		goto FAIL;
 	// TODO clean this up
 	if (!(type = sdrl_make_environment_type())
 	    || !(mach->type_env = sdrl_create_environment(mach->heap, type, SDRL_BBF_CONSTANT, (sdrl_destroy_t) sdrl_destroy_type))) {
 		if (type)
 			sdrl_destroy_type(type);
-		sdrl_destroy_machine(mach);
-		return(NULL);
+		goto FAIL;
 	}
 	sdrl_add_binding(mach->type_env, "*env*", type);
-	if (!(mach->global = sdrl_create_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value))) {
-		sdrl_destroy_machine(mach);
-		return(NULL);
-	}
+	if (!(mach->global = sdrl_create_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value)))
+		goto FAIL;
 	mach->env = SDRL_INCREF(mach->global);
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_number_type());
@@ -57,6 +50,10 @@ sdMachine *sdrl_create_machine(void)
 	sdrl_add_binding(mach->type_env, "*expr*", sdrl_make_expression_type());
 
 	return(mach);
+
+    FAIL:
+	sdrl_destroy_machine(mach);
+	return(NULL);
 }
 
 /**

@@ -1,5 +1,6 @@
 
 	* why is there expr and env types in the base library?
+	* should you have sdrl_set_error to error.c?
 	* reduce length/verbosity of some function names (as per api.txt?)
 	* make error a value
 	* make '*expr*' and '*env*' into 'expr' and 'env' and make the libbase ones 'exprref' and 'envref'
@@ -7,27 +8,24 @@
 	* make functions (inlines) for things like sdrl_find_binding that produce an error such that they
 	  can easily be used with SDRL_TRY()
 	* use SDRL_TRY everywhere you can, including the core
-	* can you/should you make a bunch of macros that hide a lot of complexity such as with types
-	  for example, making a macro of the sdrl_check_<type> functions that don't take the type args?
-	* make macros that automagically create and push/unshift/pop/shift values from C values
 	* should sdrl_make_call_expr really by called sdrl_make_expr_expr (despite it's strangity?)
 	* why the fuck is the type set to NULL in the expr make functions!?  What effect does this have?
 	* add cplusplus checks to headers that add an extern "C" { } block
-	* should you remove just the basetype from the conversion functions and check for a fixed basetype
-	  (SDRL_BT_STRING for sdrl_check_string, etc) (since we are casting the value to a certain basetype
-	  anyways).  If you do not remove the basetype, then you will *definitely* need to make a macro that
-	  hides the basetype and type parameters.
 
 	* rewrite lib functions to use the conversion/newfancy funcs
 
 ------------
 
+	* make a function called "make" or "new" that takes a typename and args and creates that type
+	  using the type's create function.  (make env *globals*) ; make an env that extends *globals*
 
 	* add AST traversers that convert "if" and various other syntactic "features" into pure "SDRL"
 	  format (verbose).  This prevents the need for a special parser but still has a lot of benifits
 	  and is much more configurable, even though it probably would be slower (a custom parser would be
 	  for speed and for complex syntax)
 	* add a basic object oriented system
+
+	* should you remove the severity number from sdrl_set_error?
 
 	* add flags to the machine or something such that a program can change certain (what might be compiled
 	  in atm) options, such as treating "namespace.name" type names as special (causing a recursive lookup)

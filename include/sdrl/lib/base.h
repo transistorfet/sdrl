@@ -115,6 +115,7 @@ int sdrl_base_and(sdMachine *, sdValue *);
 int sdrl_base_or(sdMachine *, sdValue *);
 int sdrl_base_not(sdMachine *, sdValue *);
 
+int sdrl_base_new(sdMachine *, sdValue *);
 int sdrl_base_defenv(sdMachine *, sdValue *);
 
 int sdrl_base_print(sdMachine *, sdValue *);

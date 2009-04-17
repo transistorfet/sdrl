@@ -42,15 +42,15 @@ clean:
 	$(RM) $(OBJS)
 
 basetypes.o: basetypes.c ../../include/sdrl/core/heap.h \
-  ../../include/sdrl/core/type.h ../../include/sdrl/globals.h \
+  ../../include/sdrl/globals.h ../../include/sdrl/core/type.h \
   ../../include/sdrl/core/value.h ../../include/sdrl/core/machine.h \
   ../../include/sdrl/core/expr.h ../../include/sdrl/core/error.h \
   ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
   ../../include/sdrl/core/basetypes.h
 
 bindings.o: bindings.c ../../include/sdrl/core/bindings.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/core/value.h \
-  ../../include/sdrl/core/type.h ../../include/sdrl/globals.h
+  ../../include/sdrl/core/heap.h ../../include/sdrl/globals.h \
+  ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h
 
 error.o: error.c ../../include/sdrl/core/value.h \
   ../../include/sdrl/core/type.h ../../include/sdrl/globals.h \
@@ -58,19 +58,20 @@ error.o: error.c ../../include/sdrl/core/value.h \
 
 events.o: events.c ../../include/sdrl/core/events.h \
   ../../include/sdrl/core/bindings.h ../../include/sdrl/core/heap.h \
-  ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
-  ../../include/sdrl/globals.h
+  ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
+  ../../include/sdrl/core/type.h
 
 expr.o: expr.c ../../include/sdrl/core/expr.h \
   ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
   ../../include/sdrl/globals.h ../../include/sdrl/core/heap.h
 
-heap.o: heap.c ../../include/sdrl/core/heap.h
+heap.o: heap.c ../../include/sdrl/core/heap.h \
+  ../../include/sdrl/globals.h
 
 machine.o: machine.c ../../include/sdrl/core/machine.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/core/expr.h \
-  ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
-  ../../include/sdrl/globals.h ../../include/sdrl/core/error.h \
+  ../../include/sdrl/core/heap.h ../../include/sdrl/globals.h \
+  ../../include/sdrl/core/expr.h ../../include/sdrl/core/value.h \
+  ../../include/sdrl/core/type.h ../../include/sdrl/core/error.h \
   ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
   ../../include/sdrl/core/basetypes.h
 
@@ -78,9 +79,9 @@ type.o: type.c ../../include/sdrl/core/type.h \
   ../../include/sdrl/globals.h
 
 utils.o: utils.c ../../include/sdrl/core/utils.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/core/expr.h \
-  ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
-  ../../include/sdrl/globals.h ../../include/sdrl/core/error.h \
+  ../../include/sdrl/core/heap.h ../../include/sdrl/globals.h \
+  ../../include/sdrl/core/expr.h ../../include/sdrl/core/value.h \
+  ../../include/sdrl/core/type.h ../../include/sdrl/core/error.h \
   ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
   ../../include/sdrl/core/machine.h
 

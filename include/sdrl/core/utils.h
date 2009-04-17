@@ -17,6 +17,16 @@
 #include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
 
+static inline void *sdrl_find(sdMachine *mach, sdEnv *env, const char *name) {
+	void *ptr;
+
+	if (!(ptr = sdrl_find_binding(env, name))) {
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
+		return(NULL);
+	}
+	return(ptr);
+}
+
 /**
  * Bind a C function to the given name and type in the current environment of
  * the given machine.

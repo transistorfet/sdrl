@@ -64,6 +64,7 @@ int sdrl_load_base(sdMachine *mach)
 	SDRL_BIND_FUNCTION(mach, func, "or", sdrl_base_or);
 	SDRL_BIND_FUNCTION(mach, func, "not", sdrl_base_not);
 
+	SDRL_BIND_FUNCTION(mach, func, "new", sdrl_base_new);
 	SDRL_BIND_FUNCTION(mach, func, "defenv", sdrl_base_defenv);
 
 	return(0);
