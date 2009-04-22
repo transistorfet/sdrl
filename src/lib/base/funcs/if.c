@@ -10,22 +10,24 @@
  * Args:	<value>, <expr-value> [, <expr-value>]
  * Description:	Evaluates the first expr-value if value is not 0, the second otherwise.
  */
-int sdrl_base_if(sdMachine *mach, sdValue *args)
+int sdrl_base_if(sdMachine *mach, sdArray *args)
 {
-	sdValue *block = NULL;
+	sdArray *block;
 
-	if (sdrl_value_count(args) < 2)
+	if (args->last < 2 || args->last > 3)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
-	else if (args->type->basetype != SDRL_BT_NUMBER)
+	else if (args->items[1]->type->basetype != SDRL_BT_NUMBER)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+	else if (!(block = sdrl_make_array(mach->heap, sdrl_find_binding(mach->type_env, "array"), 1)))
+		return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 	// TODO convert this to to more than just number comparison
-	else if (SDNUMBER(args)->num)
-		block = sdrl_duplicate_single_value(mach, args->next);
-	else if (args->next->next)
-		block = sdrl_duplicate_single_value(mach, args->next->next);
+	else if (SDNUMBER(args->items[1])->num)
+		sdrl_array_push(block, sdrl_duplicate_value(mach, args->items[2]));
+	else if (args->items[3])
+		sdrl_array_push(block, sdrl_duplicate_value(mach, args->items[3]));
 
-	if (block)
-		sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, block, mach->env));
+	if (block->last >= 0)
+		sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(block), mach->env);
 	mach->ret = NULL;
 	return(0);
 }

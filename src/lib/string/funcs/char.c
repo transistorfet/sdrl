@@ -15,19 +15,16 @@
  *		character at the given position indexed from 0 of the given
  *		string.
  */
-int sdrl_string_char(sdMachine *mach, sdValue *args)
+int sdrl_string_char(sdMachine *mach, sdArray *args)
 {
 	number_t ret = 0;
-	sdString *str;
-	sdNumber *index;
 
-	if (!(str = SDSTRING(sdrl_next_arg(mach, &args, SDRL_BT_STRING, NULL)))
-	    || !(index = SDNUMBER(sdrl_next_arg(mach, &args, SDRL_BT_NUMBER, NULL))))
-		return(mach->error->err);
-
-	if ((index->num >= 0) && (index->num < str->len))
-		ret = str->str[ (int) index->num ];
-	mach->ret = sdrl_make_number(mach->heap, SDVALUE(index)->type, ret);
+	if (args->last != 2 || args->items[1]->type->basetype != SDRL_BT_STRING
+	    || args->items[2]->type->basetype != SDRL_BT_NUMBER)
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+	if ((SDNUMBER(args->items[2])->num >= 0) && (SDNUMBER(args->items[2])->num < SDSTRING(args->items[1])->len))
+		ret = SDSTRING(args->items[1])->str[ (int) SDNUMBER(args->items[2])->num ];
+	mach->ret = sdrl_make_number(mach->heap, args->items[2]->type, ret);
 	return(0);
 }
 

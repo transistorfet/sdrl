@@ -34,8 +34,5 @@ static inline void *sdrl_find(sdMachine *mach, sdEnv *env, const char *name) {
 #define SDRL_BIND_FUNCTION(mach, type, name, func) \
 	sdrl_add_binding(mach->env, name, sdrl_make_pointer(mach->heap, type, func))
 
-sdValue *sdrl_next_arg(sdMachine *, sdValue **, int, sdType *);
-sdValue *sdrl_next_optional_arg(sdMachine *, sdValue **, int, sdType *);
-
 #endif
 

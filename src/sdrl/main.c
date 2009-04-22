@@ -114,7 +114,7 @@ void init_macros(sdMachine *mach)
 {
 	sdType *expr_type;
 
-	if (!(expr_type = sdrl_find_binding(mach->type_env, "*expr*")))
+	if (!(expr_type = sdrl_find_binding(mach->type_env, "expr")))
 		return;
 	sdrl_add_macro("if", 2, 3,
 		sdrl_make_call_expr(type, SDRL_ET_CALL, 0, sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "if", sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "$1",

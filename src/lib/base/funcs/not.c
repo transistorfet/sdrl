@@ -10,16 +10,16 @@
  * Args:	<value>
  * Description:	Returns 1 if all number value is 0, 0 otherwise.
  */
-int sdrl_base_not(sdMachine *mach, sdValue *args)
+int sdrl_base_not(sdMachine *mach, sdArray *args)
 {
 	number_t result = 1;
 
-	if (!args || args->next)
+	if (args->last < 1)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
-	else if (args->type->basetype != SDRL_BT_NUMBER)
+	else if (args->items[1]->type->basetype != SDRL_BT_NUMBER)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-	result = (SDNUMBER(args)->num == 0);
-	mach->ret = sdrl_make_number(mach->heap, args->type, result);
+	result = (SDNUMBER(args->items[1])->num == 0);
+	mach->ret = sdrl_make_number(mach->heap, args->items[1]->type, result);
 	return(0);
 }
 

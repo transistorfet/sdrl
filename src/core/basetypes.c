@@ -35,7 +35,6 @@ sdValue *sdrl_make_number(sdHeap *heap, sdType *type, number_t num)
 		return(NULL);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
-	SDVALUE(value)->next = NULL;
 	value->num = num;
 	return(SDVALUE(value));
 }
@@ -68,7 +67,6 @@ sdValue *sdrl_make_string(sdHeap *heap, sdType *type, const char *str, int len)
 		return(NULL);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
-	SDVALUE(value)->next = NULL;
 	value->len = len;
 	value->str = (char *) (SDSTRING(value) + 1);
 	memcpy(value->str, str, len);
@@ -90,7 +88,6 @@ sdValue *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 		return(NULL);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
-	SDVALUE(value)->next = NULL;
 	value->ref = SDRL_INCREF(ref);
 	return(SDVALUE(value));
 }
@@ -116,7 +113,6 @@ sdValue *sdrl_make_pointer(sdHeap *heap, sdType *type, void *ptr)
 		return(NULL);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
-	SDVALUE(value)->next = NULL;
 	value->ptr = ptr;
 	return(SDVALUE(value));
 }
@@ -124,34 +120,6 @@ sdValue *sdrl_make_pointer(sdHeap *heap, sdType *type, void *ptr)
 sdValue *sdrl_duplicate_pointer(sdMachine *mach, sdPointer *org)
 {
 	return(sdrl_make_pointer(mach->heap, SDVALUE(org)->type, org->ptr));
-}
-
-
-sdType *sdrl_make_expression_type(void)
-{
-	return(sdrl_make_type(
-		sizeof(sdExpr),
-		0,
-		SDRL_BT_EXPRESSION,
-		NULL,
-		(sdrl_destroy_t) sdrl_destroy_expr,
-		NULL,
-		NULL
-	));
-}
-
-
-sdType *sdrl_make_environment_type(void)
-{
-	return(sdrl_make_type(
-		sizeof(sdEnv),
-		0,
-		SDRL_BT_ENVIRONMENT,
-		NULL,
-		(sdrl_destroy_t) sdrl_retract_environment,
-		NULL,
-		NULL
-	));
 }
 
 

@@ -9,6 +9,7 @@
 
 #include <sdrl/core/bindings.h>
 #include <sdrl/core/heap.h>
+#include <sdrl/core/type.h>
 #include <sdrl/core/value.h>
 #include <sdrl/globals.h>
 
@@ -27,6 +28,24 @@ static inline int sdrl_bindings_rehash(sdEnv *env, int newsize);
 static int sdrl_stricmp(const char *, const char *);
 static inline unsigned int sdrl_hash(const char *);
 
+
+/**
+ * Create and return a type for sdEnv.
+ */
+sdType *sdrl_make_environment_type(void)
+{
+	return(sdrl_make_type(
+		sizeof(sdEnv),
+		0,
+		SDRL_BT_ENVIRONMENT,
+		NULL,
+		(sdrl_destroy_t) sdrl_retract_environment,
+		NULL,
+		NULL
+	));
+}
+
+
 /**
  * Allocate an environment for binding values to names.
  */
@@ -43,7 +62,6 @@ sdEnv *sdrl_create_environment(sdHeap *heap, sdType *type, short bitflags, sdrl_
 	}
 	SDVALUE(env)->refs = 1;
 	SDVALUE(env)->type = type;
-	SDVALUE(env)->next = NULL;
 	env->bitflags = bitflags;
 	env->heap = heap;
 	env->destroy = destroy;

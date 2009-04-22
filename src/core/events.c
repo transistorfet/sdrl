@@ -47,13 +47,12 @@ int sdrl_destroy_continuation(sdCont *cont)
 /**
  * Allocate and initialize a new sdrl_event (to be added to a continuation).
  */
-sdEvent *sdrl_make_event(int bitflags, sdrl_event_t func, sdValue *arg, sdEnv *env)
+sdEvent *sdrl_make_event(sdrl_event_t func, sdValue *arg, sdEnv *env)
 {
 	sdEvent *event;
 
 	if (!(event = (sdEvent *) malloc(sizeof(sdEvent))))
 		return(NULL);
-	event->bitflags = bitflags;
 	event->func = func;
 	event->arg = SDRL_INCREF(arg);
 	event->env = SDRL_INCREF(env);
@@ -76,7 +75,21 @@ int sdrl_destroy_event(sdEvent *event)
 }
 
 /**
- * Push an sdrl_event onto the top of a continuation stack.
+ * Make an sdEvent and push it onto the top of a continuation stack.
+ */
+int sdrl_push_new_event(sdCont *cont, sdrl_event_t func, sdValue *arg, sdEnv *env)
+{
+	sdEvent *event;
+
+	if (!(event = sdrl_make_event(func, arg, env)))
+		return(-1);
+	event->next = cont->top;
+	cont->top = event;
+	return(0);
+}
+
+/**
+ * Push an sdEvent onto the top of a continuation stack.
  */
 int sdrl_push_event(sdCont *cont, sdEvent *event)
 {

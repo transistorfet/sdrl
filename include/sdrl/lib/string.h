@@ -14,10 +14,10 @@
 int sdrl_load_string(sdMachine *);
 
 /*** Functions ***/
-int sdrl_string_char(sdMachine *, sdValue *);
-int sdrl_string_length(sdMachine *, sdValue *);
-int sdrl_string_substr(sdMachine *, sdValue *);
-int sdrl_string_tostring(sdMachine *, sdValue *);
+int sdrl_string_char(sdMachine *, sdArray *);
+int sdrl_string_length(sdMachine *, sdArray *);
+int sdrl_string_substr(sdMachine *, sdArray *);
+int sdrl_string_tostring(sdMachine *, sdArray *);
 
 #endif
 

@@ -1,15 +1,49 @@
 
-	* why is there expr and env types in the base library?
-	* should you have sdrl_set_error to error.c?
-	* reduce length/verbosity of some function names (as per api.txt?)
+	* bug seemed to be caused by the changes you made to value.c where you made sdrl_destroy_value a
+	  static inline function and forgot to put the reference decrement and check before destroying
+	  the value.  This was only an issue because of sdrl_retract_environment because the environemnts
+	  don't know about value and instead always call sdrl_destroy_value (via a function pointer) when
+	  destroying it's contents
+
+	* lexblock, dynblock, and expr type evaluate funcs set the args to be a value in the env but the
+	  first arg is the function itself.  Should it be removed from args first?
+	* should you change all function names to be sdrl_<type>_<function> such as sdrl_expr_destroy,
+	  sdrl_env_duplicate, etc?
+	* what should happen with the array manipulation functions in terms of who is responsible for
+	  creating a reference for the value being stored in the array?
+	* should we delete utils.c since it's not really used now
+	* should we remove the value.c file (keeping value.h) since there is nothing in it now?
+	* you *have* to look into how things will work with librarys loaded dynamically with respect to
+	  having access to type variables.  You may want to have both type systems at once
+
+	* these is a problem such that anything that returns a NULL value and which then gets added to an
+	  args array to be passed to a function call is a NULL yet nowhere do we check if an item in an array
+	  is NULL, only if the position in the array is supposed to be set or not.  We either need a nil/undef
+	  type value to store instead of NULL or we need to check for NULL all the time (i prefer the later
+	  but it wont be easy to do)
+
+	* convert remaining lib functions to use new args
+	* make basetypes all seperate files complete with support functions
+	* make a new list type sdList { sdValue value, sdValue *ref, sdList *next }
+	* move to pointer-based type system to speed up core, saving the type lookups
+	* add the pop/unshift realloc downsizing code (if at all)
+	* make functions for push, pop, shift, unshift
+	* attempt to optimize the core evaluation (i guess now, primarily by eliminating type lookups)
+
+	* the big thing in all of this is that the value itself is modified by the system as a side-effect
+	  and this type of behaviour should be watched for.
+
+	* use void functions where appropriate
+	* remove expr type from the base lib
+	* make '*env*' into 'env' and remove the libbase 'envref'
+	* should you move sdrl_set_error to error.c?
 	* make error a value
-	* make '*expr*' and '*env*' into 'expr' and 'env' and make the libbase ones 'exprref' and 'envref'
+	* reduce length/verbosity of some function names (as per api.txt?)
 
 	* make functions (inlines) for things like sdrl_find_binding that produce an error such that they
 	  can easily be used with SDRL_TRY()
 	* use SDRL_TRY everywhere you can, including the core
 	* should sdrl_make_call_expr really by called sdrl_make_expr_expr (despite it's strangity?)
-	* why the fuck is the type set to NULL in the expr make functions!?  What effect does this have?
 	* add cplusplus checks to headers that add an extern "C" { } block
 
 	* rewrite lib functions to use the conversion/newfancy funcs
@@ -77,6 +111,10 @@ Tests:
 
 Structural Issues:
 
+	* pthyon uses type pointer variables (possibly initialized during runtime as opposed to static
+	  although I'm not sure).  It then refers to those type variables directly instead of how I'm
+	  doing it with a type environment.  I like this method better because it's much faster to do
+	  type comparisons.
 	* should you make types constant like you have done in sdm, stutter, and such? (see notes.txt)
 	* should you have a more robust object system with a proper "init/release" type function for each
 	  type?  It will allow for better inheritance in exchange for a slight performance loss.  There is a
@@ -90,12 +128,25 @@ Structural Issues:
 	  parser would then have to know about the types somehow and also any identifiers in the expr would
 	  not be convertable into strings during interpretation.  One benifit of this however, is the
 	  ability of the parser to directly accept literals for things that are not numbers or strings such
-	  as lists of literals, complex numbers, etc.
+	  as lists of literals, complex numbers, etc.  It would also be possible to use a "macro/ast mod"
+	  system to convert and verify the AST before actual execution such that all identifiers are properly
+	  converted into whatever they should be (either direct function names or turned into value lookups
+	  with strings instead of identifiers).  This would get around the downside part and possibly result
+	  in faster evaluations.
+	* another possible way to remove number and string types from the core is if you had subtypes for
+	  exprs and have a function in the type that can be called to turn the expr into a value.  The
+	  function and thus the expr type would have to be outside of the core and the parser would have
+	  to know about the type but since that's outside of the core too, the type itself doesn't have to
+	  be in the core.
 	* is there a benifit to having multiple event stacks?  Perhaps the ability to package up the current
 	  stack when an error has occured and start executing an exception handler function on a completely
 	  different stack.  Another possible use would be in multithreading however it might be more useful
 	  to make a completely different machine structure for each thread and give each machine a reference
 	  to the same global environment in order to achieve the "shared memory" of threads.
+	* should you make expr more like all values in that you have a "subclass" for each type of expr
+	  (number, string, expr). struct sdNumberExpr { sdExpr expr; number_t num };  This would allow
+	  you to get rid of the union (not that big a deal) but also to easily make alternate expr types
+	  such as one that contains an sdValue.
 	* should it be possible somehow (perhaps it's undesirable) to directly make new "types" via the
 	  language itself, as opposed to making "types" via an environment-based object system?  Is this
 	  even useful since the benifit to types is mostly in C.  Does this also mean that it's actually

@@ -10,9 +10,14 @@
  * Args:	<value>, ...
  * Description:	Returns the values passed to it (as a single list).
  */
-int sdrl_base_array(sdMachine *mach, sdValue *args)
+int sdrl_base_array(sdMachine *mach, sdArray *args)
 {
-	mach->ret = SDRL_INCREF(args);
+	sdValue *func;
+
+	// Remove the function from the arguments
+	func = sdrl_array_shift(args);
+	SDRL_DECREF(func);
+	mach->ret = SDVALUE(SDRL_INCREF(args));
 	return(0);
 }
 

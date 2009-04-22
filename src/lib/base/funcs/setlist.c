@@ -10,28 +10,26 @@
  * Args:	<name>, <value>
  * Description:	Bind value to name.  Returns a duplicate of value.
  */
-int sdrl_base_setlist(sdMachine *mach, sdValue *args)
+int sdrl_base_setlist(sdMachine *mach, sdArray *args)
 {
-	sdValue *cur_name, *cur_value, *tmp;
+	int i;
+	sdArray *labels, *values;
 
-	if ((sdrl_value_count(args) < 2) || (args->type->basetype != SDRL_BT_REFERENCE))
+	if (args->last != 2 || (args->items[1]->type->basetype != SDRL_BT_ARRAY)
+	    || (args->items[2]->type->basetype != SDRL_BT_ARRAY))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
-	cur_name = SDREFERENCE(args)->ref;
-	cur_value = args->next;
-	args->next = NULL;
-	while (cur_name) {
-		if (cur_name->type->basetype != SDRL_BT_STRING)
+	labels = SDARRAY(args->items[1]);
+	values = SDARRAY(args->items[2]);
+	for (i = 0; i <= labels->last && i <= values->last; i++) {
+		if (labels->items[i]->type->basetype != SDRL_BT_STRING)
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-		tmp = cur_value->next;
-		cur_value->next = NULL;
-		if (sdrl_replace_binding(mach->env, SDSTRING(cur_name)->str, cur_value)) {
-			if (sdrl_add_binding(mach->env, SDSTRING(cur_name)->str, cur_value))
+		SDRL_INCREF(values->items[i]);
+		if (sdrl_replace_binding(mach->env, SDSTRING(labels->items[i])->str, values->items[i])) {
+			if (sdrl_add_binding(mach->env, SDSTRING(labels->items[i])->str, values->items[i]))
 				return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 		}
-		cur_name = cur_name->next;
-		cur_value = tmp;
 	}
-	//mach->ret = SDRL_INCREF(args->next);
+	//mach->ret = SDRL_INCREF(args->items[2]);
 	return(0);
 }
 

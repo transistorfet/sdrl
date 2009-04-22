@@ -8,7 +8,26 @@
 
 #include <sdrl/core/expr.h>
 #include <sdrl/core/value.h>
+#include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
+
+
+/**
+ * Create and return a type for sdExpr.
+ */
+sdType *sdrl_make_expr_type(void)
+{
+	return(sdrl_make_type(
+		sizeof(sdExpr),
+		0,
+		SDRL_BT_EXPRESSION,
+		NULL,
+		(sdrl_destroy_t) sdrl_destroy_expr,
+		(sdrl_duplicate_t) sdrl_duplicate_expr,
+		(sdrl_evaluate_t) sdrl_evaluate_expr
+	));
+}
+
 
 /**
  * Return a newly allocated number expression
@@ -20,8 +39,7 @@ sdExpr *sdrl_make_number_expr(sdType *type, int etype, linenumber_t line, number
 	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr))))
 		return(NULL);
 	SDVALUE(expr)->refs = 1;
-	SDVALUE(expr)->type = NULL;
-	SDVALUE(expr)->next = NULL;
+	SDVALUE(expr)->type = type;
 	expr->type = etype;
 	expr->line = line;
 	expr->data.num = num;
@@ -41,8 +59,7 @@ sdExpr *sdrl_make_string_expr(sdType *type, int etype, linenumber_t line, const 
 	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr) + strlen(str) + 1)))
 		return(NULL);
 	SDVALUE(expr)->refs = 1;
-	SDVALUE(expr)->type = NULL;
-	SDVALUE(expr)->next = NULL;
+	SDVALUE(expr)->type = type;
 	expr->type = etype;
 	expr->line = line;
 	expr->data.str = (char *) (expr + 1);
@@ -61,8 +78,7 @@ sdExpr *sdrl_make_call_expr(sdType *type, int etype, linenumber_t line, sdExpr *
 	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr))))
 		return(NULL);
 	SDVALUE(expr)->refs = 1;
-	SDVALUE(expr)->type = NULL;
-	SDVALUE(expr)->next = NULL;
+	SDVALUE(expr)->type = type;
 	expr->type = etype;
 	expr->line = line;
 	expr->data.expr = call;
@@ -73,16 +89,17 @@ sdExpr *sdrl_make_call_expr(sdType *type, int etype, linenumber_t line, sdExpr *
 /**
  * Create a duplicate of the expr.
  */
-sdExpr *sdrl_duplicate_expr(sdExpr *expr)
+sdExpr *sdrl_duplicate_expr(sdMachine *mach, sdExpr *expr)
 {
+	// TODO modify to use mach->heap for allocation
 	if (!expr)
 		return(NULL);
 	else if (expr->type & SDRL_ED_NUMBER)
-		return(sdrl_make_number_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.num, sdrl_duplicate_expr(expr->next)));
+		return(sdrl_make_number_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.num, sdrl_duplicate_expr(mach, expr->next)));
 	else if (expr->type & SDRL_ED_STRING)
-		return(sdrl_make_string_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.str, sdrl_duplicate_expr(expr->next)));
+		return(sdrl_make_string_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.str, sdrl_duplicate_expr(mach, expr->next)));
 	else if (expr->type & SDRL_ED_EXPR)
-		return(sdrl_make_call_expr(SDVALUE(expr)->type, expr->type, expr->line, sdrl_duplicate_expr(expr->data.expr), sdrl_duplicate_expr(expr->next)));
+		return(sdrl_make_call_expr(SDVALUE(expr)->type, expr->type, expr->line, sdrl_duplicate_expr(mach, expr->data.expr), sdrl_duplicate_expr(mach, expr->next)));
 	else
 		return(NULL);
 }
@@ -106,5 +123,16 @@ int sdrl_destroy_expr(sdExpr *expr)
 	return(0);
 }
 
-
+/**
+ * Use the given machine to evaluate the expression.
+ */
+int sdrl_evaluate_expr(sdMachine *mach, sdArray *args)
+{
+	// TODO what do you do (if anything) with the arguments?
+	SDRL_INCREF(args);
+	if (sdrl_add_binding(mach->env, "_", args))
+		sdrl_replace_binding(mach->env, "_", args);
+	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, args->items[0], mach->env);
+	return(0);
+}
 

@@ -17,7 +17,7 @@ int sdrl_load_base(sdMachine *mach)
 	/** Bind types */
 	sdrl_add_binding(mach->type_env, "dynblock", sdrl_base_make_dynblock_type(mach));
 	sdrl_add_binding(mach->type_env, "env", sdrl_base_make_env_type(mach));
-	sdrl_add_binding(mach->type_env, "expr", sdrl_base_make_expr_type(mach));
+	sdrl_add_binding(mach->type_env, "exprref", sdrl_base_make_expr_type(mach));
 	sdrl_add_binding(mach->type_env, "form", sdrl_base_make_form_type(mach));
 	sdrl_add_binding(mach->type_env, "func", sdrl_base_make_func_type(mach));
 	sdrl_add_binding(mach->type_env, "lexblock", sdrl_base_make_lexblock_type(mach));

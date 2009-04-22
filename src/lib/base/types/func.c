@@ -22,11 +22,11 @@ sdType *sdrl_base_make_func_type(sdMachine *mach)
 
 /*** Local Functions ***/
 
-int sdrl_base_evaluate_func(sdMachine *mach, sdPointer *func, sdValue *args)
+int sdrl_base_evaluate_func(sdMachine *mach, sdArray *args)
 {
 	SDRL_DECREF(mach->ret);
 	mach->ret = NULL;
-	return(((sdrl_func_t) func->ptr)(mach, args));
+	return(((sdrl_func_t) SDPOINTER(args->items[0])->ptr)(mach, args));
 }
 
 

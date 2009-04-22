@@ -14,32 +14,31 @@
  * Description:	Returns a string corresponding to the concatenation of the
  *		given numbers representing ASCII character and given strings.
  */
-int sdrl_string_tostring(sdMachine *mach, sdValue *args)
+int sdrl_string_tostring(sdMachine *mach, sdArray *args)
 {
-	int i = 0;
-	sdValue *cur;
+	int i, j = 0;
 	char buffer[SDRL_STRING_SIZE];
 	sdType *str_type;
 
 	if (!(str_type = sdrl_find_binding(mach->type_env, "string")))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 
-	for (cur = args; cur; cur = cur->next) {
-		if (cur->type->basetype == SDRL_BT_NUMBER)
-			buffer[i++] = (unsigned char) SDNUMBER(cur)->num;
-		else if (cur->type->basetype == SDRL_BT_STRING) {
-			strncpy(&buffer[i], SDSTRING(cur)->str, SDRL_STRING_SIZE - i - 1);
-			i += SDSTRING(cur)->len;
+	for (i = 1; i <= args->last; i++) {
+		if (args->items[i]->type->basetype == SDRL_BT_NUMBER)
+			buffer[j++] = (unsigned char) SDNUMBER(args->items[i])->num;
+		else if (args->items[i]->type->basetype == SDRL_BT_STRING) {
+			strncpy(&buffer[j], SDSTRING(args->items[i])->str, SDRL_STRING_SIZE - j - 1);
+			j += SDSTRING(args->items[i])->len;
 		}
 		else
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-		if (i >= SDRL_STRING_SIZE - 1)
+		if (j >= SDRL_STRING_SIZE - 1)
 			break;
 	}
-	if (i >= SDRL_STRING_SIZE)
-		i = SDRL_STRING_SIZE - 1;
-	buffer[i] = '\0';
-	mach->ret = sdrl_make_string(mach->heap, str_type, buffer, i);
+	if (j >= SDRL_STRING_SIZE)
+		j = SDRL_STRING_SIZE - 1;
+	buffer[j] = '\0';
+	mach->ret = sdrl_make_string(mach->heap, str_type, buffer, j);
 	return(0);
 }
 

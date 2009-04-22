@@ -38,6 +38,8 @@ struct sdEnv {
 
 #define SDENV(ptr)		( (sdEnv *) (ptr) )
 
+sdType *sdrl_make_environment_type(void);
+
 sdEnv *sdrl_create_environment(sdHeap *, sdType *, short, sdrl_destroy_t);
 sdEnv *sdrl_extend_environment(sdEnv *);
 sdEnv *sdrl_retract_environment(sdEnv *);

@@ -31,7 +31,7 @@ sdExpr *sdrl_base_parse_lambda_input(sdMachine *mach, sdInput *input)
 {
 	sdType *expr_type;
 
-	if (!(expr_type = sdrl_find_binding(mach->type_env, "*expr*")))
+	if (!(expr_type = sdrl_find_binding(mach->type_env, "expr")))
 		return(NULL);
 	return(lambda_parse_input(expr_type, input));
 }

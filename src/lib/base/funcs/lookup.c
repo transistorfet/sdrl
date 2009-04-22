@@ -10,29 +10,29 @@
  * Args:	<name>
  * Description:	Returns a copy of the value bound to the given name that is found by looking in the given environment.
  */
-int sdrl_base_lookup(sdMachine *mach, sdValue *args)
+int sdrl_base_lookup(sdMachine *mach, sdArray *args)
 {
 	sdEnv *env;
 	sdValue *bind;
 	sdType *string_type, *env_type;
 
-	if ((sdrl_value_count(args) != 2))
+	if (args->last != 2)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	else if (!(string_type = sdrl_find_binding(mach->type_env, "string")) || !(env_type = sdrl_find_binding(mach->type_env, "env")))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
-	else if ((args->type != env_type && args->type != string_type) || (args->next->type != string_type))
+	else if ((args->items[1]->type != env_type && args->items[1]->type != string_type) || (args->items[2]->type != string_type))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 	else {
-		if (args->type == string_type) {
-			if (!(env = sdrl_find_binding(mach->env, SDSTRING(args)->str)))
+		if (args->items[1]->type == string_type) {
+			if (!(env = sdrl_find_binding(mach->env, SDSTRING(args->items[1])->str)))
 				return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
-			else if (bind->type != env_type)
+			else if (SDVALUE(env)->type != env_type)
 				return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 		}
 		else
-			env = SDENV(args);
+			env = SDENV(args->items[1]);
 
-		if (!(bind = sdrl_find_binding(env, SDSTRING(args->next)->str)))
+		if (!(bind = sdrl_find_binding(env, SDSTRING(args->items[2])->str)))
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 		else
 			mach->ret = sdrl_duplicate_value(mach, bind);

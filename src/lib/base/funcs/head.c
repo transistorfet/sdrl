@@ -10,10 +10,11 @@
  * Args:	<value>, ...
  * Description:	Returns the first value passed to it.
  */
-int sdrl_base_head(sdMachine *mach, sdValue *args)
+int sdrl_base_head(sdMachine *mach, sdArray *args)
 {
-	if (args)
-		mach->ret = sdrl_duplicate_single_value(mach, args);
+	// TODO will lists be arrays or a new linked-list type??
+	if (args->last > 0)
+		mach->ret = sdrl_duplicate_value(mach, args->items[1]);
 	return(0);
 }
 

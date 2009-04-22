@@ -20,8 +20,10 @@ sdType *sdrl_base_make_list_type(sdMachine *mach)
 	));
 }
 
-sdValue *sdrl_base_create_list(sdMachine *mach, sdType *type, sdValue *args)
+sdValue *sdrl_base_create_list(sdMachine *mach, sdType *type, sdArray *args)
 {
-	return(sdrl_make_reference(mach->heap, type, args));
+	if (args->last != 0)
+		return(NULL);
+	return(sdrl_make_reference(mach->heap, type, args->items[0]));
 }
 

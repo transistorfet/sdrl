@@ -10,13 +10,14 @@
  * Args:	<value>, ...
  * Description:	Returns the number -1 if value passed is null; the number 0 if otherwise.
  */
-int sdrl_base_null(sdMachine *mach, sdValue *args)
+int sdrl_base_null(sdMachine *mach, sdArray *args)
 {
 	sdType *type;
 
 	if (!(type = sdrl_find_binding(mach->type_env, "number")))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
-	if (!args)
+	// TODO this is really really weird, maybe you should make a nil/undef type?
+	if (args->last < 1)
 		mach->ret = sdrl_make_number(mach->heap, type, -1);
 	else
 		mach->ret = sdrl_make_number(mach->heap, type, 0);

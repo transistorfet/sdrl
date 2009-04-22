@@ -20,14 +20,14 @@ sdType *sdrl_base_make_dynblock_type(sdMachine *mach)
 	));
 }
 
-int sdrl_base_evaluate_dynblock(sdMachine *mach, sdReference *expr, sdValue *args)
+int sdrl_base_evaluate_dynblock(sdMachine *mach, sdArray *args)
 {
 	sdEnv *env;
 
 	if (!(env = sdrl_extend_environment(mach->env)))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_OUT_OF_MEMORY, NULL));
 	sdrl_add_binding(env, "_", SDRL_INCREF(args));
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, expr->ref, env));
+	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDREFERENCE(args->items[0])->ref, env);
 	SDRL_DECREF(env);
 	return(0);
 }

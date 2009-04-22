@@ -11,6 +11,7 @@
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
 #include <sdrl/core/type.h>
+#include <sdrl/core/array.h>
 #include <sdrl/core/error.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/events.h>
@@ -18,7 +19,8 @@
 #include <sdrl/core/basetypes.h>
 #include <sdrl/globals.h>
 
-static int sdrl_machine_merge_return(sdMachine *, sdValue *);
+static int sdrl_push_expr_list_events(sdMachine *, sdExpr *, sdArray *);
+static int sdrl_append_return(sdMachine *, sdArray *);
 
 /**
  * Create a machine for executing code
@@ -47,7 +49,8 @@ sdMachine *sdrl_create_machine(void)
 
 	sdrl_add_binding(mach->type_env, "number", sdrl_make_number_type());
 	sdrl_add_binding(mach->type_env, "string", sdrl_make_string_type());
-	sdrl_add_binding(mach->type_env, "*expr*", sdrl_make_expression_type());
+	sdrl_add_binding(mach->type_env, "expr", sdrl_make_expr_type());
+	sdrl_add_binding(mach->type_env, "array", sdrl_make_array_type());
 
 	return(mach);
 
@@ -80,10 +83,12 @@ int sdrl_evaluate(sdMachine *mach, sdExpr *expr)
 	int ret = 0;
 	sdEvent *event;
 
-	if (!(event = sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr), mach->env)))
+	if (!(event = sdrl_make_event((sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr), mach->env)))
 		return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 	do {
-		ret = sdrl_evaluate_event(mach, event);
+		SDRL_DECREF(mach->env);
+		mach->env = SDRL_INCREF(event->env);
+		ret = event->func(mach, event->arg);
 		sdrl_destroy_event(event);
 		// TODO check the error and see if we should return or continue
 		if (ret)
@@ -95,28 +100,6 @@ int sdrl_evaluate(sdMachine *mach, sdExpr *expr)
 }
 
 /**
- * Evaluate the continuation event by calling the event function
- */
-int sdrl_evaluate_event(sdMachine *mach, sdEvent *event)
-{
-	int ret = 0;
-	sdValue *args;
-
-	SDRL_DECREF(mach->env);
-	mach->env = SDRL_INCREF(event->env);
-
-	if (SDRL_BF_IS_SET(event, SDRL_EBF_USE_RET)) {
-		args = mach->ret;
-		mach->ret = NULL;
-		ret = event->func(mach, event->arg, args);
-		SDRL_DECREF(args);
-	}
-	else 
-		ret = event->func(mach, event->arg);
-	return(ret);
-}
-
-/**
  * Evaluate the list of exprs
  */
 int sdrl_evaluate_expr_list(sdMachine *mach, sdExpr *expr)
@@ -124,17 +107,19 @@ int sdrl_evaluate_expr_list(sdMachine *mach, sdExpr *expr)
 	if (!expr)
 		return(0);
 	else if (expr->next)
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr->next), mach->env));
-	return(sdrl_evaluate_expr(mach, expr));
+		sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr->next), mach->env);
+	return(sdrl_evaluate_expr_value(mach, expr));
 }
 
 /**
- * Evaluate the single sdrl_expr and either return 0 with the result
- * stored in sdrl_machine.ret or return an error code.
+ * Evaluate the single sdExpr value and either return 0 with the result
+ * stored in mach->ret or return an error code.
  */
-int sdrl_evaluate_expr(sdMachine *mach, sdExpr *expr)
+int sdrl_evaluate_expr_value(sdMachine *mach, sdExpr *expr)
 {
+	int ret;
 	sdValue *func;
+	sdArray *args;
 
 	SDRL_DECREF(mach->ret);
 	mach->ret = NULL;
@@ -150,25 +135,39 @@ int sdrl_evaluate_expr(sdMachine *mach, sdExpr *expr)
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
+		if (!(args = sdrl_make_array(mach->heap, sdrl_find_binding(mach->type_env, "array"), SDRL_DEFAULT_ARGS)))
+			return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 		mach->current_line = expr->data.expr->line;
 		if (expr->data.expr->type == SDRL_ET_STRING || expr->data.expr->type == SDRL_ET_IDENTIFIER) {
-			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str)))
+			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str))) {
+				SDRL_DECREF(args);
 				return(sdrl_set_error(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
-			else if (func->type->evaluate && SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS))
-				return(func->type->evaluate(mach, func, SDVALUE(expr->data.expr->next)));
+			}
+			else if (func->type->evaluate && SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS)) {
+				sdrl_array_push(args, SDRL_INCREF(func));
+				sdrl_array_push(args, SDVALUE(SDRL_INCREF(expr->data.expr->next)));
+				ret = func->type->evaluate(mach, args);
+				SDRL_DECREF(args);
+				return(ret);
+			}
 			else {
-				sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, func, mach->env));
-				sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDVALUE(expr->data.expr->next), mach->env));
+				sdrl_array_push(args, SDRL_INCREF(func));
+				sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
+				sdrl_push_expr_list_events(mach, expr->data.expr->next, args);
+				SDRL_DECREF(args);
 				return(0);
 			}
 		}
 		else if (expr->data.expr->type == SDRL_ET_CALL) {
-			sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) sdrl_evaluate_value, NULL, mach->env));
-			sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDVALUE(expr->data.expr), mach->env));
+			sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
+			sdrl_push_expr_list_events(mach, expr->data.expr, args);
+			SDRL_DECREF(args);
 			return(0);
 		}
-		else
+		else {
+			SDRL_DECREF(args);
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
+		}
 	}
 	else
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_AST_TYPE, NULL));
@@ -176,18 +175,15 @@ int sdrl_evaluate_expr(sdMachine *mach, sdExpr *expr)
 }
 
 /**
- * Call the function stored in the value and set the result
+ * Call the function in the first position of the array and set the result
  * in mach->ret or store a duplicate of the value if it is not executable
  */
-int sdrl_evaluate_value(sdMachine *mach, sdValue *func, sdValue *args)
+int sdrl_evaluate_value(sdMachine *mach, sdArray *args)
 {
 	int ret = 0;
+	sdValue *func;
 
-	if (!func && args) {
-		func = args;
-		args = args->next;
-	}
-
+	func = sdrl_array_get(args, 0);
 	if (!func)
 		ret = sdrl_set_error(mach, SDRL_ES_LOW, SDRL_ERR_NOT_FOUND, NULL);
 	else if (func->type->evaluate) {
@@ -195,46 +191,46 @@ int sdrl_evaluate_value(sdMachine *mach, sdValue *func, sdValue *args)
 			ret = sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		else {
 			// TODO what are the advantages and disadvantages of these two ways of execution?
-			//mach->ret = args;
-			//sdrl_push_event(mach->cont, sdrl_make_event(SDRL_EBF_USE_RET, (sdrl_event_t) func->type->evaluate, SDRL_INCREF(func), mach->env));
-			ret = func->type->evaluate(mach, func, args);
+			//sdrl_push_new_event(mach->cont, (sdrl_event_t) func->type->evaluate, SDRL_INCREF(args), mach->env);
+			ret = func->type->evaluate(mach, args);
 		}
 	}
 	else {
 		// TODO what do we do if the function is not evaluatable?
-		if (args)
+		if (args->last > 0)
 			ret = sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		else
-			mach->ret = sdrl_duplicate_value(mach, func);
+			mach->ret = sdrl_duplicate_value(mach, args->items[0]);
 	}
 	return(ret);
 }
 
-/**
- * Evaluate all the exprs and build a list of the corresponding return values.
- */
-int sdrl_evaluate_args(sdMachine *mach, sdExpr *exprs)
-{
-	if (!exprs)
-		return(0);
-	if (exprs->next)
-		sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_args, SDVALUE(exprs->next), mach->env));
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_machine_merge_return, mach->ret, mach->env));
-	mach->ret = NULL;
-	sdrl_push_event(mach->cont, sdrl_make_event(0, (sdrl_event_t) sdrl_evaluate_expr, SDVALUE(exprs), mach->env));
-	return(0);
-}
 
 /*** Local Functions ***/
+
+/**
+ * Push events to evaluate all exprs in a list and push the results into the
+ * given array.
+ */
+static int sdrl_push_expr_list_events(sdMachine *mach, sdExpr *exprs, sdArray *args)
+{
+	if (!exprs)
+		return(-1);
+	if (exprs->next)
+		sdrl_push_expr_list_events(mach, exprs->next, args);
+	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_append_return, SDVALUE(args), mach->env);
+	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_value, SDVALUE(exprs), mach->env);
+	return(0);
+}
 
 /**
  * Append the current value of mach->ret to the end of ret and store the whole
  * thing in mach->ret.
  */
-static int sdrl_machine_merge_return(sdMachine *mach, sdValue *ret)
+static int sdrl_append_return(sdMachine *mach, sdArray *array)
 {
-	sdrl_push_value(&ret, mach->ret);
-	mach->ret = ret;
+	sdrl_array_push(array, mach->ret);
+	mach->ret = NULL;
 	return(0);
 }
 

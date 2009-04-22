@@ -9,11 +9,14 @@
 
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
+#include <sdrl/core/array.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/error.h>
 #include <sdrl/core/events.h>
 #include <sdrl/core/bindings.h>
 #include <sdrl/globals.h>
+
+#define SDRL_DEFAULT_ARGS	4
 
 struct sdMachine {
 	linenumber_t current_line;
@@ -46,11 +49,9 @@ sdMachine *sdrl_create_machine(void);
 int sdrl_destroy_machine(sdMachine *);
 
 int sdrl_evaluate(sdMachine *, sdExpr *);
-int sdrl_evaluate_event(sdMachine *, sdEvent *);
 int sdrl_evaluate_expr_list(sdMachine *, sdExpr *);
-int sdrl_evaluate_expr(sdMachine *, sdExpr *);
-int sdrl_evaluate_value(sdMachine *, sdValue *, sdValue *);
-int sdrl_evaluate_args(sdMachine *, sdExpr *);
+int sdrl_evaluate_expr_value(sdMachine *, sdExpr *);
+int sdrl_evaluate_value(sdMachine *, sdArray *);
 
 #endif
 

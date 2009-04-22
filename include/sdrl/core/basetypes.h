@@ -58,9 +58,6 @@ sdValue *sdrl_duplicate_reference(sdMachine *, sdReference *);
 sdValue *sdrl_make_pointer(sdHeap *, sdType *, void *);
 sdValue *sdrl_duplicate_pointer(sdMachine *, sdPointer *);
 
-sdType *sdrl_make_expression_type(void);
-sdType *sdrl_make_environment_type(void);
-
 
 static inline number_t sdrl_check_number(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
 	if (!cur) {

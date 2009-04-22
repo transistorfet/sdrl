@@ -20,22 +20,22 @@ sdType *sdrl_base_make_env_type(sdMachine *mach)
 	));
 }
 
-sdValue *sdrl_base_create_env(sdMachine *mach, sdType *type, sdValue *args)
+sdValue *sdrl_base_create_env(sdMachine *mach, sdType *type, sdArray *args)
 {
 	sdEnv *env;
 	sdType *env_type;
 
-	if (!args) {
+	if (args->last < 0) {
 		if (!(env_type = sdrl_find_binding(mach->type_env, "*env*")))
 			sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
 		env = sdrl_create_environment(mach->heap, env_type, 0, (sdrl_destroy_t) sdrl_destroy_value);
 	}
-	else if (args->type != type) {
+	else if (args->items[0]->type != type) {
 		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
 		return(NULL);
 	}
 	else
-		env = sdrl_extend_environment(SDENV(SDREFERENCE(args)->ref));
+		env = sdrl_extend_environment(SDENV(SDREFERENCE(args->items[0])->ref));
 	return(sdrl_make_reference(mach->heap, type, SDVALUE(env)));
 }
 

@@ -1,0 +1,35 @@
+Before new value system:
+Test                           real            user            sys             
+fac.lsp                        0.17            0.10            0.06            
+fac.pl                         0.04            0.03            0.00            
+fac.sdrl                       0.20            0.19            0.00            
+fac.scm                        0.30            0.25            0.02            
+fac.lua                        0.02            0.00            0.00 
+
+2008/01/12 - After new value system:
+Test                           real            user            sys             
+fac.lsp                        0.17            0.10            0.06            
+fac.pl                         0.06            0.03            0.01            
+fac.sdrl                       0.22            0.19            0.00            
+fac.scm                        0.29            0.24            0.02            
+fac.lua                        0.01            0.00            0.00  
+
+2009/04/12 - Before conversion to arrays
+Test                           real            user            sys             
+fac.lsp                        0.99            0.10            0.19            
+fac.lua                        0.18            0.00            0.00            
+fac.pl                         0.09            0.03            0.00            
+fac.py                         1.21            0.19            0.04            
+fac.scm                        0.69            0.26            0.03            
+fac.sdrl                       0.27            0.24            0.01 
+
+2009/04/20 - After conversion to arrays
+Test                           real            user            sys             
+fac.lsp                        0.17            0.10            0.06            
+fac.lua                        0.01            0.01            0.00            
+fac.pl                         0.04            0.03            0.00            
+fac.py                         0.21            0.18            0.03            
+fac.scm                        0.28            0.24            0.03            
+fac.sdrl                       0.30            0.22            0.07
+
+

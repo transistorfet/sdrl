@@ -12,9 +12,9 @@
 int sdrl_load_io(sdMachine *);
 
 /*** Functions ***/
-int sdrl_io_print(sdMachine *, sdValue *);
+int sdrl_io_print(sdMachine *, sdArray *);
 
-int sdrl_io_open(sdMachine *, sdValue *);
+int sdrl_io_open(sdMachine *, sdArray *);
 
 #endif
 

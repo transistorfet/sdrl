@@ -13,16 +13,15 @@
  * Args:	<value>
  * Description:	Returns the length of the given string.
  */
-int sdrl_string_length(sdMachine *mach, sdValue *args)
+int sdrl_string_length(sdMachine *mach, sdArray *args)
 {
-	sdString *str;
 	sdType *num_type;
 
+	if (args->last != 1 || args->items[1]->type->basetype != SDRL_BT_STRING)
+		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	if (!(num_type = sdrl_find_binding(mach->type_env, "number")))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
-	if (!(str = SDSTRING(sdrl_next_arg(mach, &args, SDRL_BT_STRING, NULL))))
-		return(mach->error->err);
-	mach->ret = sdrl_make_number(mach->heap, num_type, (number_t) str->len);
+	mach->ret = sdrl_make_number(mach->heap, num_type, (number_t) SDSTRING(args->items[1])->len);
 	return(0);
 }
 

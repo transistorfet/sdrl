@@ -51,21 +51,22 @@ typedef struct sdCont sdCont;
 typedef struct sdHeap sdHeap;
 typedef struct sdExpr sdExpr;
 typedef struct sdType sdType;
+typedef struct sdArray sdArray;
 typedef struct sdError sdError;
 typedef struct sdEvent sdEvent;
 typedef struct sdValue sdValue;
 typedef struct sdInput sdInput;
 typedef struct sdMachine sdMachine;
 
-typedef sdValue *(*sdrl_create_t)(sdMachine *mach, sdType *type, sdValue *args);
+typedef sdValue *(*sdrl_create_t)(sdMachine *mach, sdType *type, sdArray *args);
 typedef int (*sdrl_destroy_t)(sdValue *value);
 typedef sdValue *(*sdrl_duplicate_t)(sdMachine *mach, sdValue *value);
-typedef int (*sdrl_evaluate_t)(sdMachine *mach, sdValue *value, sdValue *args);
+typedef int (*sdrl_evaluate_t)(sdMachine *mach, sdArray *args);
 
 // TODO should that sdInput be there???
 typedef sdExpr *(*sdrl_parser_t)(sdMachine *, sdInput *);
 
-typedef int (*sdrl_func_t)(sdMachine *, sdValue *);
+typedef int (*sdrl_func_t)(sdMachine *, sdArray *);
 
 #endif
 
