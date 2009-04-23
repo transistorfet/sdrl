@@ -1,11 +1,11 @@
 /*
- * Name:	bindings.h
- * Description:	Bindings Manager Header
+ * Name:	env.h
+ * Description:	Environment Type Header
  */
 
 
-#ifndef _SDRL_CORE_BINDINGS_H
-#define _SDRL_CORE_BINDINGS_H
+#ifndef _SDRL_CORE_ENV_H
+#define _SDRL_CORE_ENV_H
 
 #include <sdrl/core/heap.h>
 #include <sdrl/core/value.h>
@@ -41,16 +41,16 @@ struct sdEnv {
 sdType *sdrl_make_environment_type(void);
 
 sdEnv *sdrl_make_environment(sdHeap *, sdType *, short, sdrl_destroy_t);
-sdEnv *sdrl_environment_create(sdMachine *, sdType *, sdArray *);
+sdEnv *sdrl_env_create(sdMachine *, sdType *, sdArray *);
 sdEnv *sdrl_extend_environment(sdEnv *);
 sdEnv *sdrl_retract_environment(sdEnv *);
 int sdrl_destroy_environment(sdEnv *);
 
-int sdrl_add_binding(sdEnv *, const char *, void *);
-int sdrl_replace_binding(sdEnv *, const char *, void *);
-int sdrl_remove_binding(sdEnv *, const char *);
+int sdrl_env_add(sdEnv *, const char *, void *);
+int sdrl_env_replace(sdEnv *, const char *, void *);
+int sdrl_env_remove(sdEnv *, const char *);
 
-void *sdrl_find_binding(sdEnv *, const char *);
+void *sdrl_env_find(sdEnv *, const char *);
 
 #endif
 

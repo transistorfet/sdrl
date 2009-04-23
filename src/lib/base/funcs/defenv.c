@@ -15,7 +15,7 @@ int sdrl_base_defenv(sdMachine *mach, sdArray *args)
 	sdType *type;
 	sdValue *value;
 
-	if (!(type = sdrl_find_binding(mach->type_env, "env")))
+	if (!(type = sdrl_env_find(mach->type_env, "env")))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	else if (!type->create)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, NULL));

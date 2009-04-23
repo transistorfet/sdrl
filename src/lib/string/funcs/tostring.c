@@ -20,7 +20,7 @@ int sdrl_string_tostring(sdMachine *mach, sdArray *args)
 	char buffer[SDRL_STRING_SIZE];
 	sdType *str_type;
 
-	if (!(str_type = sdrl_find_binding(mach->type_env, "string")))
+	if (!(str_type = sdrl_env_find(mach->type_env, "string")))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 
 	for (i = 1; i <= args->last; i++) {

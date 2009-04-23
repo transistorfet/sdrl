@@ -34,7 +34,7 @@ sdValue *sdrl_io_create_file(sdMachine *mach, sdType *type, sdValue *args)
 		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
 		return(NULL);
 	}
-	else if (!(str_type = sdrl_find_binding(mach->type_env, "string"))) {
+	else if (!(str_type = sdrl_env_find(mach->type_env, "string"))) {
 		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
 		return(NULL);
 	}

@@ -7,20 +7,20 @@
 #ifndef _SDRL_UTILS_H
 #define _SDRL_UTILS_H
 
+#include <sdrl/core/env.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
 #include <sdrl/core/type.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/error.h>
 #include <sdrl/core/events.h>
-#include <sdrl/core/bindings.h>
 #include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
 
 static inline void *sdrl_find(sdMachine *mach, sdEnv *env, const char *name) {
 	void *ptr;
 
-	if (!(ptr = sdrl_find_binding(env, name))) {
+	if (!(ptr = sdrl_env_find(env, name))) {
 		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
 		return(NULL);
 	}
@@ -32,7 +32,7 @@ static inline void *sdrl_find(sdMachine *mach, sdEnv *env, const char *name) {
  * the given machine.
  */
 #define SDRL_BIND_FUNCTION(mach, type, name, func) \
-	sdrl_add_binding(mach->env, name, sdrl_make_pointer(mach->heap, type, func))
+	sdrl_env_add(mach->env, name, sdrl_make_pointer(mach->heap, type, func))
 
 #endif
 

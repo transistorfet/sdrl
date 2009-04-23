@@ -1,13 +1,13 @@
 /*
- * Name:	bindings.c
- * Description:	Bindings Manager
+ * Name:	env.c
+ * Description:	Environment Type
  */
 
 
 #include <stdlib.h>
 #include <string.h>
 
-#include <sdrl/core/bindings.h>
+#include <sdrl/core/env.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/type.h>
 #include <sdrl/core/array.h>
@@ -25,8 +25,8 @@
 #define LOWERCASE(ch) \
 	( (ch >= 0x41 && ch <= 0x5a) ? ch + 0x20 : ch )
 
-static sdBinding *sdrl_get_bindings(sdEnv *, const char *, int);
-static inline int sdrl_bindings_rehash(sdEnv *env, int newsize);
+static sdBinding *sdrl_env_get(sdEnv *, const char *, int);
+static inline int sdrl_env_rehash(sdEnv *env, int newsize);
 static int sdrl_stricmp(const char *, const char *);
 static inline unsigned int sdrl_hash(const char *);
 
@@ -40,7 +40,7 @@ sdType *sdrl_make_environment_type(void)
 		sizeof(sdEnv),
 		0,
 		SDRL_BT_ENVIRONMENT,
-		(sdrl_create_t) sdrl_environment_create,
+		(sdrl_create_t) sdrl_env_create,
 		(sdrl_destroy_t) sdrl_retract_environment,
 		NULL,
 		NULL
@@ -79,7 +79,7 @@ sdEnv *sdrl_make_environment(sdHeap *heap, sdType *type, short bitflags, sdrl_de
  * Create a new environment optionally given a parent argument.  This function
  * is intended to be callable as a create_t type function.
  */
-sdEnv *sdrl_environment_create(sdMachine *mach, sdType *type, sdArray *args)
+sdEnv *sdrl_env_create(sdMachine *mach, sdType *type, sdArray *args)
 {
 	if (args->last < 0)
 		return(sdrl_make_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
@@ -151,7 +151,7 @@ int sdrl_destroy_environment(sdEnv *env)
 /**
  * Add a binding of name to environment.
  */
-int sdrl_add_binding(sdEnv *env, const char *name, void *data)
+int sdrl_env_add(sdEnv *env, const char *name, void *data)
 {
 	unsigned int hash;
 	sdBinding *bind;
@@ -175,20 +175,20 @@ int sdrl_add_binding(sdEnv *env, const char *name, void *data)
 	env->table[hash] = bind;
 	env->entries++;
 	if ((env->entries / env->size) > SDRL_ENV_LOAD_FACTOR)
-		sdrl_bindings_rehash(env, env->size * SDRL_ENV_GROWTH_FACTOR);
+		sdrl_env_rehash(env, env->size * SDRL_ENV_GROWTH_FACTOR);
 	return(0);
 }
 
 /**
  * Replace the binding's data with data.
  */
-int sdrl_replace_binding(sdEnv *env, const char *name, void *data)
+int sdrl_env_replace(sdEnv *env, const char *name, void *data)
 {
 	sdBinding *bind;
 
 	if (!name || !data || SDRL_BF_IS_SET(env, SDRL_BBF_NO_REPLACE))
 		return(-1);
-	if ((bind = sdrl_get_bindings(env, name, 1))) {
+	if ((bind = sdrl_env_get(env, name, 1))) {
 		if (env->destroy)
 			env->destroy(bind->data);
 		bind->data = data;
@@ -200,7 +200,7 @@ int sdrl_replace_binding(sdEnv *env, const char *name, void *data)
 /**
  * Remove a bindings of name from environment
  */
-int sdrl_remove_binding(sdEnv *env, const char *name)
+int sdrl_env_remove(sdEnv *env, const char *name)
 {
 	unsigned int hash;
 	sdBinding *cur, *prev;
@@ -231,11 +231,11 @@ int sdrl_remove_binding(sdEnv *env, const char *name)
 /**
  * Find the value bound to name in env or its parents.
  */
-void *sdrl_find_binding(sdEnv *env, const char *name)
+void *sdrl_env_find(sdEnv *env, const char *name)
 {
 	sdBinding *bind;
 
-	if ((bind = sdrl_get_bindings(env, name, 0)))
+	if ((bind = sdrl_env_get(env, name, 0)))
 		return(bind->data);
 	return(NULL);
 }
@@ -246,7 +246,7 @@ void *sdrl_find_binding(sdEnv *env, const char *name)
  * Returns binding of name in environment or one of environments parents
  * searching up to levels (0 to search all).
  */
-static sdBinding *sdrl_get_bindings(sdEnv *env, const char *name, int levels)
+static sdBinding *sdrl_env_get(sdEnv *env, const char *name, int levels)
 {
 	unsigned int hash;
 	sdBinding *cur;
@@ -268,7 +268,7 @@ static sdBinding *sdrl_get_bindings(sdEnv *env, const char *name, int levels)
 /**
  * Increases the size of the hashtable and reinserts all of the elements.
  */
-static inline int sdrl_bindings_rehash(sdEnv *env, int newsize)
+static inline int sdrl_env_rehash(sdEnv *env, int newsize)
 {
 	unsigned int i, hash, oldsize;
 	sdBinding **newtable;

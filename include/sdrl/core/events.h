@@ -7,7 +7,6 @@
 #ifndef _SDRL_CORE_EVENTS_H
 #define _SDRL_CORE_EVENTS_H
 
-#include <sdrl/core/bindings.h>
 #include <sdrl/globals.h>
 
 typedef int (*sdrl_event_t)(sdMachine *, sdValue *);

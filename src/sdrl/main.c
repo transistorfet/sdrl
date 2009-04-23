@@ -45,7 +45,7 @@ int main(int argc, char **argv)
 
 	//sdrl_base_display_expr(code);
 	// TODO this creates a cyclical reference which requires garbage collection
-	sdrl_add_binding(mach->env, "*globals*", SDRL_INCREF(mach->global));
+	sdrl_env_add(mach->env, "*globals*", SDRL_INCREF(mach->global));
 	convert_ast(code);
 	print_result(mach, sdrl_evaluate(mach, code));
 
@@ -115,7 +115,7 @@ void init_macros(sdMachine *mach)
 {
 	sdType *expr_type;
 
-	if (!(expr_type = sdrl_find_binding(mach->type_env, "expr")))
+	if (!(expr_type = sdrl_env_find(mach->type_env, "expr")))
 		return;
 	sdrl_add_macro("if", 2, 3,
 		sdrl_make_call_expr(type, SDRL_ET_CALL, 0, sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "if", sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "$1",

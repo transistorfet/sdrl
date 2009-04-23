@@ -24,7 +24,7 @@
 	* reduce length/verbosity of some function names (as per api.txt?)
 	* make a duplicate environment function
 
-	* make functions (inlines) for things like sdrl_find_binding that produce an error such that they
+	* make functions (inlines) for things like sdrl_env_find that produce an error such that they
 	  can easily be used with SDRL_TRY()
 	* use SDRL_TRY everywhere you can, including the core
 	* should sdrl_make_call_expr really by called sdrl_make_expr_expr (despite it's strangity?)
@@ -78,7 +78,6 @@
 
 Refactoring:
 
-	* change the name of bindings.c to env.c (but what do we do about the functions with the name bindings)
 	* should retract_environment replace destroy_environment (in name)
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>

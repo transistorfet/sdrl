@@ -15,16 +15,15 @@ int sdrl_load_base(sdMachine *mach)
 	sdType *form, *func;
 
 	/** Bind types */
-	sdrl_add_binding(mach->type_env, "dynblock", sdrl_base_make_dynblock_type(mach));
-	sdrl_add_binding(mach->type_env, "exprref", sdrl_base_make_expr_type(mach));
-	sdrl_add_binding(mach->type_env, "form", sdrl_base_make_form_type(mach));
-	sdrl_add_binding(mach->type_env, "func", sdrl_base_make_func_type(mach));
-	sdrl_add_binding(mach->type_env, "lexblock", sdrl_base_make_lexblock_type(mach));
-	sdrl_add_binding(mach->type_env, "list", sdrl_base_make_list_type(mach));
+	sdrl_env_add(mach->type_env, "dynblock", sdrl_base_make_dynblock_type(mach));
+	sdrl_env_add(mach->type_env, "form", sdrl_base_make_form_type(mach));
+	sdrl_env_add(mach->type_env, "func", sdrl_base_make_func_type(mach));
+	sdrl_env_add(mach->type_env, "lexblock", sdrl_base_make_lexblock_type(mach));
+	sdrl_env_add(mach->type_env, "list", sdrl_base_make_list_type(mach));
 
-	if (!(form = sdrl_find_binding(mach->type_env, "form")))
+	if (!(form = sdrl_env_find(mach->type_env, "form")))
 		return(-1);
-	if (!(func = sdrl_find_binding(mach->type_env, "func")))
+	if (!(func = sdrl_env_find(mach->type_env, "func")))
 		return(-1);
 
 	/** Bind forms */

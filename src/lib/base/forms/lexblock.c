@@ -15,7 +15,7 @@ int sdrl_base_lexblock(sdMachine *mach, sdArray *args)
 	sdType *type;
 	sdValue *func;
 
-	if (!(type = sdrl_find_binding(mach->type_env, "lexblock")))
+	if (!(type = sdrl_env_find(mach->type_env, "lexblock")))
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
 	// Remove the function value from the args
 	func = sdrl_array_shift(args);

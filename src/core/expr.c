@@ -130,8 +130,8 @@ int sdrl_evaluate_expr(sdMachine *mach, sdArray *args)
 {
 	// TODO what do you do (if anything) with the arguments?
 	SDRL_INCREF(args);
-	if (sdrl_add_binding(mach->env, "_", args))
-		sdrl_replace_binding(mach->env, "_", args);
+	if (sdrl_env_add(mach->env, "_", args))
+		sdrl_env_replace(mach->env, "_", args);
 	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, args->items[0], mach->env);
 	return(0);
 }

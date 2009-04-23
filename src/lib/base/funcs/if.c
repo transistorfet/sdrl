@@ -18,7 +18,7 @@ int sdrl_base_if(sdMachine *mach, sdArray *args)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
 	else if (args->items[1]->type->basetype != SDRL_BT_NUMBER)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
-	else if (!(block = sdrl_make_array(mach->heap, sdrl_find_binding(mach->type_env, "array"), 1)))
+	else if (!(block = sdrl_make_array(mach->heap, sdrl_env_find(mach->type_env, "array"), 1)))
 		return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 	// TODO convert this to to more than just number comparison
 	else if (SDNUMBER(args->items[1])->num)

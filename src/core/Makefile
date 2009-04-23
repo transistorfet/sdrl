@@ -10,7 +10,7 @@ LIB_TARGET = ../../lib/libsdrl.a
 
 OBJS =	array.o	\
 	basetypes.o	\
-	bindings.o	\
+	env.o	\
 	error.o	\
 	events.o	\
 	expr.o	\
@@ -45,58 +45,55 @@ clean:
 array.o: array.c ../../include/sdrl/core/array.h \
   ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
   ../../include/sdrl/globals.h ../../include/sdrl/core/machine.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/core/expr.h \
-  ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h \
-  ../../include/sdrl/core/bindings.h
+  ../../include/sdrl/core/env.h ../../include/sdrl/core/heap.h \
+  ../../include/sdrl/core/expr.h ../../include/sdrl/core/error.h \
+  ../../include/sdrl/core/events.h
 
 basetypes.o: basetypes.c ../../include/sdrl/core/heap.h \
   ../../include/sdrl/globals.h ../../include/sdrl/core/type.h \
   ../../include/sdrl/core/value.h ../../include/sdrl/core/machine.h \
-  ../../include/sdrl/core/expr.h ../../include/sdrl/core/array.h \
-  ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h \
-  ../../include/sdrl/core/bindings.h ../../include/sdrl/core/basetypes.h
+  ../../include/sdrl/core/env.h ../../include/sdrl/core/expr.h \
+  ../../include/sdrl/core/array.h ../../include/sdrl/core/error.h \
+  ../../include/sdrl/core/events.h ../../include/sdrl/core/basetypes.h
 
-bindings.o: bindings.c ../../include/sdrl/core/bindings.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/globals.h \
-  ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
-  ../../include/sdrl/core/array.h ../../include/sdrl/core/machine.h \
-  ../../include/sdrl/core/expr.h ../../include/sdrl/core/error.h \
-  ../../include/sdrl/core/events.h
+env.o: env.c ../../include/sdrl/core/env.h ../../include/sdrl/core/heap.h \
+  ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
+  ../../include/sdrl/core/type.h ../../include/sdrl/core/array.h \
+  ../../include/sdrl/core/machine.h ../../include/sdrl/core/expr.h \
+  ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h
 
 error.o: error.c ../../include/sdrl/core/value.h \
   ../../include/sdrl/core/type.h ../../include/sdrl/globals.h \
   ../../include/sdrl/core/error.h
 
 events.o: events.c ../../include/sdrl/core/events.h \
-  ../../include/sdrl/core/bindings.h ../../include/sdrl/core/heap.h \
-  ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
-  ../../include/sdrl/core/type.h
+  ../../include/sdrl/globals.h
 
 expr.o: expr.c ../../include/sdrl/core/expr.h \
   ../../include/sdrl/core/value.h ../../include/sdrl/core/type.h \
   ../../include/sdrl/globals.h ../../include/sdrl/core/machine.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/core/array.h \
-  ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h \
-  ../../include/sdrl/core/bindings.h
+  ../../include/sdrl/core/env.h ../../include/sdrl/core/heap.h \
+  ../../include/sdrl/core/array.h ../../include/sdrl/core/error.h \
+  ../../include/sdrl/core/events.h
 
 heap.o: heap.c ../../include/sdrl/core/heap.h \
   ../../include/sdrl/globals.h
 
 machine.o: machine.c ../../include/sdrl/core/machine.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/globals.h \
-  ../../include/sdrl/core/expr.h ../../include/sdrl/core/value.h \
-  ../../include/sdrl/core/type.h ../../include/sdrl/core/array.h \
-  ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h \
-  ../../include/sdrl/core/bindings.h ../../include/sdrl/core/basetypes.h
+  ../../include/sdrl/core/env.h ../../include/sdrl/core/heap.h \
+  ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
+  ../../include/sdrl/core/type.h ../../include/sdrl/core/expr.h \
+  ../../include/sdrl/core/array.h ../../include/sdrl/core/error.h \
+  ../../include/sdrl/core/events.h ../../include/sdrl/core/basetypes.h
 
 type.o: type.c ../../include/sdrl/core/type.h \
   ../../include/sdrl/globals.h
 
 utils.o: utils.c ../../include/sdrl/core/utils.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/globals.h \
-  ../../include/sdrl/core/expr.h ../../include/sdrl/core/value.h \
-  ../../include/sdrl/core/type.h ../../include/sdrl/core/error.h \
-  ../../include/sdrl/core/events.h ../../include/sdrl/core/bindings.h \
+  ../../include/sdrl/core/env.h ../../include/sdrl/core/heap.h \
+  ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
+  ../../include/sdrl/core/type.h ../../include/sdrl/core/expr.h \
+  ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h \
   ../../include/sdrl/core/machine.h ../../include/sdrl/core/array.h
 
 value.o: value.c ../../include/sdrl/core/value.h \

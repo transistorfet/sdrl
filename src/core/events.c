@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include <sdrl/core/events.h>
+#include <sdrl/core/value.h>
 #include <sdrl/globals.h>
 
 

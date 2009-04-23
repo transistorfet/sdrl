@@ -24,8 +24,8 @@ int sdrl_base_setlist(sdMachine *mach, sdArray *args)
 		if (labels->items[i]->type->basetype != SDRL_BT_STRING)
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
 		SDRL_INCREF(values->items[i]);
-		if (sdrl_replace_binding(mach->env, SDSTRING(labels->items[i])->str, values->items[i])) {
-			if (sdrl_add_binding(mach->env, SDSTRING(labels->items[i])->str, values->items[i]))
+		if (sdrl_env_replace(mach->env, SDSTRING(labels->items[i])->str, values->items[i])) {
+			if (sdrl_env_add(mach->env, SDSTRING(labels->items[i])->str, values->items[i]))
 				return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 		}
 	}

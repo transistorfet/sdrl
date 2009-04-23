@@ -12,7 +12,7 @@
  */
 int sdrl_base_dynblock(sdMachine *mach, sdArray *args)
 {
-	mach->ret = sdrl_make_reference(mach->heap, sdrl_find_binding(mach->type_env, "dynblock"), args->items[1]);
+	mach->ret = sdrl_make_reference(mach->heap, sdrl_env_find(mach->type_env, "dynblock"), args->items[1]);
 	return(0);
 }
 

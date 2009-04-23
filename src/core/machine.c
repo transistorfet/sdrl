@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include <sdrl/core/machine.h>
+#include <sdrl/core/env.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
 #include <sdrl/core/type.h>
@@ -15,7 +16,6 @@
 #include <sdrl/core/error.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/events.h>
-#include <sdrl/core/bindings.h>
 #include <sdrl/core/basetypes.h>
 #include <sdrl/globals.h>
 
@@ -42,15 +42,15 @@ sdMachine *sdrl_create_machine(void)
 			sdrl_destroy_type(type);
 		goto FAIL;
 	}
-	sdrl_add_binding(mach->type_env, "env", type);
+	sdrl_env_add(mach->type_env, "env", type);
 	if (!(mach->global = sdrl_make_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value)))
 		goto FAIL;
 	mach->env = SDRL_INCREF(mach->global);
 
-	sdrl_add_binding(mach->type_env, "number", sdrl_make_number_type());
-	sdrl_add_binding(mach->type_env, "string", sdrl_make_string_type());
-	sdrl_add_binding(mach->type_env, "expr", sdrl_make_expr_type());
-	sdrl_add_binding(mach->type_env, "array", sdrl_make_array_type());
+	sdrl_env_add(mach->type_env, "number", sdrl_make_number_type());
+	sdrl_env_add(mach->type_env, "string", sdrl_make_string_type());
+	sdrl_env_add(mach->type_env, "expr", sdrl_make_expr_type());
+	sdrl_env_add(mach->type_env, "array", sdrl_make_array_type());
 
 	return(mach);
 
@@ -129,17 +129,17 @@ int sdrl_evaluate_expr_value(sdMachine *mach, sdExpr *expr)
 
 	mach->current_line = expr->line;
 	if (expr->type == SDRL_ET_NUMBER)
-		mach->ret = sdrl_make_number(mach->heap, sdrl_find_binding(mach->type_env, "number"), expr->data.num);
+		mach->ret = sdrl_make_number(mach->heap, sdrl_env_find(mach->type_env, "number"), expr->data.num);
 	else if (expr->type == SDRL_ET_STRING || expr->type == SDRL_ET_IDENTIFIER)
-		mach->ret = sdrl_make_string(mach->heap, sdrl_find_binding(mach->type_env, "string"), expr->data.str, strlen(expr->data.str));
+		mach->ret = sdrl_make_string(mach->heap, sdrl_env_find(mach->type_env, "string"), expr->data.str, strlen(expr->data.str));
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
-		if (!(args = sdrl_make_array(mach->heap, sdrl_find_binding(mach->type_env, "array"), SDRL_DEFAULT_ARGS)))
+		if (!(args = sdrl_make_array(mach->heap, sdrl_env_find(mach->type_env, "array"), SDRL_DEFAULT_ARGS)))
 			return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
 		mach->current_line = expr->data.expr->line;
 		if (expr->data.expr->type == SDRL_ET_STRING || expr->data.expr->type == SDRL_ET_IDENTIFIER) {
-			if (!(func = sdrl_find_binding(mach->env, expr->data.expr->data.str))) {
+			if (!(func = sdrl_env_find(mach->env, expr->data.expr->data.str))) {
 				SDRL_DECREF(args);
 				return(sdrl_set_error(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
 			}

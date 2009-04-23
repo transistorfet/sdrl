@@ -14,7 +14,7 @@ int sdrl_load_io(sdMachine *mach)
 {
 	sdType *func;
 
-	if (!(func = sdrl_find_binding(mach->type_env, "func")))
+	if (!(func = sdrl_env_find(mach->type_env, "func")))
 		return(-1);
 
 	SDRL_BIND_FUNCTION(mach, func, "print", sdrl_io_print);
