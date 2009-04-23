@@ -10,7 +10,9 @@
 #include <sdrl/core/bindings.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/type.h>
+#include <sdrl/core/array.h>
 #include <sdrl/core/value.h>
+#include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
 
 #define SDRL_ENV_INIT_SIZE		32
@@ -38,7 +40,7 @@ sdType *sdrl_make_environment_type(void)
 		sizeof(sdEnv),
 		0,
 		SDRL_BT_ENVIRONMENT,
-		NULL,
+		(sdrl_create_t) sdrl_environment_create,
 		(sdrl_destroy_t) sdrl_retract_environment,
 		NULL,
 		NULL
@@ -49,7 +51,7 @@ sdType *sdrl_make_environment_type(void)
 /**
  * Allocate an environment for binding values to names.
  */
-sdEnv *sdrl_create_environment(sdHeap *heap, sdType *type, short bitflags, sdrl_destroy_t destroy)
+sdEnv *sdrl_make_environment(sdHeap *heap, sdType *type, short bitflags, sdrl_destroy_t destroy)
 {
 	sdBinding **table;
 	sdEnv *env;
@@ -74,13 +76,28 @@ sdEnv *sdrl_create_environment(sdHeap *heap, sdType *type, short bitflags, sdrl_
 }
 
 /**
+ * Create a new environment optionally given a parent argument.  This function
+ * is intended to be callable as a create_t type function.
+ */
+sdEnv *sdrl_environment_create(sdMachine *mach, sdType *type, sdArray *args)
+{
+	if (args->last < 0)
+		return(sdrl_make_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
+	else if (args->items[0]->type != type) {
+		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		return(NULL);
+	}
+	return(sdrl_extend_environment(SDENV(args->items[0])));
+}
+
+/**
  * Allocate an environment for binding values to names.
  */
 sdEnv *sdrl_extend_environment(sdEnv *parent)
 {
 	sdEnv *env;
 
-	if (!(env = sdrl_create_environment(parent->heap, SDVALUE(parent)->type, parent->bitflags, parent->destroy)))
+	if (!(env = sdrl_make_environment(parent->heap, SDVALUE(parent)->type, parent->bitflags, parent->destroy)))
 		return(NULL);
 	env->parent = SDRL_INCREF(parent);
 	return(env);

@@ -42,7 +42,6 @@ OBJS =	load.o	\
 	parsers/lambda.o	\
 	parsers/lispy.o	\
 	types/dynblock.o	\
-	types/env.o	\
 	types/form.o	\
 	types/func.o	\
 	types/lexblock.o	\
@@ -408,16 +407,6 @@ parsers/lispy.o: parsers/lispy.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/input.h
 
 types/dynblock.o: types/dynblock.c ../../../include/sdrl/sdrl.h \
-  ../../../include/sdrl/core/heap.h ../../../include/sdrl/globals.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/type.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
-  ../../../include/sdrl/core/bindings.h \
-  ../../../include/sdrl/core/machine.h \
-  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h
-
-types/env.o: types/env.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/heap.h ../../../include/sdrl/globals.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/type.h ../../../include/sdrl/core/array.h \

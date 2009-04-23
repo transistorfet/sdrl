@@ -44,7 +44,8 @@ int main(int argc, char **argv)
 	}
 
 	//sdrl_base_display_expr(code);
-	sdrl_add_binding(mach->env, "*globals*", sdrl_make_reference(mach->heap, sdrl_find_binding(mach->type_env, "env"), SDVALUE(mach->env)));
+	// TODO this creates a cyclical reference which requires garbage collection
+	sdrl_add_binding(mach->env, "*globals*", SDRL_INCREF(mach->global));
 	convert_ast(code);
 	print_result(mach, sdrl_evaluate(mach, code));
 

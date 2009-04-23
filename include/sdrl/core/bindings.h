@@ -40,7 +40,8 @@ struct sdEnv {
 
 sdType *sdrl_make_environment_type(void);
 
-sdEnv *sdrl_create_environment(sdHeap *, sdType *, short, sdrl_destroy_t);
+sdEnv *sdrl_make_environment(sdHeap *, sdType *, short, sdrl_destroy_t);
+sdEnv *sdrl_environment_create(sdMachine *, sdType *, sdArray *);
 sdEnv *sdrl_extend_environment(sdEnv *);
 sdEnv *sdrl_retract_environment(sdEnv *);
 int sdrl_destroy_environment(sdEnv *);

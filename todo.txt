@@ -1,10 +1,4 @@
 
-	* bug seemed to be caused by the changes you made to value.c where you made sdrl_destroy_value a
-	  static inline function and forgot to put the reference decrement and check before destroying
-	  the value.  This was only an issue because of sdrl_retract_environment because the environemnts
-	  don't know about value and instead always call sdrl_destroy_value (via a function pointer) when
-	  destroying it's contents
-
 	* lexblock, dynblock, and expr type evaluate funcs set the args to be a value in the env but the
 	  first arg is the function itself.  Should it be removed from args first?
 	* should you change all function names to be sdrl_<type>_<function> such as sdrl_expr_destroy,
@@ -12,17 +6,10 @@
 	* what should happen with the array manipulation functions in terms of who is responsible for
 	  creating a reference for the value being stored in the array?
 	* should we delete utils.c since it's not really used now
-	* should we remove the value.c file (keeping value.h) since there is nothing in it now?
 	* you *have* to look into how things will work with librarys loaded dynamically with respect to
 	  having access to type variables.  You may want to have both type systems at once
 
-	* these is a problem such that anything that returns a NULL value and which then gets added to an
-	  args array to be passed to a function call is a NULL yet nowhere do we check if an item in an array
-	  is NULL, only if the position in the array is supposed to be set or not.  We either need a nil/undef
-	  type value to store instead of NULL or we need to check for NULL all the time (i prefer the later
-	  but it wont be easy to do)
-
-	* convert remaining lib functions to use new args
+	* add an 'undef' value to be used in place of actual NULL values (alternately check for NULL in libs)
 	* make basetypes all seperate files complete with support functions
 	* make a new list type sdList { sdValue value, sdValue *ref, sdList *next }
 	* move to pointer-based type system to speed up core, saving the type lookups
@@ -30,15 +17,12 @@
 	* make functions for push, pop, shift, unshift
 	* attempt to optimize the core evaluation (i guess now, primarily by eliminating type lookups)
 
-	* the big thing in all of this is that the value itself is modified by the system as a side-effect
-	  and this type of behaviour should be watched for.
-
 	* use void functions where appropriate
-	* remove expr type from the base lib
-	* make '*env*' into 'env' and remove the libbase 'envref'
+	* put lib type stuff in a seperate file rather than base.h or wherever
 	* should you move sdrl_set_error to error.c?
 	* make error a value
 	* reduce length/verbosity of some function names (as per api.txt?)
+	* make a duplicate environment function
 
 	* make functions (inlines) for things like sdrl_find_binding that produce an error such that they
 	  can easily be used with SDRL_TRY()

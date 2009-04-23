@@ -37,13 +37,13 @@ sdMachine *sdrl_create_machine(void)
 		goto FAIL;
 	// TODO clean this up
 	if (!(type = sdrl_make_environment_type())
-	    || !(mach->type_env = sdrl_create_environment(mach->heap, type, SDRL_BBF_CONSTANT, (sdrl_destroy_t) sdrl_destroy_type))) {
+	    || !(mach->type_env = sdrl_make_environment(mach->heap, type, SDRL_BBF_CONSTANT, (sdrl_destroy_t) sdrl_destroy_type))) {
 		if (type)
 			sdrl_destroy_type(type);
 		goto FAIL;
 	}
-	sdrl_add_binding(mach->type_env, "*env*", type);
-	if (!(mach->global = sdrl_create_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value)))
+	sdrl_add_binding(mach->type_env, "env", type);
+	if (!(mach->global = sdrl_make_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value)))
 		goto FAIL;
 	mach->env = SDRL_INCREF(mach->global);
 

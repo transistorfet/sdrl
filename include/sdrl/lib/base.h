@@ -13,11 +13,6 @@ int sdrl_load_base(sdMachine *);
 
 /*** TYPES ***/
 
-/** Environment Reference Type **/
-
-sdType *sdrl_base_make_env_type(sdMachine *);
-sdValue *sdrl_base_create_env(sdMachine *, sdType *type, sdArray *);
-
 /** Dynamic Block Type **/
 
 sdType *sdrl_base_make_dynblock(sdMachine *);
