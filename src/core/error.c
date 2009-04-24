@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <sdrl/core/heap.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/error.h>
 #include <sdrl/globals.h>
@@ -29,19 +30,22 @@ static const char *error_msgs[] = {
 	"Divide by zero"
 };
 
-static sdError memory_error = { 0, SDRL_EBF_STATIC, 1, SDRL_ERR_OUT_OF_MEMORY, "Out Of Memory" };
+static sdError memory_error = { { 1, NULL }, 0, SDRL_EBF_STATIC, 1, SDRL_ERR_OUT_OF_MEMORY, "Out Of Memory" };
 
 /**
  * Allocate and initialize an error report.
  */
-sdError *sdrl_make_error(linenumber_t line, short severity, int err, const char *msg)
+sdError *sdrl_make_error(sdHeap *heap, linenumber_t line, short severity, int err, const char *msg)
 {
 	sdError *error;
 
 	if (err == SDRL_ERR_OUT_OF_MEMORY)
 		return(&memory_error);
-	if (!(error = (sdError *) malloc(sizeof(sdError))))
+	if (!(error = (sdError *) sdrl_heap_alloc(heap, sizeof(sdError))))
 		return(&memory_error);
+	SDVALUE(error)->refs = 1;
+	// TODO fix this later
+	SDVALUE(error)->type = NULL;
 	error->line = line;
 	error->bitflags = 0;
 	error->severity = severity;
@@ -62,19 +66,21 @@ sdError *sdrl_make_error(linenumber_t line, short severity, int err, const char 
 int sdrl_destroy_error(sdError *error)
 {
 	if (error && !SDRL_BF_IS_SET(error, SDRL_EBF_STATIC))
-		free(error);
+		sdrl_heap_free(error);
 	return(0);
 }
  
 /**
  * Duplicate the given error report.
  */
-sdError *sdrl_duplicate_error(sdError *org)
+sdError *sdrl_duplicate_error(sdHeap *heap, sdError *org)
 {
 	sdError *error;
 
-	if (!(error = (sdError *) malloc(sizeof(sdError))))
+	if (!(error = (sdError *) sdrl_heap_alloc(heap, sizeof(sdError))))
 		return(&memory_error);
+	SDVALUE(error)->refs = 1;
+	SDVALUE(error)->type = SDVALUE(org)->type;
 	error->line = org->line;
 	error->bitflags = org->bitflags;
 	error->severity = org->severity;

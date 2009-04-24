@@ -1,27 +1,42 @@
 
+	* you could, as a possible compromise, have an array of some kind in the machine struct with pointers
+	  to certain types with known indicies so that you can easily get the type pointer.  This might also
+	  have benifits in changing the actual type used in a given situation but then again, the functions
+	  statically referenced like make_string will still be called
+	* should you use a common heap instead of a seperate heap for each machine?  It would allow more
+	  easy sharing of values (no need to worry about which machine has which value) and it would pose
+	  fewer concerns to a pointer-based type system.  Lua uses a function pointer to realloc passed to
+	  it when initialized so that you can pass it a custom allocation function to keep instances isolated
+	  if you want.
+
+	* make error macros for certain known common errors like sdrl_set_type_error(), etc
+	* make macro to check the number of args and set an error if not matched
+	* add inheritence to types even without going to the pointer-based type system
+
 	* lexblock, dynblock, and expr type evaluate funcs set the args to be a value in the env but the
 	  first arg is the function itself.  Should it be removed from args first?
 	* should you change all function names to be sdrl_<type>_<function> such as sdrl_expr_destroy,
 	  sdrl_env_duplicate, etc?
 	* what should happen with the array manipulation functions in terms of who is responsible for
 	  creating a reference for the value being stored in the array?
+	* look at python and perl in terms of reference management and try to make reference management
+	  (who creates and destroys references) easier to follow such that you avoid reference-based bugs
 	* should we delete utils.c since it's not really used now
 	* you *have* to look into how things will work with librarys loaded dynamically with respect to
 	  having access to type variables.  You may want to have both type systems at once
+	* should you move sdrl_set_error to error.c?
+
+	* make basetypes all seperate files complete with support functions
+	* put lib type stuff in a seperate file rather than base.h or wherever
+	* reduce length/verbosity of some function names (as per api.txt?)
+	* use void functions where appropriate
+	* make error a value
 
 	* add an 'undef' value to be used in place of actual NULL values (alternately check for NULL in libs)
-	* make basetypes all seperate files complete with support functions
 	* make a new list type sdList { sdValue value, sdValue *ref, sdList *next }
 	* move to pointer-based type system to speed up core, saving the type lookups
 	* add the pop/unshift realloc downsizing code (if at all)
 	* make functions for push, pop, shift, unshift
-	* attempt to optimize the core evaluation (i guess now, primarily by eliminating type lookups)
-
-	* use void functions where appropriate
-	* put lib type stuff in a seperate file rather than base.h or wherever
-	* should you move sdrl_set_error to error.c?
-	* make error a value
-	* reduce length/verbosity of some function names (as per api.txt?)
 	* make a duplicate environment function
 
 	* make functions (inlines) for things like sdrl_env_find that produce an error such that they

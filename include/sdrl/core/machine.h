@@ -33,7 +33,7 @@ struct sdMachine {
 static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const char *msg) {
 	if (mach->error)
 		sdrl_destroy_error(mach->error);
-	mach->error = sdrl_make_error(mach->current_line, severity, err, msg);
+	mach->error = sdrl_make_error(mach->heap, mach->current_line, severity, err, msg);
 	return(err);
 }
 

@@ -7,6 +7,7 @@
 #ifndef _SDRL_CORE_ERROR_H
 #define _SDRL_CORE_ERROR_H
 
+#include <sdrl/core/heap.h>
 #include <sdrl/core/value.h>
 #include <sdrl/globals.h>
 
@@ -19,6 +20,7 @@
 #define SDRL_ES_WARNING		5
 
 struct sdError {
+	sdValue value;
 	linenumber_t line;
 	short bitflags;
 	short severity;
@@ -26,9 +28,9 @@ struct sdError {
 	const char *msg;
 };
 
-sdError *sdrl_make_error(linenumber_t, short, int, const char *);
+sdError *sdrl_make_error(sdHeap *, linenumber_t, short, int, const char *);
 int sdrl_destroy_error(sdError *);
-sdError *sdrl_duplicate_error(sdError *);
+sdError *sdrl_duplicate_error(sdHeap *, sdError *);
 
 #endif
 
