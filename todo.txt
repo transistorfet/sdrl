@@ -17,7 +17,6 @@
 	  having access to type variables.  You may want to have both type systems at once
 
 	* add system initialization (indepedant of the creation of a machine instance)
-	* convert code to use the new error macros
 	* move to pointer-based type system to speed up core, saving the type lookups
 	* add inheritence to types
 	* make basetypes all seperate files complete with support functions

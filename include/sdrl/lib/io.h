@@ -9,6 +9,8 @@
 
 #include <sdrl/sdrl.h>
 
+#include <sdrl/lib/io/file.h>
+
 int sdrl_load_io(sdMachine *);
 
 /*** Functions ***/

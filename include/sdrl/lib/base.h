@@ -9,50 +9,13 @@
 
 #include <sdrl/sdrl.h>
 
+#include <sdrl/lib/base/form.h>
+#include <sdrl/lib/base/func.h>
+#include <sdrl/lib/base/list.h>
+#include <sdrl/lib/base/dynblock.h>
+#include <sdrl/lib/base/lexblock.h>
+
 int sdrl_load_base(sdMachine *);
-
-/*** TYPES ***/
-
-/** Dynamic Block Type **/
-
-sdType *sdrl_base_make_dynblock(sdMachine *);
-int sdrl_base_evaluate_dynblock(sdMachine *, sdArray *);
-
-/** C Function Type **/
-
-sdType *sdrl_base_make_func_type(sdMachine *);
-int sdrl_base_evaluate_func(sdMachine *, sdArray *);
-
-/** C Forms Type **/
-
-sdType *sdrl_base_make_form_type(sdMachine *);
-int sdrl_base_evaluate_form(sdMachine *, sdArray *);
-
-/** Lexical Block Type **/
-
-// TODO should you make this inherit from expr which would allow for awesomeness
-typedef struct sdLexBlock sdLexBlock;
-struct sdLexBlock {
-	sdValue value;
-	sdExpr *code;
-	sdEnv *env;
-};
-
-#define SDLEXBLOCK(ptr)		( (sdLexBlock *) (ptr) )
-sdType *sdrl_base_make_lexblock_type(sdMachine *);
-sdValue *sdrl_base_create_lexblock(sdMachine *, sdType *, sdArray *);
-int sdrl_base_destroy_lexblock(sdLexBlock *);
-sdValue *sdrl_base_duplicate_lexblock(sdMachine *, sdLexBlock *);
-int sdrl_base_evaluate_lexblock(sdMachine *, sdArray *);
-
-/** List (Reference) Type **/
-
-sdType *sdrl_base_make_list_type(sdMachine *);
-sdValue *sdrl_base_create_list(sdMachine *, sdType *, sdArray *);
-
-
-
-
 
 
 /*** Parsers ***/
