@@ -29,13 +29,14 @@ struct sdMachine {
 	sdEnv *env;
 };
 
-/*** Generate an error and set it in the current machine. ***/
-static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const char *msg) {
-	if (mach->error)
-		sdrl_destroy_error(mach->error);
-	mach->error = sdrl_make_error(mach->heap, mach->current_line, severity, err, msg);
-	return(err);
-}
+sdMachine *sdrl_create_machine(void);
+int sdrl_destroy_machine(sdMachine *);
+
+int sdrl_evaluate(sdMachine *, sdExpr *);
+int sdrl_evaluate_expr_list(sdMachine *, sdExpr *);
+int sdrl_evaluate_expr_value(sdMachine *, sdExpr *);
+int sdrl_evaluate_value(sdMachine *, sdArray *);
+
 
 /*** Try a piece of code and jump to a failure point if it produces an error.  This assumes that
      there is an sdrl_machine pointer called "mach" in the current scope and a label called "FAIL". */
@@ -45,13 +46,38 @@ static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const
 		goto FAIL;	\
 }
 
-sdMachine *sdrl_create_machine(void);
-int sdrl_destroy_machine(sdMachine *);
+/*** Generate an error and set it in the current machine. ***/
+static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const char *msg) {
+	if (mach->error)
+		sdrl_destroy_error(mach->error);
+	mach->error = sdrl_make_error(mach->heap, mach->current_line, severity, err, msg);
+	return(err);
+}
 
-int sdrl_evaluate(sdMachine *, sdExpr *);
-int sdrl_evaluate_expr_list(sdMachine *, sdExpr *);
-int sdrl_evaluate_expr_value(sdMachine *, sdExpr *);
-int sdrl_evaluate_value(sdMachine *, sdArray *);
+/*** Generate an out of memory error and set it in the machine. ***/
+static inline int sdrl_set_memory_error(sdMachine *mach) {
+	if (mach->error)
+		sdrl_destroy_error(mach->error);
+	// TODO make this set using the static memory error
+	//mach->error = sdrl_make_error(mach->heap, mach->current_line, severity, err, msg);
+	return(0);
+}
+
+/*** Generate an invalid type error and set it in the machine. ***/
+#define sdrl_set_type_error(mach) \
+	sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_INVALID_TYPE, NULL)
+
+/*** Generate an invalid args error and set it in the machine. ***/
+#define sdrl_set_args_error(mach) \
+	sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_INVALID_ARGS, NULL)
+
+/*** Generate a not found error and set it in the machine. ***/
+#define sdrl_set_not_found_error(mach) \
+	sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_NOT_FOUND, NULL)
+
+/*** Generate an out of bounds error and set it in the machine. ***/
+#define sdrl_set_bounds_error(mach) \
+	sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_BOUNDS, NULL)
 
 #endif
 

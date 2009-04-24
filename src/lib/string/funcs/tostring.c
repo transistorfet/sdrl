@@ -21,7 +21,7 @@ int sdrl_string_tostring(sdMachine *mach, sdArray *args)
 	sdType *str_type;
 
 	if (!(str_type = sdrl_env_find(mach->type_env, "string")))
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_not_found_error(mach));
 
 	for (i = 1; i <= args->last; i++) {
 		if (args->items[i]->type->basetype == SDRL_BT_NUMBER)
@@ -31,7 +31,7 @@ int sdrl_string_tostring(sdMachine *mach, sdArray *args)
 			j += SDSTRING(args->items[i])->len;
 		}
 		else
-			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+			return(sdrl_set_type_error(mach));
 		if (j >= SDRL_STRING_SIZE - 1)
 			break;
 	}

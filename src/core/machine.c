@@ -84,7 +84,7 @@ int sdrl_evaluate(sdMachine *mach, sdExpr *expr)
 	sdEvent *event;
 
 	if (!(event = sdrl_make_event((sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr), mach->env)))
-		return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
+		return(sdrl_set_memory_error(mach));
 	do {
 		SDRL_DECREF(mach->env);
 		mach->env = SDRL_INCREF(event->env);
@@ -136,12 +136,12 @@ int sdrl_evaluate_expr_value(sdMachine *mach, sdExpr *expr)
 		if (!expr->data.expr)
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
 		if (!(args = sdrl_make_array(mach->heap, sdrl_env_find(mach->type_env, "array"), SDRL_DEFAULT_ARGS)))
-			return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
+			return(sdrl_set_memory_error(mach));
 		mach->current_line = expr->data.expr->line;
 		if (expr->data.expr->type == SDRL_ET_STRING || expr->data.expr->type == SDRL_ET_IDENTIFIER) {
 			if (!(func = sdrl_env_find(mach->env, expr->data.expr->data.str))) {
 				SDRL_DECREF(args);
-				return(sdrl_set_error(mach, SDRL_ES_MEDIUM, SDRL_ERR_NOT_FOUND, NULL));
+				return(sdrl_set_not_found_error(mach));
 			}
 			else if (func->type->evaluate && SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS)) {
 				sdrl_array_push(args, SDRL_INCREF(func));
@@ -185,10 +185,10 @@ int sdrl_evaluate_value(sdMachine *mach, sdArray *args)
 
 	func = sdrl_array_get(args, 0);
 	if (!func)
-		ret = sdrl_set_error(mach, SDRL_ES_LOW, SDRL_ERR_NOT_FOUND, NULL);
+		ret = sdrl_set_not_found_error(mach);
 	else if (func->type->evaluate) {
 		if (SDRL_BF_IS_SET(func->type, SDRL_TBF_PASS_EXPRS))
-			ret = sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+			ret = sdrl_set_args_error(mach);
 		else {
 			// TODO what are the advantages and disadvantages of these two ways of execution?
 			//sdrl_push_new_event(mach->cont, (sdrl_event_t) func->type->evaluate, SDRL_INCREF(args), mach->env);
@@ -198,7 +198,7 @@ int sdrl_evaluate_value(sdMachine *mach, sdArray *args)
 	else {
 		// TODO what do we do if the function is not evaluatable?
 		if (args->last > 0)
-			ret = sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+			ret = sdrl_set_args_error(mach);
 		else
 			mach->ret = sdrl_duplicate_value(mach, args->items[0]);
 	}

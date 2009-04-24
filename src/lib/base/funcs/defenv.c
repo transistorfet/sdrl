@@ -16,7 +16,7 @@ int sdrl_base_defenv(sdMachine *mach, sdArray *args)
 	sdValue *value;
 
 	if (!(type = sdrl_env_find(mach->type_env, "env")))
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_not_found_error(mach));
 	else if (!type->create)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, NULL));
 	value = sdrl_array_shift(args);

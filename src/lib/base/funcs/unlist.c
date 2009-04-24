@@ -15,7 +15,7 @@ int sdrl_base_unlist(sdMachine *mach, sdArray *args)
 	// TODO deal with this when you know about lists (if you are even going to need this anymore)
 	/*
 	if (!args || args->next || (args->type->basetype != SDRL_BT_REFERENCE) || !SDREFERENCE(args)->ref->type)
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_args_error(mach));
 	mach->ret = SDRL_INCREF(SDREFERENCE(args)->ref);
 	*/
 	return(0);

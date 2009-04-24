@@ -17,11 +17,11 @@ int sdrl_base_new(sdMachine *mach, sdArray *args)
 	const char *typename;
 
 	if (args->last < 1)
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_args_error(mach));
 	SDRL_TRY(typename = sdrl_check_string(mach, args->items[1], SDRL_BT_STRING, NULL));
 	SDRL_TRY(type = sdrl_find(mach, mach->type_env, typename));
 	if (!type->create)
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, "Type has no create function"));
+		return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_FAILED, "Type has no create function"));
 	// Remove the function and typename values from the args
 	tmp = sdrl_array_shift(args);
 	SDRL_DECREF(tmp);

@@ -9,7 +9,7 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-sdValue *sdrl_io_create_file(sdMachine *, sdType *, sdValue *);
+sdValue *sdrl_io_create_file(sdMachine *, sdType *, sdArray *);
 int sdrl_io_destroy_file(sdValue *);
 
 sdType *sdrl_base_make_file_type(sdMachine *mach)
@@ -25,24 +25,24 @@ sdType *sdrl_base_make_file_type(sdMachine *mach)
 	));
 }
 
-sdValue *sdrl_io_create_file(sdMachine *mach, sdType *type, sdValue *args)
+sdValue *sdrl_io_create_file(sdMachine *mach, sdType *type, sdArray *args)
 {
 	FILE *fptr;
 	sdType *str_type;
 
-	if (!args) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+	if (args->last < 0) {
+		sdrl_set_args_error(mach);
 		return(NULL);
 	}
 	else if (!(str_type = sdrl_env_find(mach->type_env, "string"))) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL);
+		sdrl_set_type_error(mach);
 		return(NULL);
 	}
-	else if (args->type != str_type) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+	else if (args->items[1]->type != str_type) {
+		sdrl_set_type_error(mach);
 		return(NULL);
 	}
-	else if (!(fptr = fopen(SDSTRING(args)->str, "r"))) {
+	else if (!(fptr = fopen(SDSTRING(args->items[1])->str, "r"))) {
 		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, "Error opening file");
 		return(NULL);
 	}

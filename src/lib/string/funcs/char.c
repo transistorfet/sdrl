@@ -21,7 +21,7 @@ int sdrl_string_char(sdMachine *mach, sdArray *args)
 
 	if (args->last != 2 || args->items[1]->type->basetype != SDRL_BT_STRING
 	    || args->items[2]->type->basetype != SDRL_BT_NUMBER)
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_args_error(mach));
 	if ((SDNUMBER(args->items[2])->num >= 0) && (SDNUMBER(args->items[2])->num < SDSTRING(args->items[1])->len))
 		ret = SDSTRING(args->items[1])->str[ (int) SDNUMBER(args->items[2])->num ];
 	mach->ret = sdrl_make_number(mach->heap, args->items[2]->type, ret);

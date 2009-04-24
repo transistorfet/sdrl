@@ -15,11 +15,11 @@ int sdrl_base_if(sdMachine *mach, sdArray *args)
 	sdArray *block;
 
 	if (args->last < 2 || args->last > 3)
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_args_error(mach));
 	else if (args->items[1]->type->basetype != SDRL_BT_NUMBER)
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+		return(sdrl_set_type_error(mach));
 	else if (!(block = sdrl_make_array(mach->heap, sdrl_env_find(mach->type_env, "array"), 1)))
-		return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
+		return(sdrl_set_memory_error(mach));
 	// TODO convert this to to more than just number comparison
 	else if (SDNUMBER(args->items[1])->num)
 		sdrl_array_push(block, sdrl_duplicate_value(mach, args->items[2]));

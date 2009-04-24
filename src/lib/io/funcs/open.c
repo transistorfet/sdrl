@@ -18,9 +18,9 @@ int sdrl_io_open(sdMachine *mach, sdArray *args)
 	sdValue *tmp;
 
 	if (args->last != 1 || (args->items[1]->type->basetype != SDRL_BT_STRING))
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_args_error(mach));
 	if (!(type = sdrl_env_find(mach->type_env, "file")))
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_not_found_error(mach));
 	else if (type->create) {
 		tmp = sdrl_array_shift(args);
 		SDRL_DECREF(tmp);

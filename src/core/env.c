@@ -84,7 +84,7 @@ sdEnv *sdrl_env_create(sdMachine *mach, sdType *type, sdArray *args)
 	if (args->last < 0)
 		return(sdrl_make_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
 	else if (args->items[0]->type != type) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_type_error(mach);
 		return(NULL);
 	}
 	return(sdrl_extend_environment(SDENV(args->items[0])));

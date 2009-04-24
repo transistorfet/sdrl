@@ -61,11 +61,11 @@ sdValue *sdrl_duplicate_pointer(sdMachine *, sdPointer *);
 
 static inline number_t sdrl_check_number(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
 	if (!cur) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+		sdrl_set_args_error(mach);
 		return(0);
 	}
 	if (cur->type->basetype != basetype || (type && (cur->type != type))) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_type_error(mach);
 		return(0);
 	}
 	return(SDNUMBER(cur)->num);
@@ -73,11 +73,11 @@ static inline number_t sdrl_check_number(sdMachine *mach, sdValue *cur, short ba
 
 static inline const char *sdrl_check_string(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
 	if (!cur) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+		sdrl_set_args_error(mach);
 		return(NULL);
 	}
 	if (cur->type->basetype != basetype || (type && (cur->type != type))) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_type_error(mach);
 		return(NULL);
 	}
 	return(SDSTRING(cur)->str);
@@ -85,11 +85,11 @@ static inline const char *sdrl_check_string(sdMachine *mach, sdValue *cur, short
 
 static inline void *sdrl_check_pointer(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
 	if (!cur) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+		sdrl_set_args_error(mach);
 		return(NULL);
 	}
 	if (cur->type->basetype != basetype || (type && (cur->type != type))) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL);
+		sdrl_set_type_error(mach);
 		return(NULL);
 	}
 	return(SDPOINTER(cur)->ptr);
@@ -98,7 +98,7 @@ static inline void *sdrl_check_pointer(sdMachine *mach, sdValue *cur, short base
 static inline int sdrl_check_end(sdMachine *mach, sdValue *cur) {
 	if (!cur)
 		return(0);
-	sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL);
+	sdrl_set_args_error(mach);
 	return(-1);
 }
 

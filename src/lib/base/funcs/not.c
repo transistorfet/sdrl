@@ -15,9 +15,9 @@ int sdrl_base_not(sdMachine *mach, sdArray *args)
 	number_t result = 1;
 
 	if (args->last < 1)
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_args_error(mach));
 	else if (args->items[1]->type->basetype != SDRL_BT_NUMBER)
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+		return(sdrl_set_type_error(mach));
 	result = (SDNUMBER(args->items[1])->num == 0);
 	mach->ret = sdrl_make_number(mach->heap, args->items[1]->type, result);
 	return(0);

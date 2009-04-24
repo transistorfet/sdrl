@@ -17,7 +17,7 @@ int sdrl_base_add(sdMachine *mach, sdArray *args)
 
 	for (i = 1; i <= args->last; i++) {
 		if (args->items[i]->type->basetype != SDRL_BT_NUMBER)
-			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+			return(sdrl_set_type_error(mach));
 		result += SDNUMBER(args->items[i])->num;
 	}
 	if (args)

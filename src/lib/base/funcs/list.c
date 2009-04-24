@@ -17,7 +17,7 @@ int sdrl_base_list(sdMachine *mach, sdArray *args)
 	// TODO come back to this when you know more about create
 	/*
 	if (!(type = sdrl_env_find(mach->type_env, "list")))
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_NOT_FOUND, NULL));
+		return(sdrl_set_not_found_error(mach));
 	if (type->create)
 		mach->ret = type->create(mach, type, args);
 	*/

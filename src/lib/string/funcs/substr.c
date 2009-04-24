@@ -24,7 +24,7 @@ int sdrl_string_substr(sdMachine *mach, sdArray *args)
 	    || args->items[1]->type->basetype != SDRL_BT_STRING
 	    || args->items[2]->type->basetype != SDRL_BT_NUMBER
 	    || (args->last == 3 && args->items[3]->type->basetype != SDRL_BT_NUMBER))
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_args_error(mach));
 
 	len = SDSTRING(args->items[1])->len;
 	j = (int) SDNUMBER(args->items[2])->num;

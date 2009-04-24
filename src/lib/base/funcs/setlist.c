@@ -17,16 +17,16 @@ int sdrl_base_setlist(sdMachine *mach, sdArray *args)
 
 	if (args->last != 2 || (args->items[1]->type->basetype != SDRL_BT_ARRAY)
 	    || (args->items[2]->type->basetype != SDRL_BT_ARRAY))
-		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_ARGS, NULL));
+		return(sdrl_set_args_error(mach));
 	labels = SDARRAY(args->items[1]);
 	values = SDARRAY(args->items[2]);
 	for (i = 0; i <= labels->last && i <= values->last; i++) {
 		if (labels->items[i]->type->basetype != SDRL_BT_STRING)
-			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_TYPE, NULL));
+			return(sdrl_set_type_error(mach));
 		SDRL_INCREF(values->items[i]);
 		if (sdrl_env_replace(mach->env, SDSTRING(labels->items[i])->str, values->items[i])) {
 			if (sdrl_env_add(mach->env, SDSTRING(labels->items[i])->str, values->items[i]))
-				return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_OUT_OF_MEMORY, NULL));
+				return(sdrl_set_memory_error(mach));
 		}
 	}
 	//mach->ret = SDRL_INCREF(args->items[2]);
