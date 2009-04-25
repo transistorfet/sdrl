@@ -7,7 +7,7 @@
 #include <string.h>
 
 #include <sdrl/sdrl.h>
-#include <sdrl/lib/base.h>
+#include <sdrl/lib/string.h>
 
 /**
  * Args:	<string>, <number>
@@ -19,12 +19,12 @@ int sdrl_string_char(sdMachine *mach, sdArray *args)
 {
 	number_t ret = 0;
 
-	if (args->last != 2 || args->items[1]->type->basetype != SDRL_BT_STRING
-	    || args->items[2]->type->basetype != SDRL_BT_NUMBER)
+	if (args->last != 2 || !sdrl_value_isa(args->items[1], &sdStringTypeDef)
+	    || !sdrl_value_isa(args->items[2], &sdNumberTypeDef))
 		return(sdrl_set_args_error(mach));
 	if ((SDNUMBER(args->items[2])->num >= 0) && (SDNUMBER(args->items[2])->num < SDSTRING(args->items[1])->len))
 		ret = SDSTRING(args->items[1])->str[ (int) SDNUMBER(args->items[2])->num ];
-	mach->ret = sdrl_make_number(mach->heap, args->items[2]->type, ret);
+	mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, ret);
 	return(0);
 }
 

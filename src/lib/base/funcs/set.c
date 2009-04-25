@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<name>, <value>
@@ -14,9 +15,9 @@ int sdrl_base_set(sdMachine *mach, sdArray *args)
 {
 	sdValue *value;
 
-	if (args->last < 2)
+	if (args->last != 2)
 		return(sdrl_set_args_error(mach));
-	if (args->items[1]->type->basetype != SDRL_BT_STRING)
+	if (!sdrl_value_isa(args->items[1], &sdStringTypeDef))
 		return(sdrl_set_type_error(mach));
 	// TODO should this instead clobber the args stripping off the value to be assigned?
 	value = SDRL_INCREF(args->items[2]);

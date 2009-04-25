@@ -10,6 +10,8 @@
 
 #define SDFILE(ptr)		( (sdFile *) (ptr) )
 
+extern sdType sdFileTypeDef;
+
 typedef struct sdFile sdFile;
 
 struct sdFile {

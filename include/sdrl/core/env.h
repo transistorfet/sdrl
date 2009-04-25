@@ -17,6 +17,10 @@
 #define SDRL_BBF_CONSTANT		0x0006			/** No bindings can be replaced or removed */
 #define SDRL_BBF_CASE_INSENSITIVE	0x0008			/** Ignore case when looking up bindings */
 
+#define SDENV(ptr)		( (sdEnv *) (ptr) )
+
+extern sdType sdEnvTypeDef;
+
 typedef struct sdBinding sdBinding;
 
 struct sdBinding {
@@ -35,10 +39,6 @@ struct sdEnv {
 	sdBinding **table;
 	sdEnv *parent;
 };
-
-#define SDENV(ptr)		( (sdEnv *) (ptr) )
-
-sdType *sdrl_make_environment_type(void);
 
 sdEnv *sdrl_make_environment(sdHeap *, sdType *, short, sdrl_destroy_t);
 sdEnv *sdrl_env_create(sdMachine *, sdType *, sdArray *);

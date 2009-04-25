@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<value>, ...
@@ -16,10 +17,8 @@ int sdrl_base_list(sdMachine *mach, sdArray *args)
 
 	// TODO come back to this when you know more about create
 	/*
-	if (!(type = sdrl_env_find(mach->type_env, "list")))
-		return(sdrl_set_not_found_error(mach));
-	if (type->create)
-		mach->ret = type->create(mach, type, args);
+	if (sdListTypeDef.create)
+		mach->ret = sdListTypeDef.create(mach, &sdListTypeDef, args);
 	*/
 	return(0);
 }

@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 #include <sdrl/lib/string.h>
 
 /**
@@ -12,15 +13,11 @@
  */
 int sdrl_load_string(sdMachine *mach)
 {
-	sdType *func;
 
-	if (!(func = sdrl_env_find(mach->type_env, "func")))
-		return(-1);
-
-	SDRL_BIND_FUNCTION(mach, func, "char", sdrl_string_char);
-	SDRL_BIND_FUNCTION(mach, func, "length", sdrl_string_length);
-	SDRL_BIND_FUNCTION(mach, func, "substr", sdrl_string_substr);
-	SDRL_BIND_FUNCTION(mach, func, "tostring", sdrl_string_tostring);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "char", sdrl_string_char);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "length", sdrl_string_length);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "substr", sdrl_string_substr);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "tostring", sdrl_string_tostring);
 
 	return(0);
 }

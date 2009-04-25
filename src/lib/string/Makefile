@@ -39,37 +39,44 @@ clean:
 load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/type.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
-  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
+  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
+  ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
-  ../../../include/sdrl/core/basetypes.h \
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
+  ../../../include/sdrl/lib/base/form.h \
+  ../../../include/sdrl/lib/base/func.h \
+  ../../../include/sdrl/lib/base/list.h \
+  ../../../include/sdrl/lib/base/dynblock.h \
+  ../../../include/sdrl/lib/base/lexblock.h \
   ../../../include/sdrl/lib/string.h
 
 funcs/char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/type.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
-  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
+  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
+  ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
-  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h
+  ../../../include/sdrl/core/basetypes.h \
+  ../../../include/sdrl/lib/string.h
 
 funcs/length.o: funcs/length.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/type.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
-  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
+  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
+  ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
-  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h
+  ../../../include/sdrl/core/basetypes.h \
+  ../../../include/sdrl/lib/string.h
 
 funcs/substr.o: funcs/substr.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/type.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
-  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
+  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
+  ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h \
   ../../../include/sdrl/lib/string.h
@@ -77,9 +84,9 @@ funcs/substr.o: funcs/substr.c ../../../include/sdrl/sdrl.h \
 funcs/tostring.o: funcs/tostring.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/type.h ../../../include/sdrl/core/expr.h \
-  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
-  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
+  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
+  ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h \
   ../../../include/sdrl/lib/string.h

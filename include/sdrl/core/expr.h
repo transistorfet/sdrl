@@ -21,6 +21,8 @@
 
 #define SDEXPR(ptr)		( (sdExpr *) (ptr) )
 
+extern sdType sdExprTypeDef;
+
 struct sdExpr {
 	sdValue value;
 	int type;
@@ -32,8 +34,6 @@ struct sdExpr {
 	} data;
 	sdExpr *next;
 };
-
-sdType *sdrl_make_expr_type(void);
 
 sdExpr *sdrl_make_number_expr(sdType *, int, linenumber_t, number_t, sdExpr *);
 sdExpr *sdrl_make_string_expr(sdType *, int, linenumber_t, const char *, sdExpr *);

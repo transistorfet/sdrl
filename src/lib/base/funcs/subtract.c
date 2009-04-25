@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<number>, ...
@@ -15,18 +16,18 @@ int sdrl_base_subtract(sdMachine *mach, sdArray *args)
 	int i;
 	number_t result = 0;
 
-	if (args->last < 1)
-		return(sdrl_set_args_error(mach));
-	if (args->items[1]->type->basetype != SDRL_BT_NUMBER)
-		return(sdrl_set_type_error(mach));
+	SDRL_TRY(sdrl_check_args(mach, args, 1, -1));
+	SDRL_TRY(sdrl_check_type(mach, args->items[1], &sdNumberTypeDef));
 	result = SDNUMBER(args->items[1])->num;
 	for (i = 2; i <= args->last; i++) {
-		if (args->items[i]->type->basetype != SDRL_BT_NUMBER)
-			return(sdrl_set_type_error(mach));
+		SDRL_TRY(sdrl_check_type(mach, args->items[i], &sdNumberTypeDef));
 		result -= SDNUMBER(args->items[i])->num;
 	}
 	mach->ret = sdrl_make_number(mach->heap, args->items[1]->type, result);
 	return(0);
+
+    FAIL:
+	return(mach->error->err);
 }
 
 

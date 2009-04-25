@@ -11,22 +11,15 @@
 #include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
 
-
-/**
- * Create and return a type for sdExpr.
- */
-sdType *sdrl_make_expr_type(void)
-{
-	return(sdrl_make_type(
-		sizeof(sdExpr),
-		0,
-		SDRL_BT_EXPRESSION,
-		NULL,
-		(sdrl_destroy_t) sdrl_destroy_expr,
-		(sdrl_duplicate_t) sdrl_duplicate_expr,
-		(sdrl_evaluate_t) sdrl_evaluate_expr
-	));
-}
+sdType sdExprTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdExpr),
+	0,
+	NULL,
+	(sdrl_destroy_t) sdrl_destroy_expr,
+	(sdrl_duplicate_t) sdrl_duplicate_expr,
+	(sdrl_evaluate_t) sdrl_evaluate_expr
+};
 
 
 /**

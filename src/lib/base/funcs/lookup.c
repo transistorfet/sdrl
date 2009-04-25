@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<name>
@@ -14,30 +15,28 @@ int sdrl_base_lookup(sdMachine *mach, sdArray *args)
 {
 	sdEnv *env;
 	sdValue *bind;
-	sdType *string_type, *env_type;
 
 	if (args->last != 2)
 		return(sdrl_set_args_error(mach));
-	else if (!(string_type = sdrl_env_find(mach->type_env, "string")) || !(env_type = sdrl_env_find(mach->type_env, "env")))
-		return(sdrl_set_not_found_error(mach));
-	else if ((args->items[1]->type != env_type && args->items[1]->type != string_type) || (args->items[2]->type != string_type))
-		return(sdrl_set_type_error(mach));
-	else {
-		if (args->items[1]->type == string_type) {
-			if (!(env = sdrl_env_find(mach->env, SDSTRING(args->items[1])->str)))
-				return(sdrl_set_not_found_error(mach));
-			else if (SDVALUE(env)->type != env_type)
-				return(sdrl_set_type_error(mach));
-		}
-		else
-			env = SDENV(args->items[1]);
-
-		if (!(bind = sdrl_env_find(env, SDSTRING(args->items[2])->str)))
+	SDRL_TRY(sdrl_check_type(mach, args->items[2], &sdStringTypeDef));
+	if (sdrl_check_type(mach, args->items[1], &sdStringTypeDef)) {
+		if (!(env = sdrl_env_find(mach->env, SDSTRING(args->items[1])->str)))
 			return(sdrl_set_not_found_error(mach));
-		else
-			mach->ret = sdrl_duplicate_value(mach, bind);
+		SDRL_TRY(sdrl_check_type(mach, SDVALUE(env), &sdEnvTypeDef));
 	}
+	else if (sdrl_check_type(mach, args->items[1], &sdEnvTypeDef))
+		env = SDENV(args->items[1]);
+	else
+		return(sdrl_set_type_error(mach));
+
+	if (!(bind = sdrl_env_find(env, SDSTRING(args->items[2])->str)))
+		return(sdrl_set_not_found_error(mach));
+	else
+		mach->ret = sdrl_duplicate_value(mach, bind);
 	return(0);
+
+    FAIL:
+	return(mach->error->err);
 }
 
 

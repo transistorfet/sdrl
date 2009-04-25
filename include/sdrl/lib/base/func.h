@@ -8,7 +8,8 @@
 
 #include <sdrl/sdrl.h>
 
-sdType *sdrl_base_make_func_type(sdMachine *);
+extern sdType sdFuncTypeDef;
+
 int sdrl_base_evaluate_func(sdMachine *, sdArray *);
 
 #endif

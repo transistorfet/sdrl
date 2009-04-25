@@ -11,7 +11,6 @@
 #include <sdrl/core/env.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
-#include <sdrl/core/type.h>
 #include <sdrl/core/array.h>
 #include <sdrl/core/error.h>
 #include <sdrl/core/value.h>
@@ -27,7 +26,6 @@ static int sdrl_append_return(sdMachine *, sdArray *);
  */
 sdMachine *sdrl_create_machine(void)
 {
-	sdType *type;
 	sdMachine *mach;
 
 	if (!(mach = (sdMachine *) malloc(sizeof(sdMachine))))
@@ -35,23 +33,17 @@ sdMachine *sdrl_create_machine(void)
 	memset(mach, '\0', sizeof(sdMachine));
 	if (!(mach->heap = sdrl_create_heap()) || !(mach->cont = sdrl_create_continuation()))
 		goto FAIL;
-	// TODO clean this up
-	if (!(type = sdrl_make_environment_type())
-	    || !(mach->type_env = sdrl_make_environment(mach->heap, type, SDRL_BBF_CONSTANT, (sdrl_destroy_t) sdrl_destroy_type))) {
-		if (type)
-			sdrl_destroy_type(type);
+	if (!(mach->type_env = sdrl_make_environment(mach->heap, &sdEnvTypeDef, SDRL_BBF_CONSTANT, NULL)))
 		goto FAIL;
-	}
-	sdrl_env_add(mach->type_env, "env", type);
-	if (!(mach->global = sdrl_make_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value)))
+	if (!(mach->global = sdrl_make_environment(mach->heap, &sdEnvTypeDef, 0, (sdrl_destroy_t) sdrl_destroy_value)))
 		goto FAIL;
 	mach->env = SDRL_INCREF(mach->global);
-
-	sdrl_env_add(mach->type_env, "number", sdrl_make_number_type());
-	sdrl_env_add(mach->type_env, "string", sdrl_make_string_type());
-	sdrl_env_add(mach->type_env, "expr", sdrl_make_expr_type());
-	sdrl_env_add(mach->type_env, "array", sdrl_make_array_type());
-
+	sdrl_env_add(mach->type_env, "array", &sdArrayTypeDef);
+	sdrl_env_add(mach->type_env, "number", &sdNumberTypeDef);
+	sdrl_env_add(mach->type_env, "string", &sdStringTypeDef);
+	sdrl_env_add(mach->type_env, "expr", &sdExprTypeDef);
+	sdrl_env_add(mach->type_env, "env", &sdEnvTypeDef);
+	sdrl_env_add(mach->type_env, "error", &sdErrorTypeDef);
 	return(mach);
 
     FAIL:
@@ -64,7 +56,7 @@ sdMachine *sdrl_create_machine(void)
  */
 int sdrl_destroy_machine(sdMachine *mach)
 {
-	sdrl_destroy_value(mach->ret);
+	SDRL_DECREF(mach->ret);
 	sdrl_destroy_continuation(mach->cont);
 	SDRL_DECREF(mach->env);
 	sdrl_destroy_environment(mach->global);
@@ -129,13 +121,13 @@ int sdrl_evaluate_expr_value(sdMachine *mach, sdExpr *expr)
 
 	mach->current_line = expr->line;
 	if (expr->type == SDRL_ET_NUMBER)
-		mach->ret = sdrl_make_number(mach->heap, sdrl_env_find(mach->type_env, "number"), expr->data.num);
+		mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, expr->data.num);
 	else if (expr->type == SDRL_ET_STRING || expr->type == SDRL_ET_IDENTIFIER)
-		mach->ret = sdrl_make_string(mach->heap, sdrl_env_find(mach->type_env, "string"), expr->data.str, strlen(expr->data.str));
+		mach->ret = sdrl_make_string(mach->heap, &sdStringTypeDef, expr->data.str, strlen(expr->data.str));
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
-		if (!(args = sdrl_make_array(mach->heap, sdrl_env_find(mach->type_env, "array"), SDRL_DEFAULT_ARGS)))
+		if (!(args = sdrl_make_array(mach->heap, &sdArrayTypeDef, SDRL_DEFAULT_ARGS)))
 			return(sdrl_set_memory_error(mach));
 		mach->current_line = expr->data.expr->line;
 		if (expr->data.expr->type == SDRL_ET_STRING || expr->data.expr->type == SDRL_ET_IDENTIFIER) {

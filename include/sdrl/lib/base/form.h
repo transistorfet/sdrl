@@ -8,7 +8,8 @@
 
 #include <sdrl/sdrl.h>
 
-sdType *sdrl_base_make_form_type(sdMachine *);
+extern sdType sdFormTypeDef;
+
 int sdrl_base_evaluate_form(sdMachine *, sdArray *);
 
 #endif

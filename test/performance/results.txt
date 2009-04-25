@@ -32,4 +32,13 @@ fac.py                         0.21            0.18            0.03
 fac.scm                        0.28            0.24            0.03            
 fac.sdrl                       0.30            0.22            0.07
 
+2009/04/25 - Before conversion to statically allocated type
+Test                           real            user            sys             
+fac.lsp                        0.18            0.10            0.06            
+fac.lua                        0.01            0.00            0.00            
+fac.pl                         0.04            0.03            0.01            
+fac.py                         0.21            0.17            0.03            
+fac.scm                        0.28            0.26            0.02            
+fac.sdrl                       0.25            0.24            0.01 
+
 

@@ -19,6 +19,8 @@
 #define SDRL_ES_LOW		4
 #define SDRL_ES_WARNING		5
 
+extern sdType sdErrorTypeDef;
+
 struct sdError {
 	sdValue value;
 	linenumber_t line;

@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<expr>, ...
@@ -12,16 +13,13 @@
  */
 int sdrl_base_lexblock(sdMachine *mach, sdArray *args)
 {
-	sdType *type;
 	sdValue *func;
 
-	if (!(type = sdrl_env_find(mach->type_env, "lexblock")))
-		return(sdrl_set_not_found_error(mach));
 	// Remove the function value from the args
 	func = sdrl_array_shift(args);
 	SDRL_DECREF(func);
-	if (type->create)
-		mach->ret = type->create(mach, type, args);
+	if (sdLexBlockTypeDef.create)
+		mach->ret = sdLexBlockTypeDef.create(mach, &sdLexBlockTypeDef, args);
 	return(0);
 }
 

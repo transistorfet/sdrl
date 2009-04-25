@@ -29,11 +29,7 @@ static inline char lambda_escape_char(char);
  */
 sdExpr *sdrl_base_parse_lambda_input(sdMachine *mach, sdInput *input)
 {
-	sdType *expr_type;
-
-	if (!(expr_type = sdrl_env_find(mach->type_env, "expr")))
-		return(NULL);
-	return(lambda_parse_input(expr_type, input));
+	return(lambda_parse_input(&sdExprTypeDef, input));
 }
 
 /*** Local Functions ***/

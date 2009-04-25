@@ -30,11 +30,7 @@ static inline char lispy_escape_char(char);
  */
 sdExpr *sdrl_base_parse_lispy_input(sdMachine *mach, sdInput *input)
 {
-	sdType *expr_type;
-
-	if (!(expr_type = sdrl_env_find(mach->type_env, "expr")))
-		return(NULL);
-	return(lispy_parse_input(expr_type, 0, input));
+	return(lispy_parse_input(&sdExprTypeDef, 0, input));
 }
 
 /*** Local Functions ***/

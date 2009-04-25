@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<value>, ...
@@ -12,16 +13,13 @@
  */
 int sdrl_base_defenv(sdMachine *mach, sdArray *args)
 {
-	sdType *type;
 	sdValue *value;
 
-	if (!(type = sdrl_env_find(mach->type_env, "env")))
-		return(sdrl_set_not_found_error(mach));
-	else if (!type->create)
+	if (!sdEnvTypeDef.create)
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, NULL));
 	value = sdrl_array_shift(args);
 	SDRL_DECREF(value);
-	mach->ret = type->create(mach, type, args);
+	mach->ret = sdEnvTypeDef.create(mach, &sdEnvTypeDef, args);
 	return(0);
 }
 

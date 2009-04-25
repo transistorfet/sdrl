@@ -7,20 +7,15 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-sdType *sdrl_base_make_form_type(sdMachine *mach)
-{
-	return(sdrl_make_type(
-		sizeof(sdPointer),
-		SDRL_TBF_PASS_EXPRS,
-		SDRL_BT_POINTER,
-		NULL,
-		(sdrl_destroy_t) sdrl_heap_free,
-		(sdrl_duplicate_t) sdrl_duplicate_pointer,
-		(sdrl_evaluate_t) sdrl_base_evaluate_form
-	));	
-}
-
-/*** Local Functions ***/
+sdType sdFormTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdPointer),
+	SDRL_TBF_PASS_EXPRS,
+	NULL,
+	(sdrl_destroy_t) sdrl_heap_free,
+	(sdrl_duplicate_t) sdrl_duplicate_pointer,
+	(sdrl_evaluate_t) sdrl_base_evaluate_form
+};
 
 int sdrl_base_evaluate_form(sdMachine *mach, sdArray *args)
 {

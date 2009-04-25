@@ -7,18 +7,16 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-sdType *sdrl_base_make_dynblock_type(sdMachine *mach)
-{
-	return(sdrl_make_type(
-		sizeof(sdReference),
-		0,
-		SDRL_BT_REFERENCE,
-		NULL,
-		(sdrl_destroy_t) sdrl_destroy_reference,
-		(sdrl_duplicate_t) sdrl_duplicate_reference,
-		(sdrl_evaluate_t) sdrl_base_evaluate_dynblock
-	));
-}
+sdType sdDynBlockTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdReference),
+	0,
+	NULL,
+	(sdrl_destroy_t) sdrl_destroy_reference,
+	(sdrl_duplicate_t) sdrl_duplicate_reference,
+	(sdrl_evaluate_t) sdrl_base_evaluate_dynblock
+};
+
 
 int sdrl_base_evaluate_dynblock(sdMachine *mach, sdArray *args)
 {

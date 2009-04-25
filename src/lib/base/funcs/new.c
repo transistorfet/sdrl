@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<value>, ...
@@ -18,7 +19,7 @@ int sdrl_base_new(sdMachine *mach, sdArray *args)
 
 	if (args->last < 1)
 		return(sdrl_set_args_error(mach));
-	SDRL_TRY(typename = sdrl_check_string(mach, args->items[1], SDRL_BT_STRING, NULL));
+	SDRL_TRY(typename = sdrl_check_string(mach, args->items[1], &sdStringTypeDef));
 	SDRL_TRY(type = sdrl_find(mach, mach->type_env, typename));
 	if (!type->create)
 		return(sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_FAILED, "Type has no create function"));

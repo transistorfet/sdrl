@@ -7,18 +7,16 @@
 #include <sdrl/sdrl.h>
 #include <sdrl/lib/base.h>
 
-sdType *sdrl_base_make_lexblock_type(sdMachine *mach)
-{
-	return(sdrl_make_type(
-		sizeof(sdLexBlock),
-		0,
-		SDRL_BT_DATA,
-		(sdrl_create_t) sdrl_base_create_lexblock,
-		(sdrl_destroy_t) sdrl_base_destroy_lexblock,
-		(sdrl_duplicate_t) sdrl_base_duplicate_lexblock,
-		(sdrl_evaluate_t) sdrl_base_evaluate_lexblock
-	));
-}
+sdType sdLexBlockTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdLexBlock),
+	0,
+	(sdrl_create_t) sdrl_base_create_lexblock,
+	(sdrl_destroy_t) sdrl_base_destroy_lexblock,
+	(sdrl_duplicate_t) sdrl_base_duplicate_lexblock,
+	(sdrl_evaluate_t) sdrl_base_evaluate_lexblock
+};
+
 
 sdValue *sdrl_base_create_lexblock(sdMachine *mach, sdType *type, sdArray *args)
 {

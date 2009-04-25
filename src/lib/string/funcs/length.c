@@ -7,7 +7,7 @@
 #include <string.h>
 
 #include <sdrl/sdrl.h>
-#include <sdrl/lib/base.h>
+#include <sdrl/lib/string.h>
 
 /**
  * Args:	<value>
@@ -15,13 +15,9 @@
  */
 int sdrl_string_length(sdMachine *mach, sdArray *args)
 {
-	sdType *num_type;
-
-	if (args->last != 1 || args->items[1]->type->basetype != SDRL_BT_STRING)
+	if (args->last != 1 || !sdrl_value_isa(args->items[1], &sdStringTypeDef))
 		return(sdrl_set_args_error(mach));
-	if (!(num_type = sdrl_env_find(mach->type_env, "number")))
-		return(sdrl_set_not_found_error(mach));
-	mach->ret = sdrl_make_number(mach->heap, num_type, (number_t) SDSTRING(args->items[1])->len);
+	mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, (number_t) SDSTRING(args->items[1])->len);
 	return(0);
 }
 

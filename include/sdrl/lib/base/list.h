@@ -10,6 +10,8 @@
 
 #define SDLIST(ptr)		( (sdList *) (ptr) )
 
+extern sdType sdListTypeDef;
+
 typedef struct sdList sdList;
 
 struct sdList {
@@ -18,7 +20,6 @@ struct sdList {
 	sdList *next;
 };
 
-sdType *sdrl_base_make_list_type(sdMachine *);
 sdValue *sdrl_base_create_list(sdMachine *, sdType *, sdArray *);
 
 #endif

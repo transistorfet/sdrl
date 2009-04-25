@@ -6,7 +6,6 @@
 #include <string.h>
 
 #include <sdrl/core/heap.h>
-#include <sdrl/core/type.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/machine.h>
 #include <sdrl/core/basetypes.h>
@@ -14,18 +13,16 @@
 
 /*** Number Type ***/
 
-sdType *sdrl_make_number_type(void)
-{
-	return(sdrl_make_type(
-		sizeof(sdNumber),
-		0,
-		SDRL_BT_NUMBER,
-		NULL,
-		(sdrl_destroy_t) sdrl_heap_free,
-		(sdrl_duplicate_t) sdrl_duplicate_number,
-		NULL
-	));
-}
+sdType sdNumberTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdNumber),
+	0,
+	NULL,
+	(sdrl_destroy_t) sdrl_heap_free,
+	(sdrl_duplicate_t) sdrl_duplicate_number,
+	NULL
+};
+
 
 sdValue *sdrl_make_number(sdHeap *heap, sdType *type, number_t num)
 {
@@ -46,18 +43,16 @@ sdValue *sdrl_duplicate_number(sdMachine *mach, sdNumber *org)
 
 /*** String Type ***/
 
-sdType *sdrl_make_string_type(void)
-{
-	return(sdrl_make_type(
-		sizeof(sdString),
-		0,
-		SDRL_BT_STRING,
-		NULL,
-		(sdrl_destroy_t) sdrl_heap_free,
-		(sdrl_duplicate_t) sdrl_duplicate_string,
-		NULL
-	));
-}
+sdType sdStringTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdString),
+	0,
+	NULL,
+	(sdrl_destroy_t) sdrl_heap_free,
+	(sdrl_duplicate_t) sdrl_duplicate_string,
+	NULL
+};
+
 
 sdValue *sdrl_make_string(sdHeap *heap, sdType *type, const char *str, int len)
 {

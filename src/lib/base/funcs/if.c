@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<value>, <expr-value> [, <expr-value>]
@@ -14,11 +15,9 @@ int sdrl_base_if(sdMachine *mach, sdArray *args)
 {
 	sdArray *block;
 
-	if (args->last < 2 || args->last > 3)
-		return(sdrl_set_args_error(mach));
-	else if (args->items[1]->type->basetype != SDRL_BT_NUMBER)
-		return(sdrl_set_type_error(mach));
-	else if (!(block = sdrl_make_array(mach->heap, sdrl_env_find(mach->type_env, "array"), 1)))
+	SDRL_TRY(sdrl_check_args(mach, args, 2, 3));
+	SDRL_TRY(sdrl_check_type(mach, args->items[1], &sdNumberTypeDef));
+	if (!(block = sdrl_make_array(mach->heap, &sdArrayTypeDef, 1)))
 		return(sdrl_set_memory_error(mach));
 	// TODO convert this to to more than just number comparison
 	else if (SDNUMBER(args->items[1])->num)
@@ -30,6 +29,9 @@ int sdrl_base_if(sdMachine *mach, sdArray *args)
 		sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(block), mach->env);
 	mach->ret = NULL;
 	return(0);
+
+    FAIL:
+	return(mach->error->err);
 }
 
 

@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/io.h>
 
 /**
  * Args:	<filename>, <permissions>
@@ -14,17 +15,14 @@
  */
 int sdrl_io_open(sdMachine *mach, sdArray *args)
 {
-	sdType *type;
 	sdValue *tmp;
 
-	if (args->last != 1 || (args->items[1]->type->basetype != SDRL_BT_STRING))
+	if (args->last != 1 || !sdrl_value_isa(args->items[1], &sdStringTypeDef))
 		return(sdrl_set_args_error(mach));
-	if (!(type = sdrl_env_find(mach->type_env, "file")))
-		return(sdrl_set_not_found_error(mach));
-	else if (type->create) {
+	else if (sdFileTypeDef.create) {
 		tmp = sdrl_array_shift(args);
 		SDRL_DECREF(tmp);
-		mach->ret = type->create(mach, type, args);
+		mach->ret = sdFileTypeDef.create(mach, &sdFileTypeDef, args);
 	}
 	else
 		return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, NULL));

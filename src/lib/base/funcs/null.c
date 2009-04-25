@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<value>, ...
@@ -12,15 +13,11 @@
  */
 int sdrl_base_null(sdMachine *mach, sdArray *args)
 {
-	sdType *type;
-
-	if (!(type = sdrl_env_find(mach->type_env, "number")))
-		return(sdrl_set_not_found_error(mach));
 	// TODO this is really really weird, maybe you should make a nil/undef type?
 	if (args->last < 1)
-		mach->ret = sdrl_make_number(mach->heap, type, -1);
+		mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, -1);
 	else
-		mach->ret = sdrl_make_number(mach->heap, type, 0);
+		mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, 0);
 	return(0);
 }
 

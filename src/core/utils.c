@@ -7,7 +7,6 @@
 #include <sdrl/core/env.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
-#include <sdrl/core/type.h>
 #include <sdrl/core/error.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/events.h>

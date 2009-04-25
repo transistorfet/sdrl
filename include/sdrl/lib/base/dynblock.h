@@ -8,7 +8,8 @@
 
 #include <sdrl/sdrl.h>
 
-sdType *sdrl_base_make_dynblock(sdMachine *);
+extern sdType sdDynBlockTypeDef;
+
 int sdrl_base_evaluate_dynblock(sdMachine *, sdArray *);
 
 #endif

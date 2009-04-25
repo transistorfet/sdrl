@@ -21,9 +21,9 @@ int sdrl_string_substr(sdMachine *mach, sdArray *args)
 	char buffer[SDRL_STRING_SIZE];
 
 	if ((args->last < 2 || args->last > 3)
-	    || args->items[1]->type->basetype != SDRL_BT_STRING
-	    || args->items[2]->type->basetype != SDRL_BT_NUMBER
-	    || (args->last == 3 && args->items[3]->type->basetype != SDRL_BT_NUMBER))
+	    || !sdrl_value_isa(args->items[1], &sdStringTypeDef)
+	    || !sdrl_value_isa(args->items[2], &sdNumberTypeDef)
+	    || (args->last == 3 && !sdrl_value_isa(args->items[3], &sdNumberTypeDef)))
 		return(sdrl_set_args_error(mach));
 
 	len = SDSTRING(args->items[1])->len;
@@ -37,7 +37,7 @@ int sdrl_string_substr(sdMachine *mach, sdArray *args)
 	for (;(i < SDRL_STRING_SIZE) && (j < len);i++, j++)
 		buffer[i] = SDSTRING(args->items[1])->str[j];
 	buffer[i] = '\0';
-	mach->ret = sdrl_make_string(mach->heap, args->items[1]->type, buffer, i);
+	mach->ret = sdrl_make_string(mach->heap, &sdStringTypeDef, buffer, i);
 	return(0);
 }
 

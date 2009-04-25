@@ -13,6 +13,16 @@
 
 #define NUM_ERRORS	14
 
+sdType sdErrorTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdError),
+	0,
+	NULL,
+	(sdrl_destroy_t) sdrl_destroy_error,
+	(sdrl_duplicate_t) sdrl_duplicate_error,
+	NULL
+};
+
 static const char *error_msgs[] = {
 	"General error",
 	"Out of memory",

@@ -9,7 +9,6 @@
 
 #include <sdrl/core/env.h>
 #include <sdrl/core/heap.h>
-#include <sdrl/core/type.h>
 #include <sdrl/core/array.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/machine.h>
@@ -30,22 +29,15 @@ static inline int sdrl_env_rehash(sdEnv *env, int newsize);
 static int sdrl_stricmp(const char *, const char *);
 static inline unsigned int sdrl_hash(const char *);
 
-
-/**
- * Create and return a type for sdEnv.
- */
-sdType *sdrl_make_environment_type(void)
-{
-	return(sdrl_make_type(
-		sizeof(sdEnv),
-		0,
-		SDRL_BT_ENVIRONMENT,
-		(sdrl_create_t) sdrl_env_create,
-		(sdrl_destroy_t) sdrl_retract_environment,
-		NULL,
-		NULL
-	));
-}
+sdType sdEnvTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdEnv),
+	0,
+	(sdrl_create_t) sdrl_env_create,
+	(sdrl_destroy_t) sdrl_retract_environment,
+	NULL,
+	NULL
+};
 
 
 /**

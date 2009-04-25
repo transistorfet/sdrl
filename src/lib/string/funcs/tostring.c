@@ -18,15 +18,11 @@ int sdrl_string_tostring(sdMachine *mach, sdArray *args)
 {
 	int i, j = 0;
 	char buffer[SDRL_STRING_SIZE];
-	sdType *str_type;
-
-	if (!(str_type = sdrl_env_find(mach->type_env, "string")))
-		return(sdrl_set_not_found_error(mach));
 
 	for (i = 1; i <= args->last; i++) {
-		if (args->items[i]->type->basetype == SDRL_BT_NUMBER)
+		if (sdrl_value_isa(args->items[1], &sdNumberTypeDef))
 			buffer[j++] = (unsigned char) SDNUMBER(args->items[i])->num;
-		else if (args->items[i]->type->basetype == SDRL_BT_STRING) {
+		else if (sdrl_value_isa(args->items[1], &sdStringTypeDef)) {
 			strncpy(&buffer[j], SDSTRING(args->items[i])->str, SDRL_STRING_SIZE - j - 1);
 			j += SDSTRING(args->items[i])->len;
 		}
@@ -38,7 +34,7 @@ int sdrl_string_tostring(sdMachine *mach, sdArray *args)
 	if (j >= SDRL_STRING_SIZE)
 		j = SDRL_STRING_SIZE - 1;
 	buffer[j] = '\0';
-	mach->ret = sdrl_make_string(mach->heap, str_type, buffer, j);
+	mach->ret = sdrl_make_string(mach->heap, &sdStringTypeDef, buffer, j);
 	return(0);
 }
 

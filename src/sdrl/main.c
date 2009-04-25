@@ -113,14 +113,10 @@ static int convert_ast(sdExpr *expr)
 /*
 void init_macros(sdMachine *mach)
 {
-	sdType *expr_type;
-
-	if (!(expr_type = sdrl_env_find(mach->type_env, "expr")))
-		return;
 	sdrl_add_macro("if", 2, 3,
-		sdrl_make_call_expr(type, SDRL_ET_CALL, 0, sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "if", sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "$1",
-			sdrl_make_call_expr(type, SDRL_ET_CALL, 0, sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "code", sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "$2", NULL)),
-				sdrl_make_call_expr(type, SDRL_ET_CALL, 0, sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "code", sdrl_make_string_expr(type, SDRL_ET_STRING, 0, "$3", NULL)), NULL)
+		sdrl_make_call_expr(&sdExprTypeDef, SDRL_ET_CALL, 0, sdrl_make_string_expr(&sdExprTypeDef, SDRL_ET_STRING, 0, "if", sdrl_make_string_expr(&sdExprTypeDef, SDRL_ET_STRING, 0, "$1",
+			sdrl_make_call_expr(&sdExprTypeDef, SDRL_ET_CALL, 0, sdrl_make_string_expr(&sdExprTypeDef, SDRL_ET_STRING, 0, "code", sdrl_make_string_expr(&sdExprTypeDef, SDRL_ET_STRING, 0, "$2", NULL)),
+				sdrl_make_call_expr(&sdExprTypeDef, SDRL_ET_CALL, 0, sdrl_make_string_expr(&sdExprTypeDef, SDRL_ET_STRING, 0, "code", sdrl_make_string_expr(&sdExprTypeDef, SDRL_ET_STRING, 0, "$3", NULL)), NULL)
 			), NULL),
 		), NULL)
 	);

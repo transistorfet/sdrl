@@ -13,21 +13,15 @@
 
 #define SDRL_RESIZE_MAX		1024
 
-/**
- * Create and return a type for sdArray.
- */
-sdType *sdrl_make_array_type(void)
-{
-	return(sdrl_make_type(
-		sizeof(sdArray),
-		0,
-		SDRL_BT_ARRAY,
-		NULL,
-		(sdrl_destroy_t) sdrl_destroy_array,
-		(sdrl_duplicate_t) sdrl_duplicate_array,
-		NULL
-	));
-}
+sdType sdArrayTypeDef = {
+	&sdValueTypeDef,
+	sizeof(sdArray),
+	0,
+	NULL,
+	(sdrl_destroy_t) sdrl_destroy_array,
+	(sdrl_duplicate_t) sdrl_duplicate_array,
+	NULL
+};
 
 
 /**

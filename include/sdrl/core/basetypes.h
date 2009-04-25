@@ -7,7 +7,6 @@
 #ifndef _SDRL_CORE_BASETYPES_H
 #define _SDRL_CORE_BASETYPES_H
 
-#include <sdrl/core/type.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
@@ -16,6 +15,9 @@
 #define SDSTRING(ptr)		( (sdString *) (ptr) )
 #define SDREFERENCE(ptr)	( (sdReference *) (ptr) )
 #define SDPOINTER(ptr)		( (sdPointer *) (ptr) )
+
+extern sdType sdNumberTypeDef;
+extern sdType sdStringTypeDef;
 
 typedef struct sdNumber sdNumber;
 typedef struct sdString sdString;
@@ -43,11 +45,9 @@ struct sdPointer {
 	void *ptr;
 };
 
-sdType *sdrl_make_number_type(void);
 sdValue *sdrl_make_number(sdHeap *, sdType *, number_t);
 sdValue *sdrl_duplicate_number(sdMachine *, sdNumber *);
 
-sdType *sdrl_make_string_type(void);
 sdValue *sdrl_make_string(sdHeap *, sdType *, const char *, int);
 sdValue *sdrl_duplicate_string(sdMachine *, sdString *);
 
@@ -58,37 +58,48 @@ sdValue *sdrl_duplicate_reference(sdMachine *, sdReference *);
 sdValue *sdrl_make_pointer(sdHeap *, sdType *, void *);
 sdValue *sdrl_duplicate_pointer(sdMachine *, sdPointer *);
 
+static inline int sdrl_check_args(sdMachine *mach, sdArray *args, int min, int max) {
+	if ((min != -1 && args->last < min) || (max != -1 && args->last > max))
+		return(sdrl_set_args_error(mach));
+	return(0);
+}
 
-static inline number_t sdrl_check_number(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
+static inline int sdrl_check_type(sdMachine *mach, sdValue *cur, sdType *type) {
+	if (!sdrl_value_isa(cur, type))
+		return(sdrl_set_type_error(mach));
+	return(0);
+}
+
+static inline number_t sdrl_check_number(sdMachine *mach, sdValue *cur, sdType *type) {
 	if (!cur) {
 		sdrl_set_args_error(mach);
 		return(0);
 	}
-	if (cur->type->basetype != basetype || (type && (cur->type != type))) {
+	if ((type && cur->type != type) || (!type && cur->type != &sdNumberTypeDef)) {
 		sdrl_set_type_error(mach);
 		return(0);
 	}
 	return(SDNUMBER(cur)->num);
 }
 
-static inline const char *sdrl_check_string(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
+static inline const char *sdrl_check_string(sdMachine *mach, sdValue *cur, sdType *type) {
 	if (!cur) {
 		sdrl_set_args_error(mach);
 		return(NULL);
 	}
-	if (cur->type->basetype != basetype || (type && (cur->type != type))) {
+	if ((type && cur->type != type) || (!type && cur->type != &sdStringTypeDef)) {
 		sdrl_set_type_error(mach);
 		return(NULL);
 	}
 	return(SDSTRING(cur)->str);
 }
 
-static inline void *sdrl_check_pointer(sdMachine *mach, sdValue *cur, short basetype, sdType *type) {
+static inline void *sdrl_check_pointer(sdMachine *mach, sdValue *cur, sdType *type) {
 	if (!cur) {
 		sdrl_set_args_error(mach);
 		return(NULL);
 	}
-	if (cur->type->basetype != basetype || (type && (cur->type != type))) {
+	if (cur->type != type) {
 		sdrl_set_type_error(mach);
 		return(NULL);
 	}

@@ -7,10 +7,18 @@
 #include <string.h>
 
 #include <sdrl/core/value.h>
-#include <sdrl/core/type.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/globals.h>
 
+sdType sdValueTypeDef = {
+	NULL,
+	sizeof(sdValue),
+	0,
+	NULL,
+	(sdrl_destroy_t) sdrl_destroy_value,
+	(sdrl_duplicate_t) sdrl_duplicate_value,
+	NULL
+};
 
 /**
  * Duplicate the value.  Doesn't copy deep structure

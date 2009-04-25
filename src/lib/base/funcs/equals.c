@@ -5,6 +5,7 @@
  */
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/base.h>
 
 /**
  * Args:	<value>, ...
@@ -32,15 +33,15 @@ int sdrl_base_equals(sdMachine *mach, sdArray *args)
 	return(0);
 */
 
-	SDRL_TRY(comp = sdrl_check_number(mach, args->items[1], SDRL_BT_NUMBER, NULL));
+	SDRL_TRY(comp = sdrl_check_number(mach, args->items[1], &sdNumberTypeDef));
 	for (i = 1; i <= args->last; i++) {
-		SDRL_TRY(num = sdrl_check_number(mach, args->items[i], SDRL_BT_NUMBER, NULL));
+		SDRL_TRY(num = sdrl_check_number(mach, args->items[i], &sdNumberTypeDef));
 		if (comp != num) {
 			result = 0;
 			break;
 		}
 	}
-	mach->ret = sdrl_make_number(mach->heap, args->items[1]->type, result);
+	mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, result);
 	return(0);
 
     FAIL:

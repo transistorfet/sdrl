@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 #include <sdrl/sdrl.h>
+#include <sdrl/lib/io.h>
 
 /**
  * Args:	<value>, ...
@@ -19,22 +20,14 @@ int sdrl_io_print(sdMachine *mach, sdArray *args)
 	for (i = 1; i <= args->last; i++) {
 		if (!args->items[i])
 			continue;
-		switch (args->items[i]->type->basetype) {
-			case SDRL_BT_NUMBER:
-				printf("%f", SDNUMBER(args->items[i])->num);
-				break;
-			case SDRL_BT_STRING:
-				printf("%s", SDSTRING(args->items[i])->str);
-				break;
-			case SDRL_BT_POINTER:
-				printf("0x%x", (unsigned int) SDPOINTER(args->items[i])->ptr);
-				break;
-			case SDRL_BT_DATA:
-				printf("0x%x", (unsigned int) args->items[i]);
-				break;
-			default:
-				break;
-		}
+		else if (sdrl_value_isa(args->items[i], &sdNumberTypeDef))
+			printf("%f", SDNUMBER(args->items[i])->num);
+		else if (sdrl_value_isa(args->items[i], &sdStringTypeDef))
+			printf("%s", SDSTRING(args->items[i])->str);
+		//else if (sdrl_value_isa(args->items[i], &sdPointerTypeDef))
+		//	printf("0x%x", (unsigned int) SDPOINTER(args->items[i])->ptr);
+		//else if (sdrl_value_isa(args->items[i], &sdDataTypeDef))
+		//		printf("0x%x", (unsigned int) args->items[i]);
 	}
 	mach->ret = SDVALUE(SDRL_INCREF(args));
 	return(0);

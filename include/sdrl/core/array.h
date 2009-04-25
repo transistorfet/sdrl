@@ -12,14 +12,14 @@
 
 #define SDARRAY(ptr)		( (sdArray *) (ptr) )
 
+extern sdType sdArrayTypeDef;
+
 struct sdArray {
 	sdValue value;
 	int size;
 	int last;
 	sdValue **items;
 };
-
-sdType *sdrl_make_array_type(void);
 
 sdArray *sdrl_make_array(sdHeap *, sdType *, int);
 int sdrl_resize_array(sdArray *, int);

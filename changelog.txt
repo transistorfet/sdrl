@@ -5,6 +5,10 @@ current:	* Renamed "builtins" to "funcs"
 		* Modified the heap to just track memory for now
 		* Removed the "Exited Normally" message
 		* Added perl script to generate Makefiles
+		* Changed the names of all structs
+		* Removed the 'next' field from sdValue and subsequently modified the argument passing method
+		* Added the array type
+		* Moved to a statically allocated type system
 		* ...
 
 v0.3:		* Changed bindings to store void * instead of specific struct pointers

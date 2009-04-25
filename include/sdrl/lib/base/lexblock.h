@@ -10,6 +10,8 @@
 
 #define SDLEXBLOCK(ptr)		( (sdLexBlock *) (ptr) )
 
+extern sdType sdLexBlockTypeDef;
+
 typedef struct sdLexBlock sdLexBlock;
 
 // TODO should you make this inherit from expr which would allow for awesomeness (?? howso?)
