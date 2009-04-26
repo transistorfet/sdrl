@@ -132,11 +132,10 @@ sdEnv *sdrl_env_retract(sdEnv *env)
 /**
  * Free resources allocated by the environment and all of its parents.
  */
-int sdrl_env_destroy(sdEnv *env)
+void sdrl_env_destroy(sdEnv *env)
 {
 	while (env)
 		env = sdrl_env_retract(env);
-	return(0);
 }
 
 

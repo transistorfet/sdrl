@@ -52,7 +52,7 @@ sdValue *sdrl_make_string(sdHeap *, sdType *, const char *, int);
 sdValue *sdrl_string_duplicate(sdMachine *, sdString *);
 
 sdValue *sdrl_make_reference(sdHeap *, sdType *, sdValue *);
-int sdrl_reference_destroy(sdReference *);
+void sdrl_reference_destroy(sdReference *);
 sdValue *sdrl_reference_duplicate(sdMachine *, sdReference *);
 
 sdValue *sdrl_make_pointer(sdHeap *, sdType *, void *);

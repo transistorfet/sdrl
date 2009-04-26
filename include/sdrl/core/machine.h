@@ -30,7 +30,7 @@ struct sdMachine {
 };
 
 sdMachine *sdrl_make_machine(void);
-int sdrl_machine_destroy(sdMachine *);
+void sdrl_machine_destroy(sdMachine *);
 
 int sdrl_evaluate(sdMachine *, sdExpr *);
 int sdrl_evaluate_expr_list(sdMachine *, sdExpr *);

@@ -100,7 +100,7 @@ sdExpr *sdrl_expr_duplicate(sdMachine *mach, sdExpr *expr)
 /**
  * Free all memory associated with the sdrl_expr
  */
-int sdrl_expr_destroy(sdExpr *expr)
+void sdrl_expr_destroy(sdExpr *expr)
 {
 	sdExpr *tmp;
 
@@ -112,8 +112,6 @@ int sdrl_expr_destroy(sdExpr *expr)
 		free(expr);
 		expr = tmp;
 	}
-	
-	return(0);
 }
 
 /**

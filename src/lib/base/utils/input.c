@@ -32,12 +32,11 @@ sdInput *sdrl_make_input(void)
 /**
  * Free the resources used by the input stack.
  */
-int sdrl_input_destroy(sdInput *input)
+void sdrl_input_destroy(sdInput *input)
 {
 	while (input->stack)
 		input_free_source(input);
 	free(input);
-	return(0);
 }
 
 /**

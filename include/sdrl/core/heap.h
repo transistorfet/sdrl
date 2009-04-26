@@ -10,9 +10,9 @@
 #include <sdrl/globals.h>
 
 sdHeap *sdrl_make_heap(void);
-int sdrl_heap_destroy(sdHeap *);
+void sdrl_heap_destroy(sdHeap *);
 void *sdrl_heap_alloc(sdHeap *, unsigned int);
-int sdrl_heap_free(void *);
+void sdrl_heap_free(void *);
 
 #endif
 

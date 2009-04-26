@@ -40,10 +40,9 @@ sdValue *sdrl_io_file_create(sdMachine *mach, sdType *type, sdArray *args)
 	return(sdrl_make_pointer(mach->heap, type, fptr));
 }
 
-int sdrl_io_file_destroy(sdValue *value)
+void sdrl_io_file_destroy(sdValue *value)
 {
 	fclose((FILE *) SDPOINTER(value)->ptr);
-	return(0);
 }
 
 

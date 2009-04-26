@@ -79,15 +79,14 @@ sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short se
 /**
  * Free the resources of an error report.
  */
-int sdrl_error_destroy(sdError *error)
+void sdrl_error_destroy(sdError *error)
 {
 	if (!error)
-		return(-1);
+		return;
 	if (SDRL_BF_IS_SET(error, SDRL_EBF_STATIC))
 		SDVALUE(error)->refs = 1;
 	else
 		sdrl_heap_free(error);
-	return(0);
 }
  
 /**

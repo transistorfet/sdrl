@@ -32,12 +32,11 @@ sdValue *sdrl_base_lexblock_create(sdMachine *mach, sdType *type, sdArray *args)
 	return(SDVALUE(value));
 }
 
-int sdrl_base_lexblock_destroy(sdLexBlock *value)
+void sdrl_base_lexblock_destroy(sdLexBlock *value)
 {
 	SDRL_DECREF(value->code);
 	SDRL_DECREF(value->env);
 	sdrl_heap_free(value);
-	return(0);
 }
 
 sdValue *sdrl_base_lexblock_duplicate(sdMachine *mach, sdLexBlock *org)

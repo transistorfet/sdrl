@@ -28,13 +28,12 @@ sdCont *sdrl_make_cont(void)
 /**
  * Free the resources allocated to the continuation stack.
  */
-int sdrl_cont_destroy(sdCont *cont)
+void sdrl_cont_destroy(sdCont *cont)
 {
 	sdEvent *cur, *tmp;
 
 	if (!cont)
-		return(-1);
-
+		return;
 	cur = cont->top;
 	while (cur) {
 		tmp = cur->next;
@@ -42,7 +41,6 @@ int sdrl_cont_destroy(sdCont *cont)
 		cur = tmp;
 	}
 	free(cont);
-	return(0);
 }
 
 /**
@@ -64,14 +62,13 @@ sdEvent *sdrl_make_event(sdrl_event_t func, sdValue *arg, sdEnv *env)
 /**
  * Free the resources used by an sdrl_event
  */
-int sdrl_event_destroy(sdEvent *event)
+void sdrl_event_destroy(sdEvent *event)
 {
 	if (event) {
 		SDRL_DECREF(event->arg);
 		SDRL_DECREF(event->env);
 		free(event);
 	}
-	return(0);
 }
 
 /**

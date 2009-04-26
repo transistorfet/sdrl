@@ -20,7 +20,7 @@ struct sdFile {
 };
 
 sdValue *sdrl_io_file_create(sdMachine *, sdType *, sdArray *);
-int sdrl_io_file_destroy(sdValue *);
+void sdrl_io_file_destroy(sdValue *);
 
 #endif
 

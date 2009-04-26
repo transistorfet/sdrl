@@ -59,7 +59,7 @@ typedef struct sdInput sdInput;
 typedef struct sdMachine sdMachine;
 
 typedef sdValue *(*sdrl_create_t)(sdMachine *mach, sdType *type, sdArray *args);
-typedef int (*sdrl_destroy_t)(sdValue *value);
+typedef void (*sdrl_destroy_t)(sdValue *value);
 typedef sdValue *(*sdrl_duplicate_t)(sdMachine *mach, sdValue *value);
 typedef int (*sdrl_evaluate_t)(sdMachine *mach, sdArray *args);
 

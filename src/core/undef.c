@@ -43,13 +43,12 @@ sdValue *sdrl_make_undef(sdHeap *heap, sdType *type)
 /**
  * Free all memory associated with the undef
  */
-int sdrl_undef_destroy(sdValue *undef)
+void sdrl_undef_destroy(sdValue *undef)
 {
 	if (undef == &sdUndefValue)
 		undef->refs++;
 	else
 		sdrl_heap_free(undef);
-	return(0);
 }
 
 

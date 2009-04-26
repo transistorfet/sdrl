@@ -33,7 +33,7 @@ struct sdError {
 extern sdError sdMemoryError;
 
 sdError *sdrl_make_error(sdHeap *, sdType *, linenumber_t, short, int, const char *);
-int sdrl_error_destroy(sdError *);
+void sdrl_error_destroy(sdError *);
 sdError *sdrl_error_duplicate(sdHeap *, sdError *);
 
 #endif

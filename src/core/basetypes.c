@@ -87,11 +87,10 @@ sdValue *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 	return(SDVALUE(value));
 }
 
-int sdrl_reference_destroy(sdReference *value)
+void sdrl_reference_destroy(sdReference *value)
 {
 	SDRL_DECREF(value->ref);
 	sdrl_heap_free(value);
-	return(0);
 }
 
 sdValue *sdrl_reference_duplicate(sdMachine *mach, sdReference *org)

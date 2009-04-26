@@ -95,7 +95,7 @@ sdArray *sdrl_array_duplicate(sdMachine *mach, sdArray *org)
 /**
  * Free all memory associated with the array
  */
-int sdrl_array_destroy(sdArray *array)
+void sdrl_array_destroy(sdArray *array)
 {
 	int i;
 
@@ -104,7 +104,6 @@ int sdrl_array_destroy(sdArray *array)
 	}
 	free(array->items);
 	sdrl_heap_free(array);
-	return(0);
 }
 
 /**

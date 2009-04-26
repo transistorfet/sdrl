@@ -28,8 +28,14 @@
 	* should type make functions take the type as an argument?  this would allow for reuse of functions
 	  by subclasses of a certain type.  Make functions consistent where needed
 
+	* make all destroy functions use void return instead of int
+	* make all create_t type functions more generic by having them allocate based on the size in the
+	  type struct and have them memset the result such that certain create funcs can call other create
+	  funcs directly, allowing for a rather simple yet flexible inheritence constructor system.
+	  make_<type> functions would not necessarily do the same although they can.  Maybe you can make all
+	  make functions that receive a type do this
 	* make basetypes all seperate files complete with support functions
-	* use void functions where appropriate
+	* use void functions where appropriate, like destroy
 
 	* make a new list type sdList { sdValue value, sdValue *ref, sdList *next }
 	* add the pop/unshift realloc downsizing code (if at all)

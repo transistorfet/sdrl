@@ -23,10 +23,10 @@ struct sdCont {
 };
 
 sdCont *sdrl_make_cont(void);
-int sdrl_cont_destroy(sdCont *);
+void sdrl_cont_destroy(sdCont *);
 
 sdEvent *sdrl_make_event(sdrl_event_t, sdValue *, sdEnv *);
-int sdrl_event_destroy(sdEvent *);
+void sdrl_event_destroy(sdEvent *);
 int sdrl_event_push_new(sdCont *, sdrl_event_t, sdValue *, sdEnv *);
 int sdrl_event_push(sdCont *, sdEvent *);
 sdEvent *sdrl_event_pop(sdCont *);

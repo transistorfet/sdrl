@@ -22,7 +22,7 @@ struct sdLexBlock {
 };
 
 sdValue *sdrl_base_lexblock_create(sdMachine *, sdType *, sdArray *);
-int sdrl_base_lexblock_destroy(sdLexBlock *);
+void sdrl_base_lexblock_destroy(sdLexBlock *);
 sdValue *sdrl_base_lexblock_duplicate(sdMachine *, sdLexBlock *);
 int sdrl_base_lexblock_evaluate(sdMachine *, sdArray *);
 

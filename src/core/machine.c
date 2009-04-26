@@ -57,7 +57,7 @@ sdMachine *sdrl_make_machine(void)
 /**
  * Free the resources allocated to mach
  */
-int sdrl_machine_destroy(sdMachine *mach)
+void sdrl_machine_destroy(sdMachine *mach)
 {
 	SDRL_DECREF(mach->ret);
 	sdrl_cont_destroy(mach->cont);
@@ -67,7 +67,6 @@ int sdrl_machine_destroy(sdMachine *mach)
 	sdrl_error_destroy(mach->error);
 	sdrl_heap_destroy(mach->heap);
 	free(mach);
-	return(0);
 }
 
 /**

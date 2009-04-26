@@ -39,7 +39,7 @@ sdExpr *sdrl_make_number_expr(sdType *, int, linenumber_t, number_t, sdExpr *);
 sdExpr *sdrl_make_string_expr(sdType *, int, linenumber_t, const char *, sdExpr *);
 sdExpr *sdrl_make_call_expr(sdType *, int, linenumber_t, sdExpr *, sdExpr *);
 sdExpr *sdrl_expr_duplicate(sdMachine *, sdExpr *);
-int sdrl_expr_destroy(sdExpr *);
+void sdrl_expr_destroy(sdExpr *);
 int sdrl_expr_evaluate(sdMachine *, sdArray *);
 
 #endif

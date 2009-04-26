@@ -38,12 +38,12 @@ sdHeap *sdrl_make_heap(void)
 /**
  * Free all the memory allocated by the heap
  */
-int sdrl_heap_destroy(sdHeap *heap)
+void sdrl_heap_destroy(sdHeap *heap)
 {
 	sdHeapEntry *cur, *next;
 
 	if (!heap)
-		return(-1);
+		return;
 	//sdrl_heap_report(heap);
 
 	cur = heap->node.next;
@@ -53,7 +53,6 @@ int sdrl_heap_destroy(sdHeap *heap)
 		cur = next;
 	}
 	free(heap);
-	return(0);
 }
 
 /**
@@ -77,10 +76,9 @@ void *sdrl_heap_alloc(sdHeap *heap, unsigned int size)
 }
 
 /**
- * Free a memory address allocated from heap and return 0 if successful or
- * -1 if an error occurs.
+ * Free a memory address allocated from the heap.
  */
-int sdrl_heap_free(void *addr)
+void sdrl_heap_free(void *addr)
 {
 	sdHeapEntry *entry;
 
@@ -90,12 +88,11 @@ int sdrl_heap_free(void *addr)
 	    in order to remove a node.  Therefore, if we encounter a NULL prev
 	    here, it must be a corrupt or invalid node */
 	if (!entry->prev)
-		return(-1);
+		return;
 	entry->prev->next = entry->next;
 	if (entry->next)
 		entry->next->prev = entry->prev;
 	free(entry);
-	return(0);
 }
 
 /*** Local Functions ***/
