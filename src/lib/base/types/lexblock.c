@@ -23,7 +23,7 @@ sdValue *sdrl_base_lexblock_create(sdMachine *mach, sdType *type, sdArray *args)
 	sdLexBlock *value;
 
 	// TODO should you check that args is an expr reference type first?
-	if (!(value = (sdLexBlock *) sdrl_heap_alloc(mach->heap, sizeof(sdLexBlock))))
+	if (!(value = (sdLexBlock *) sdrl_heap_alloc(mach->heap, type->size)))
 		return(NULL);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
@@ -44,7 +44,7 @@ sdValue *sdrl_base_lexblock_duplicate(sdMachine *mach, sdLexBlock *org)
 	sdLexBlock *value;
 
 	// TODO should you check the expr type first?
-	if (!(value = (sdLexBlock *) sdrl_heap_alloc(mach->heap, sizeof(sdLexBlock))))
+	if (!(value = (sdLexBlock *) sdrl_heap_alloc(mach->heap, SDVALUE(org)->type->size)))
 		return(NULL);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = SDVALUE(org)->type;

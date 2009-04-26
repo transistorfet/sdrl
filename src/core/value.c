@@ -20,6 +20,23 @@ sdType sdValueTypeDef = {
 	NULL
 };
 
+
+/**
+ * Allocate a value of size type->size + size and return it.  The value's refs
+ * and type fields are initialized and the rest of the memory is zero'd.
+ */
+sdValue *sdrl_make_value(sdHeap *heap, sdType *type, int size)
+{
+	sdValue *value;
+
+	if (!(value = (sdValue *) sdrl_heap_alloc(heap, type->size + size)))
+		return(NULL);
+	memset(value, '\0', type->size + size);
+	value->refs = 1;
+	value->type = type;
+	return(value);
+}
+
 /**
  * Duplicate the value.  Doesn't copy deep structure
  */

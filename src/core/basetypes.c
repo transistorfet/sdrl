@@ -30,6 +30,7 @@ sdValue *sdrl_make_number(sdHeap *heap, sdType *type, number_t num)
 
 	if (!(value = (sdNumber *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
+	memset(value, '\0', type->size);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
 	value->num = num;
@@ -60,10 +61,11 @@ sdValue *sdrl_make_string(sdHeap *heap, sdType *type, const char *str, int len)
 
 	if (!(value = (sdString *) sdrl_heap_alloc(heap, type->size + len + 1)))
 		return(NULL);
+	memset(value, '\0', type->size);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
 	value->len = len;
-	value->str = (char *) (SDSTRING(value) + 1);
+	value->str = (char *) (((char *) value) + type->size);
 	memcpy(value->str, str, len);
 	value->str[len] = '\0';		/** Just in case someone uses unbounded cstring functions */
 	return(SDVALUE(value));
@@ -81,6 +83,7 @@ sdValue *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 
 	if (!(value = (sdReference *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
+	memset(value, '\0', type->size);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
 	value->ref = SDRL_INCREF(ref);
@@ -105,6 +108,7 @@ sdValue *sdrl_make_pointer(sdHeap *heap, sdType *type, void *ptr)
 
 	if (!(value = (sdPointer *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
+	memset(value, '\0', type->size);
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
 	value->ptr = ptr;

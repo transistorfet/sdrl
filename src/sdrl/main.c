@@ -49,9 +49,8 @@ int main(int argc, char **argv)
 	convert_ast(code);
 	print_result(mach, sdrl_evaluate(mach, code));
 
-	sdrl_machine_destroy(mach);
 	sdrl_expr_destroy(code);
-
+	sdrl_machine_destroy(mach);
 	return(0);
 }
 

@@ -1,22 +1,14 @@
 
-	* make some of the #defines "redefinable"
-
 	* you can make a static array of sdEvent structs to form a stack where when you call the function to
 	  add an event, it just sets the values in the static elements and increments the stack pointer.
 	  An inline function can be used in machine.c to automatically execute the event in a standardized
 	  fashion.
 	* if you did the realloc system, you could make seperate modules external to the core that handled
 	  various memory models such as just using realloc, using a garbage collection library of some kind,
-	  using a memory tracker, etc.  You could make a macro like g_realloc or somethnig for global realloc
-	  which can be reasigned and is used when memory is not to be tied to a particular machine and
-	  anything tied to a machine uses s_realloc (will need new tames for these) that takes the machine
-	  struct and uses the pointer to an allocator in it.
+	  using a memory tracker, etc.  Similar to lua 5.1.  If you do this, use macros for the funcs so that
+	  they can easily be redefined to directly use realloc for ultimate speed.  Should there still be
+	  a heap pointer in the machine for passing to the realloc func (or even passing the whole mach)?
 
-	* should you use a common heap instead of a seperate heap for each machine?  It would allow more
-	  easy sharing of values (no need to worry about which machine has which value) and it would pose
-	  fewer concerns to a pointer-based type system.  Lua uses a function pointer to realloc passed to
-	  it when initialized so that you can pass it a custom allocation function to keep instances isolated
-	  if you want.
 	* should sdrl_destroy/duplicate_value be that or sdrl_value_destroy/duplicate?
 	* what should happen with the array manipulation functions in terms of who is responsible for
 	  creating a reference for the value being stored in the array?
@@ -25,24 +17,16 @@
 	* should we delete utils.c since it's not really used now
 	* you *have* to look into how things will work with librarys loaded dynamically with respect to
 	  having access to type variables.  You may want to have both type systems at once
-	* should type make functions take the type as an argument?  this would allow for reuse of functions
-	  by subclasses of a certain type.  Make functions consistent where needed
 
-	* make all destroy functions use void return instead of int
-	* make all create_t type functions more generic by having them allocate based on the size in the
-	  type struct and have them memset the result such that certain create funcs can call other create
-	  funcs directly, allowing for a rather simple yet flexible inheritence constructor system.
-	  make_<type> functions would not necessarily do the same although they can.  Maybe you can make all
-	  make functions that receive a type do this
+	* use sdrl_make_value and all other types of constructors in all make and create functions
 	* make basetypes all seperate files complete with support functions
-	* use void functions where appropriate, like destroy
+	* make some of the #defines "redefinable"
 
 	* make a new list type sdList { sdValue value, sdValue *ref, sdList *next }
 	* add the pop/unshift realloc downsizing code (if at all)
 	* make functions for push, pop, shift, unshift
 	* make a duplicate environment function
 
-	* should sdrl_make_call_expr really by called sdrl_make_expr_expr (despite it's strangity?)
 	* add cplusplus checks to headers that add an extern "C" { } block
 
 ------------

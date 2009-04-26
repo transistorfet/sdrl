@@ -13,11 +13,11 @@
 #define LISPY_MAX_NUMBER		128
 #define LISPY_MAX_STRING		1024
 
-static sdExpr *lispy_parse_input(sdType *, int, sdInput *);
-static sdExpr *lispy_parse_expr(sdType *, int, sdInput *);
-static sdExpr *lispy_parse_number(sdType *, sdInput *, char, linenumber_t);
-static sdExpr *lispy_parse_string(sdType *, sdInput *, char, linenumber_t);
-static sdExpr *lispy_parse_identifier(sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lispy_parse_input(sdHeap *, sdType *, int, sdInput *);
+static sdExpr *lispy_parse_expr(sdHeap *, sdType *, int, sdInput *);
+static sdExpr *lispy_parse_number(sdHeap *, sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lispy_parse_string(sdHeap *, sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lispy_parse_identifier(sdHeap *, sdType *, sdInput *, char, linenumber_t);
 static int lispy_get_next_char(sdInput *);
 static inline int lispy_is_identifier(char);
 static inline int lispy_is_digit(char);
@@ -30,7 +30,7 @@ static inline char lispy_escape_char(char);
  */
 sdExpr *sdrl_base_parse_lispy_input(sdMachine *mach, sdInput *input)
 {
-	return(lispy_parse_input(&sdExprTypeDef, 0, input));
+	return(lispy_parse_input(mach->heap, &sdExprTypeDef, 0, input));
 }
 
 /*** Local Functions ***/
@@ -38,13 +38,13 @@ sdExpr *sdrl_base_parse_lispy_input(sdMachine *mach, sdInput *input)
 /**
  * Parse input stream.
  */
-sdExpr *lispy_parse_input(sdType *type, int openfunc, sdInput *input)
+sdExpr *lispy_parse_input(sdHeap *heap, sdType *type, int openfunc, sdInput *input)
 {
 	sdExpr *head, *cur;
 
-	head = cur = lispy_parse_expr(type, openfunc, input);
+	head = cur = lispy_parse_expr(heap, type, openfunc, input);
 	while (cur) {
-		cur->next = lispy_parse_expr(type, 0, input);
+		cur->next = lispy_parse_expr(heap, type, 0, input);
 		cur = cur->next;
 	}
 	return(head);
@@ -53,7 +53,7 @@ sdExpr *lispy_parse_input(sdType *type, int openfunc, sdInput *input)
 /**
  * Parse a single expression.
  */
-static sdExpr *lispy_parse_expr(sdType *type, int openfunc, sdInput *input)
+static sdExpr *lispy_parse_expr(sdHeap *heap, sdType *type, int openfunc, sdInput *input)
 {
 	char ch;
 	linenumber_t line;
@@ -67,31 +67,31 @@ static sdExpr *lispy_parse_expr(sdType *type, int openfunc, sdInput *input)
 	else if (ch == ')')
 		return(NULL);
 	else if (lispy_is_digit(ch) || ((ch == '-') && lispy_is_digit(sdrl_peek_char(input)))) {
-		if (!(expr = lispy_parse_number(type, input, ch, line)))
+		if (!(expr = lispy_parse_number(heap, type, input, ch, line)))
 			return(NULL);
 	}
 	else if ((ch == '\"') || (ch == '\'')) {
-		if (!(expr = lispy_parse_string(type, input, ch, line)))
+		if (!(expr = lispy_parse_string(heap, type, input, ch, line)))
 			return(NULL);
 	}
 	else if (ch == '(') {
-		if(!(expr = lispy_parse_input(type, 1, input)))
+		if(!(expr = lispy_parse_input(heap, type, 1, input)))
 			return(NULL);
-		expr = sdrl_make_call_expr(type, SDRL_ET_CALL, line, expr, NULL);
+		expr = sdrl_make_expr_expr(heap, type, SDRL_ET_CALL, line, expr, NULL);
 	}
 	else {
-		if (!(expr = lispy_parse_identifier(type, input, ch, line)))
+		if (!(expr = lispy_parse_identifier(heap, type, input, ch, line)))
 			return(NULL);
 		if (!openfunc) {
-			if (!(expr = sdrl_make_string_expr(type, SDRL_ET_IDENTIFIER, line, "$", expr))
-			    || !(expr = sdrl_make_call_expr(type, SDRL_ET_CALL, line, expr, NULL)))
+			if (!(expr = sdrl_make_string_expr(heap, type, SDRL_ET_IDENTIFIER, line, "$", expr))
+			    || !(expr = sdrl_make_expr_expr(heap, type, SDRL_ET_CALL, line, expr, NULL)))
 				return(NULL);
 		}
 	}
 	return(expr);
 }
 
-static sdExpr *lispy_parse_number(sdType *type, sdInput *input, char first, linenumber_t line)
+static sdExpr *lispy_parse_number(sdHeap *heap, sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i = 0;
 	char buffer[LISPY_MAX_NUMBER];
@@ -105,10 +105,10 @@ static sdExpr *lispy_parse_number(sdType *type, sdInput *input, char first, line
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_number_expr(type, SDRL_ET_NUMBER, line, strtod(buffer, NULL), NULL));
+	return(sdrl_make_number_expr(heap, type, SDRL_ET_NUMBER, line, strtod(buffer, NULL), NULL));
 }
 
-static sdExpr *lispy_parse_string(sdType *type, sdInput *input, char first, linenumber_t line)
+static sdExpr *lispy_parse_string(sdHeap *heap, sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i;
 	char ch;
@@ -124,10 +124,10 @@ static sdExpr *lispy_parse_string(sdType *type, sdInput *input, char first, line
 			break;
 	}
 	buffer[i] = '\0';
-	return(sdrl_make_string_expr(type, SDRL_ET_STRING, line, buffer, NULL));
+	return(sdrl_make_string_expr(heap, type, SDRL_ET_STRING, line, buffer, NULL));
 }
 
-static sdExpr *lispy_parse_identifier(sdType *type, sdInput *input, char first, linenumber_t line)
+static sdExpr *lispy_parse_identifier(sdHeap *heap, sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i;
 	char buffer[LISPY_MAX_STRING];
@@ -140,7 +140,7 @@ static sdExpr *lispy_parse_identifier(sdType *type, sdInput *input, char first, 
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_string_expr(type, SDRL_ET_IDENTIFIER, line, buffer, NULL));
+	return(sdrl_make_string_expr(heap, type, SDRL_ET_IDENTIFIER, line, buffer, NULL));
 }
 
 static int lispy_get_next_char(sdInput *input)

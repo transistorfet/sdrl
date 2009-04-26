@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include <sdrl/core/expr.h>
+#include <sdrl/core/heap.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/machine.h>
 #include <sdrl/globals.h>
@@ -25,11 +26,11 @@ sdType sdExprTypeDef = {
 /**
  * Return a newly allocated number expression
  */
-sdExpr *sdrl_make_number_expr(sdType *type, int etype, linenumber_t line, number_t num, sdExpr *next)
+sdExpr *sdrl_make_number_expr(sdHeap *heap, sdType *type, int etype, linenumber_t line, number_t num, sdExpr *next)
 {
 	sdExpr *expr;
 
-	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr))))
+	if (!(expr = (sdExpr *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
 	SDVALUE(expr)->refs = 1;
 	SDVALUE(expr)->type = type;
@@ -43,19 +44,19 @@ sdExpr *sdrl_make_number_expr(sdType *type, int etype, linenumber_t line, number
 /**
  * Return a newly allocated string expression using a malloc'd string, str.
  */
-sdExpr *sdrl_make_string_expr(sdType *type, int etype, linenumber_t line, const char *str, sdExpr *next)
+sdExpr *sdrl_make_string_expr(sdHeap *heap, sdType *type, int etype, linenumber_t line, const char *str, sdExpr *next)
 {
 	sdExpr *expr;
 
 	if (!str)
 		return(NULL);
-	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr) + strlen(str) + 1)))
+	if (!(expr = (sdExpr *) sdrl_heap_alloc(heap, type->size + strlen(str) + 1)))
 		return(NULL);
 	SDVALUE(expr)->refs = 1;
 	SDVALUE(expr)->type = type;
 	expr->type = etype;
 	expr->line = line;
-	expr->data.str = (char *) (expr + 1);
+	expr->data.str = (char *) (((char *) expr) + type->size);
 	strcpy(expr->data.str, str);
 	expr->next = next;
 	return(expr);
@@ -64,11 +65,11 @@ sdExpr *sdrl_make_string_expr(sdType *type, int etype, linenumber_t line, const 
 /**
  * Return a newly allocated call expression using a make'd expr, expr.
  */
-sdExpr *sdrl_make_call_expr(sdType *type, int etype, linenumber_t line, sdExpr *call, sdExpr *next)
+sdExpr *sdrl_make_expr_expr(sdHeap *heap, sdType *type, int etype, linenumber_t line, sdExpr *call, sdExpr *next)
 {
 	sdExpr *expr;
 
-	if (!(expr = (sdExpr *) malloc(sizeof(sdExpr))))
+	if (!(expr = (sdExpr *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
 	SDVALUE(expr)->refs = 1;
 	SDVALUE(expr)->type = type;
@@ -88,11 +89,11 @@ sdExpr *sdrl_expr_duplicate(sdMachine *mach, sdExpr *expr)
 	if (!expr)
 		return(NULL);
 	else if (expr->type & SDRL_ED_NUMBER)
-		return(sdrl_make_number_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.num, sdrl_expr_duplicate(mach, expr->next)));
+		return(sdrl_make_number_expr(mach->heap, SDVALUE(expr)->type, expr->type, expr->line, expr->data.num, sdrl_expr_duplicate(mach, expr->next)));
 	else if (expr->type & SDRL_ED_STRING)
-		return(sdrl_make_string_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.str, sdrl_expr_duplicate(mach, expr->next)));
+		return(sdrl_make_string_expr(mach->heap, SDVALUE(expr)->type, expr->type, expr->line, expr->data.str, sdrl_expr_duplicate(mach, expr->next)));
 	else if (expr->type & SDRL_ED_EXPR)
-		return(sdrl_make_call_expr(SDVALUE(expr)->type, expr->type, expr->line, sdrl_expr_duplicate(mach, expr->data.expr), sdrl_expr_duplicate(mach, expr->next)));
+		return(sdrl_make_expr_expr(mach->heap, SDVALUE(expr)->type, expr->type, expr->line, sdrl_expr_duplicate(mach, expr->data.expr), sdrl_expr_duplicate(mach, expr->next)));
 	else
 		return(NULL);
 }
@@ -109,7 +110,7 @@ void sdrl_expr_destroy(sdExpr *expr)
 		if (expr->type & SDRL_ED_EXPR)
 			sdrl_expr_destroy(expr->data.expr);
 		tmp = expr->next;
-		free(expr);
+		sdrl_heap_free(expr);
 		expr = tmp;
 	}
 }

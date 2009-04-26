@@ -17,18 +17,9 @@
 
 int sdrl_load_base(sdMachine *);
 
-
 /*** Parsers ***/
 sdExpr *sdrl_base_parse_lambda_input(sdMachine *, sdInput *);
 sdExpr *sdrl_base_parse_lispy_input(sdMachine *, sdInput *);
-
-/*** Types ***/
-sdType *sdrl_base_make_dynblock_type(sdMachine *);
-sdType *sdrl_base_make_expr_type(sdMachine *);
-sdType *sdrl_base_make_form_type(sdMachine *);
-sdType *sdrl_base_make_func_type(sdMachine *);
-sdType *sdrl_base_make_lexblock_type(sdMachine *);
-sdType *sdrl_base_make_list_type(sdMachine *);
 
 /*** Forms ***/
 int sdrl_base_code(sdMachine *, sdArray *);

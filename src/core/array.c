@@ -33,7 +33,7 @@ sdArray *sdrl_make_array(sdHeap *heap, sdType *type, int size)
 
 	if (size <= 0)
 		return(NULL);
-	if (!(array = (sdArray *) sdrl_heap_alloc(heap, sizeof(sdArray))))
+	if (!(array = (sdArray *) sdrl_heap_alloc(heap, type->size)))
 		return(NULL);
 	array->items = NULL;
 	if (size && !(array->items = (sdValue **) malloc(sizeof(sdValue *) * size))) {

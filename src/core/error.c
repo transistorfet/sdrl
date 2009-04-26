@@ -58,7 +58,7 @@ sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short se
 
 	if (err == SDRL_ERR_OUT_OF_MEMORY)
 		return(&sdMemoryError);
-	if (!(error = (sdError *) sdrl_heap_alloc(heap, sizeof(sdError))))
+	if (!(error = (sdError *) sdrl_heap_alloc(heap, type->size)))
 		return(&sdMemoryError);
 	SDVALUE(error)->refs = 1;
 	SDVALUE(error)->type = type;
@@ -96,7 +96,7 @@ sdError *sdrl_error_duplicate(sdHeap *heap, sdError *org)
 {
 	sdError *error;
 
-	if (!(error = (sdError *) sdrl_heap_alloc(heap, sizeof(sdError))))
+	if (!(error = (sdError *) sdrl_heap_alloc(heap, SDVALUE(org)->type->size)))
 		return(&sdMemoryError);
 	SDVALUE(error)->refs = 1;
 	SDVALUE(error)->type = SDVALUE(org)->type;

@@ -31,13 +31,7 @@ sdValue sdUndefValue = {
  */
 sdValue *sdrl_make_undef(sdHeap *heap, sdType *type)
 {
-	sdValue *undef;
-
-	if (!(undef = (sdValue *) sdrl_heap_alloc(heap, sizeof(sdValue))))
-		return(NULL);
-	SDVALUE(undef)->refs = 1;
-	SDVALUE(undef)->type = type;
-	return(undef);
+	return(sdrl_make_value(heap, type, 0));
 }
 
 /**

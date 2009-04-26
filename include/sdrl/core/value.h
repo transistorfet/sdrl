@@ -30,6 +30,7 @@ struct sdValue {
 	sdType *type;
 };
 
+sdValue *sdrl_make_value(sdHeap *, sdType *, int);
 sdValue *sdrl_duplicate_value(sdMachine *, sdValue *);
 void sdrl_destroy_value(sdValue *);
 
