@@ -38,9 +38,9 @@ clean:
 load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/io.h \
   ../../../include/sdrl/lib/io/file.h ../../../include/sdrl/lib/base.h \
@@ -53,9 +53,9 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
 funcs/open.o: funcs/open.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/io.h \
   ../../../include/sdrl/lib/io/file.h
@@ -63,9 +63,9 @@ funcs/open.o: funcs/open.c ../../../include/sdrl/sdrl.h \
 funcs/print.o: funcs/print.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/io.h \
   ../../../include/sdrl/lib/io/file.h
@@ -73,9 +73,9 @@ funcs/print.o: funcs/print.c ../../../include/sdrl/sdrl.h \
 types/file.o: types/file.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/io.h \
   ../../../include/sdrl/lib/io/file.h ../../../include/sdrl/lib/base.h \

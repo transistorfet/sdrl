@@ -11,6 +11,7 @@
 #include <sdrl/core/env.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
+#include <sdrl/core/undef.h>
 #include <sdrl/core/array.h>
 #include <sdrl/core/error.h>
 #include <sdrl/core/value.h>
@@ -44,6 +45,8 @@ sdMachine *sdrl_make_machine(void)
 	sdrl_env_add(mach->type_env, "expr", &sdExprTypeDef);
 	sdrl_env_add(mach->type_env, "env", &sdEnvTypeDef);
 	sdrl_env_add(mach->type_env, "error", &sdErrorTypeDef);
+
+	sdrl_env_add(mach->global, "undef", sdrl_get_undef());
 	return(mach);
 
     FAIL:
@@ -221,7 +224,7 @@ static int sdrl_push_expr_list_events(sdMachine *mach, sdExpr *exprs, sdArray *a
  */
 static int sdrl_append_return(sdMachine *mach, sdArray *array)
 {
-	sdrl_array_push(array, mach->ret);
+	sdrl_array_push(array, mach->ret ? mach->ret : sdrl_get_undef());
 	mach->ret = NULL;
 	return(0);
 }

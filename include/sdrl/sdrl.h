@@ -10,6 +10,7 @@
 #include <sdrl/core/env.h>
 #include <sdrl/core/heap.h>
 #include <sdrl/core/expr.h>
+#include <sdrl/core/undef.h>
 #include <sdrl/core/array.h>
 #include <sdrl/core/value.h>
 #include <sdrl/core/error.h>

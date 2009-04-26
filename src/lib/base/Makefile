@@ -77,9 +77,9 @@ clean:
 load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -91,9 +91,9 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
 forms/code.o: forms/code.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -105,9 +105,9 @@ forms/code.o: forms/code.c ../../../include/sdrl/sdrl.h \
 forms/dynblock.o: forms/dynblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -119,9 +119,9 @@ forms/dynblock.o: forms/dynblock.c ../../../include/sdrl/sdrl.h \
 forms/lexblock.o: forms/lexblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -133,9 +133,9 @@ forms/lexblock.o: forms/lexblock.c ../../../include/sdrl/sdrl.h \
 funcs/add.o: funcs/add.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -147,9 +147,9 @@ funcs/add.o: funcs/add.c ../../../include/sdrl/sdrl.h \
 funcs/and.o: funcs/and.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -161,9 +161,9 @@ funcs/and.o: funcs/and.c ../../../include/sdrl/sdrl.h \
 funcs/array.o: funcs/array.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -175,9 +175,9 @@ funcs/array.o: funcs/array.c ../../../include/sdrl/sdrl.h \
 funcs/defenv.o: funcs/defenv.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -189,9 +189,9 @@ funcs/defenv.o: funcs/defenv.c ../../../include/sdrl/sdrl.h \
 funcs/divide.o: funcs/divide.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -203,9 +203,9 @@ funcs/divide.o: funcs/divide.c ../../../include/sdrl/sdrl.h \
 funcs/equals.o: funcs/equals.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -217,9 +217,9 @@ funcs/equals.o: funcs/equals.c ../../../include/sdrl/sdrl.h \
 funcs/gethan.o: funcs/gethan.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -231,9 +231,9 @@ funcs/gethan.o: funcs/gethan.c ../../../include/sdrl/sdrl.h \
 funcs/gthan.o: funcs/gthan.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -245,9 +245,9 @@ funcs/gthan.o: funcs/gthan.c ../../../include/sdrl/sdrl.h \
 funcs/head.o: funcs/head.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -259,9 +259,9 @@ funcs/head.o: funcs/head.c ../../../include/sdrl/sdrl.h \
 funcs/if.o: funcs/if.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -273,9 +273,9 @@ funcs/if.o: funcs/if.c ../../../include/sdrl/sdrl.h \
 funcs/lethan.o: funcs/lethan.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -287,9 +287,9 @@ funcs/lethan.o: funcs/lethan.c ../../../include/sdrl/sdrl.h \
 funcs/list.o: funcs/list.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -301,9 +301,9 @@ funcs/list.o: funcs/list.c ../../../include/sdrl/sdrl.h \
 funcs/lookup.o: funcs/lookup.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -315,9 +315,9 @@ funcs/lookup.o: funcs/lookup.c ../../../include/sdrl/sdrl.h \
 funcs/lthan.o: funcs/lthan.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -329,9 +329,9 @@ funcs/lthan.o: funcs/lthan.c ../../../include/sdrl/sdrl.h \
 funcs/modulo.o: funcs/modulo.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -343,9 +343,9 @@ funcs/modulo.o: funcs/modulo.c ../../../include/sdrl/sdrl.h \
 funcs/multiply.o: funcs/multiply.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -357,9 +357,9 @@ funcs/multiply.o: funcs/multiply.c ../../../include/sdrl/sdrl.h \
 funcs/nequals.o: funcs/nequals.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -371,9 +371,9 @@ funcs/nequals.o: funcs/nequals.c ../../../include/sdrl/sdrl.h \
 funcs/new.o: funcs/new.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -385,9 +385,9 @@ funcs/new.o: funcs/new.c ../../../include/sdrl/sdrl.h \
 funcs/not.o: funcs/not.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -399,9 +399,9 @@ funcs/not.o: funcs/not.c ../../../include/sdrl/sdrl.h \
 funcs/null.o: funcs/null.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -413,9 +413,9 @@ funcs/null.o: funcs/null.c ../../../include/sdrl/sdrl.h \
 funcs/or.o: funcs/or.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -427,9 +427,9 @@ funcs/or.o: funcs/or.c ../../../include/sdrl/sdrl.h \
 funcs/resolve.o: funcs/resolve.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -441,9 +441,9 @@ funcs/resolve.o: funcs/resolve.c ../../../include/sdrl/sdrl.h \
 funcs/set.o: funcs/set.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -455,9 +455,9 @@ funcs/set.o: funcs/set.c ../../../include/sdrl/sdrl.h \
 funcs/setlist.o: funcs/setlist.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -469,9 +469,9 @@ funcs/setlist.o: funcs/setlist.c ../../../include/sdrl/sdrl.h \
 funcs/subtract.o: funcs/subtract.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -483,9 +483,9 @@ funcs/subtract.o: funcs/subtract.c ../../../include/sdrl/sdrl.h \
 funcs/tail.o: funcs/tail.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -497,9 +497,9 @@ funcs/tail.o: funcs/tail.c ../../../include/sdrl/sdrl.h \
 funcs/unlist.o: funcs/unlist.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -511,9 +511,9 @@ funcs/unlist.o: funcs/unlist.c ../../../include/sdrl/sdrl.h \
 parsers/lambda.o: parsers/lambda.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -526,9 +526,9 @@ parsers/lambda.o: parsers/lambda.c ../../../include/sdrl/sdrl.h \
 parsers/lispy.o: parsers/lispy.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -541,9 +541,9 @@ parsers/lispy.o: parsers/lispy.c ../../../include/sdrl/sdrl.h \
 types/dynblock.o: types/dynblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -555,9 +555,9 @@ types/dynblock.o: types/dynblock.c ../../../include/sdrl/sdrl.h \
 types/form.o: types/form.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -569,9 +569,9 @@ types/form.o: types/form.c ../../../include/sdrl/sdrl.h \
 types/func.o: types/func.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -583,9 +583,9 @@ types/func.o: types/func.c ../../../include/sdrl/sdrl.h \
 types/lexblock.o: types/lexblock.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -597,9 +597,9 @@ types/lexblock.o: types/lexblock.c ../../../include/sdrl/sdrl.h \
 types/list.o: types/list.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -611,18 +611,18 @@ types/list.o: types/list.c ../../../include/sdrl/sdrl.h \
 utils/disperr.o: utils/disperr.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h
 
 utils/dispexpr.o: utils/dispexpr.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -637,9 +637,9 @@ utils/input.o: utils/input.c ../../../include/sdrl/globals.h \
 utils/parsef.o: utils/parsef.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \
@@ -652,9 +652,9 @@ utils/parsef.o: utils/parsef.c ../../../include/sdrl/sdrl.h \
 utils/parses.o: utils/parses.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/array.h \
-  ../../../include/sdrl/core/error.h ../../../include/sdrl/core/utils.h \
-  ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
   ../../../include/sdrl/core/machine.h \
   ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
   ../../../include/sdrl/lib/base/form.h \

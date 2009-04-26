@@ -16,6 +16,7 @@ OBJS =	array.o	\
 	expr.o	\
 	heap.o	\
 	machine.o	\
+	undef.o	\
 	utils.o	\
 	value.o
 
@@ -81,7 +82,11 @@ machine.o: machine.c ../../include/sdrl/core/machine.h \
   ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
   ../../include/sdrl/core/expr.h ../../include/sdrl/core/array.h \
   ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h \
-  ../../include/sdrl/core/basetypes.h
+  ../../include/sdrl/core/undef.h ../../include/sdrl/core/basetypes.h
+
+undef.o: undef.c ../../include/sdrl/core/undef.h \
+  ../../include/sdrl/core/value.h ../../include/sdrl/globals.h \
+  ../../include/sdrl/core/heap.h
 
 utils.o: utils.c ../../include/sdrl/core/utils.h \
   ../../include/sdrl/core/env.h ../../include/sdrl/core/heap.h \

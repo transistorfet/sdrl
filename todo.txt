@@ -1,6 +1,5 @@
 
-	* add a simple redefineable memory allocotor function set for both global and local memory while
-	  adding the new type system
+	* make some of the #defines "redefinable"
 
 	* you can make a static array of sdEvent structs to form a stack where when you call the function to
 	  add an event, it just sets the values in the static elements and increments the stack pointer.
@@ -31,10 +30,7 @@
 
 	* make basetypes all seperate files complete with support functions
 	* use void functions where appropriate
-	* fix make_error to set the type of the value
-	* allocate the out of memory error during initialization
 
-	* add an 'undef' value to be used in place of actual NULL values (alternately check for NULL in libs)
 	* make a new list type sdList { sdValue value, sdValue *ref, sdList *next }
 	* add the pop/unshift realloc downsizing code (if at all)
 	* make functions for push, pop, shift, unshift
@@ -45,8 +41,11 @@
 
 ------------
 
-	* make a function called "make" or "new" that takes a typename and args and creates that type
-	  using the type's create function.  (make env *globals*) ; make an env that extends *globals*
+	* make a "profile" system where a certain profile can be loaded into a machine configuring that
+	  machine for a particular 'sublanguage'.  You can load a lisp profile for example and get all the
+	  functions named and working as you'd expect in lisp.  It would/could be a matter of defining
+	  things with certain names, using the macro/ast-rewriting system to preprocess ast, and possibly
+	  bitflag settings in the machine to change core behaviours of various kinds
 
 	* add AST traversers that convert "if" and various other syntactic "features" into pure "SDRL"
 	  format (verbose).  This prevents the need for a special parser but still has a lot of benifits
@@ -54,7 +53,10 @@
 	  for speed and for complex syntax)
 	* add a basic object oriented system
 
-	* should you remove the severity number from sdrl_set_error?
+	* improve the error handling so that you can more easily debug programs.  Make the linenumber more
+	  accurate.  Can/should you make the error messages more accurate/informational?
+	* add the ability to catch errors and handle them like exceptions
+	* add a reasonably detailed exception printing function so that you can trace errors
 
 	* add flags to the machine or something such that a program can change certain (what might be compiled
 	  in atm) options, such as treating "namespace.name" type names as special (causing a recursive lookup)
