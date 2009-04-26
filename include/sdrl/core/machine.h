@@ -48,18 +48,15 @@ int sdrl_evaluate_value(sdMachine *, sdArray *);
 
 /*** Generate an error and set it in the current machine. ***/
 static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const char *msg) {
-	if (mach->error)
-		sdrl_error_destroy(mach->error);
-	mach->error = sdrl_make_error(mach->heap, mach->current_line, severity, err, msg);
+	SDRL_DECREF(mach->error);
+	mach->error = sdrl_make_error(mach->heap, &sdErrorTypeDef, mach->current_line, severity, err, msg);
 	return(err);
 }
 
 /*** Generate an out of memory error and set it in the machine. ***/
 static inline int sdrl_set_memory_error(sdMachine *mach) {
-	if (mach->error)
-		sdrl_error_destroy(mach->error);
-	// TODO make this set using the static memory error
-	//mach->error = sdrl_make_error(mach->heap, mach->current_line, severity, err, msg);
+	SDRL_DECREF(mach->error);
+	mach->error = SDRL_INCREF(&sdMemoryError);
 	return(0);
 }
 

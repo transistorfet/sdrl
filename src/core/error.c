@@ -40,22 +40,28 @@ static const char *error_msgs[] = {
 	"Divide by zero"
 };
 
-static sdError memory_error = { { 1, NULL }, 0, SDRL_EBF_STATIC, 1, SDRL_ERR_OUT_OF_MEMORY, "Out Of Memory" };
+sdError sdMemoryError = {
+	{ 1, &sdErrorTypeDef },
+	0,
+	SDRL_EBF_STATIC,
+	SDRL_ES_FATAL,
+	SDRL_ERR_OUT_OF_MEMORY,
+	"Out Of Memory"
+};
 
 /**
  * Allocate and initialize an error report.
  */
-sdError *sdrl_make_error(sdHeap *heap, linenumber_t line, short severity, int err, const char *msg)
+sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short severity, int err, const char *msg)
 {
 	sdError *error;
 
 	if (err == SDRL_ERR_OUT_OF_MEMORY)
-		return(&memory_error);
+		return(&sdMemoryError);
 	if (!(error = (sdError *) sdrl_heap_alloc(heap, sizeof(sdError))))
-		return(&memory_error);
+		return(&sdMemoryError);
 	SDVALUE(error)->refs = 1;
-	// TODO fix this later
-	SDVALUE(error)->type = NULL;
+	SDVALUE(error)->type = type;
 	error->line = line;
 	error->bitflags = 0;
 	error->severity = severity;
@@ -75,7 +81,11 @@ sdError *sdrl_make_error(sdHeap *heap, linenumber_t line, short severity, int er
  */
 int sdrl_error_destroy(sdError *error)
 {
-	if (error && !SDRL_BF_IS_SET(error, SDRL_EBF_STATIC))
+	if (!error)
+		return(-1);
+	if (SDRL_BF_IS_SET(error, SDRL_EBF_STATIC))
+		SDVALUE(error)->refs = 1;
+	else
 		sdrl_heap_free(error);
 	return(0);
 }
@@ -88,7 +98,7 @@ sdError *sdrl_error_duplicate(sdHeap *heap, sdError *org)
 	sdError *error;
 
 	if (!(error = (sdError *) sdrl_heap_alloc(heap, sizeof(sdError))))
-		return(&memory_error);
+		return(&sdMemoryError);
 	SDVALUE(error)->refs = 1;
 	SDVALUE(error)->type = SDVALUE(org)->type;
 	error->line = org->line;
