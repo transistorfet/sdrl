@@ -124,7 +124,7 @@ int sdrl_expr_evaluate(sdMachine *mach, sdArray *args)
 	SDRL_INCREF(args);
 	if (sdrl_env_add(mach->env, "_", args))
 		sdrl_env_replace(mach->env, "_", args);
-	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, args->items[0], mach->env);
+	sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, args->items[0], mach->env);
 	return(0);
 }
 

@@ -26,7 +26,7 @@ int sdrl_base_if(sdMachine *mach, sdArray *args)
 		sdrl_array_push(block, sdrl_duplicate_value(mach, args->items[3]));
 
 	if (block->last >= 0)
-		sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(block), mach->env);
+		sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(block), mach->env);
 	mach->ret = NULL;
 	return(0);
 

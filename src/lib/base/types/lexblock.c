@@ -62,7 +62,7 @@ int sdrl_base_lexblock_evaluate(sdMachine *mach, sdArray *args)
 	if (!(env = sdrl_env_extend(func->env)))
 		return(sdrl_set_memory_error(mach));
 	sdrl_env_add(env, "_", SDRL_INCREF(args));
-	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(func->code), env);
+	sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(func->code), env);
 	SDRL_DECREF(env);
 	return(0);
 }

@@ -1,8 +1,4 @@
 
-	* you can make a static array of sdEvent structs to form a stack where when you call the function to
-	  add an event, it just sets the values in the static elements and increments the stack pointer.
-	  An inline function can be used in machine.c to automatically execute the event in a standardized
-	  fashion.
 	* if you did the realloc system, you could make seperate modules external to the core that handled
 	  various memory models such as just using realloc, using a garbage collection library of some kind,
 	  using a memory tracker, etc.  Similar to lua 5.1.  If you do this, use macros for the funcs so that
@@ -41,7 +37,7 @@
 	  format (verbose).  This prevents the need for a special parser but still has a lot of benifits
 	  and is much more configurable, even though it probably would be slower (a custom parser would be
 	  for speed and for complex syntax)
-	* add a basic object oriented system
+	* add a basic object oriented system using environments
 
 	* improve the error handling so that you can more easily debug programs.  Make the linenumber more
 	  accurate.  Can/should you make the error messages more accurate/informational?
@@ -50,15 +46,16 @@
 
 	* add flags to the machine or something such that a program can change certain (what might be compiled
 	  in atm) options, such as treating "namespace.name" type names as special (causing a recursive lookup)
+	  (or should this be handled through an AST rewriter/macro system?)
 	* should it be possible to set the parser on the command line or somethnig?
 	* make regression tests to test all aspects of the base library extensively
 	* make (if there isn't one already) a function that takes a string and evaluates it as code
-	* review 'lookup', 'set', & 'setlist' and cleanup
 
 	* make a hash string value (type?) and modify bindings to take a precalculated hash and then
 	  use those functions as often as possible and make language bindings to support it so you can use
 	  the values directly in order to speed up accesses when you know the hash will not otherwise be
-	  preserved
+	  preserved (note: as long as you defer the hash modulo to the end, the hash will always be the
+	  same so you don't have to adjust when the size of the table changes) (is it really worth it?)
 
 	* make string functions: strcmp, uppercase, lowercase
 	* make libraries namespacable
@@ -71,8 +68,6 @@
 	* make parser catch errors during a parse
 	* make the lambda parser support hex and octal number representation
 
-	* rewrite event.c to use a preallocated set of events (???)
-	* make equals and nequals more generic (not just numbers)
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* optimize the hash function
 	* add the ability to make a reference constant
@@ -81,10 +76,9 @@
 
 Refactoring:
 
-	* should retract_environment replace destroy_environment (in name)
+	* should retract_environment replace destroy_environment (in name) (???)
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>
-	* can you convert to using enums?  what are the drawbacks with regards to backwards compatibility?
 	* should you move the number and string types to libbase and move the basetypes into utils?
 
 Tests:

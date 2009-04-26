@@ -76,19 +76,23 @@ int sdrl_evaluate(sdMachine *mach, sdExpr *expr)
 {
 	int ret = 0;
 	sdEvent *event;
+	sdValue *arg;
+	sdrl_event_t func;
 
-	if (!(event = sdrl_make_event((sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr), mach->env)))
-		return(sdrl_set_memory_error(mach));
-	do {
+	// TODO do you have to incref the expr first?
+	sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr), mach->env);
+	while ((event = sdrl_event_get_top(mach->cont))) {
 		SDRL_DECREF(mach->env);
 		mach->env = SDRL_INCREF(event->env);
-		ret = event->func(mach, event->arg);
-		sdrl_event_destroy(event);
+		arg = SDRL_INCREF(event->arg);
+		func = event->func;
+		sdrl_event_pop(mach->cont);
+		ret = func(mach, arg);
+		SDRL_DECREF(arg);
 		// TODO check the error and see if we should return or continue
 		if (ret)
 			return(ret);
-		event = sdrl_event_pop(mach->cont);
-	} while (event);
+	}
 
 	return(0);
 }
@@ -101,7 +105,7 @@ int sdrl_evaluate_expr_list(sdMachine *mach, sdExpr *expr)
 	if (!expr)
 		return(0);
 	else if (expr->next)
-		sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr->next), mach->env);
+		sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr->next), mach->env);
 	return(sdrl_evaluate_expr_value(mach, expr));
 }
 
@@ -146,14 +150,14 @@ int sdrl_evaluate_expr_value(sdMachine *mach, sdExpr *expr)
 			}
 			else {
 				sdrl_array_push(args, SDRL_INCREF(func));
-				sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
+				sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
 				sdrl_push_expr_list_events(mach, expr->data.expr->next, args);
 				SDRL_DECREF(args);
 				return(0);
 			}
 		}
 		else if (expr->data.expr->type == SDRL_ET_CALL) {
-			sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
+			sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
 			sdrl_push_expr_list_events(mach, expr->data.expr, args);
 			SDRL_DECREF(args);
 			return(0);
@@ -212,8 +216,8 @@ static int sdrl_push_expr_list_events(sdMachine *mach, sdExpr *exprs, sdArray *a
 		return(-1);
 	if (exprs->next)
 		sdrl_push_expr_list_events(mach, exprs->next, args);
-	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_append_return, SDVALUE(args), mach->env);
-	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_value, SDVALUE(exprs), mach->env);
+	sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_append_return, SDVALUE(args), mach->env);
+	sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_value, SDVALUE(exprs), mach->env);
 	return(0);
 }
 

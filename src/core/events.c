@@ -11,6 +11,7 @@
 #include <sdrl/core/value.h>
 #include <sdrl/globals.h>
 
+#define SDRL_STACK_SIZE		200
 
 /**
  * Create a new continuation stack for sdrl_events.
@@ -21,7 +22,12 @@ sdCont *sdrl_make_cont(void)
 
 	if (!(cont = (sdCont *) malloc(sizeof(sdCont))))
 		return(NULL);
-	cont->top = NULL;
+	if (!(cont->stack = (sdEvent *) malloc(sizeof(sdEvent) * SDRL_STACK_SIZE))) {
+		free(cont);
+		return(NULL);
+	}
+	cont->size = SDRL_STACK_SIZE;
+	cont->sp = -1;
 	return(cont);
 }
 
@@ -30,95 +36,50 @@ sdCont *sdrl_make_cont(void)
  */
 void sdrl_cont_destroy(sdCont *cont)
 {
-	sdEvent *cur, *tmp;
-
 	if (!cont)
 		return;
-	cur = cont->top;
-	while (cur) {
-		tmp = cur->next;
-		sdrl_event_destroy(cur);
-		cur = tmp;
+	for (; cont->sp >= 0; cont->sp--) {
+		SDRL_DECREF(cont->stack[cont->sp].arg);
+		SDRL_DECREF(cont->stack[cont->sp].env);
 	}
 	free(cont);
 }
 
-/**
- * Allocate and initialize a new sdrl_event (to be added to a continuation).
- */
-sdEvent *sdrl_make_event(sdrl_event_t func, sdValue *arg, sdEnv *env)
-{
-	sdEvent *event;
-
-	if (!(event = (sdEvent *) malloc(sizeof(sdEvent))))
-		return(NULL);
-	event->func = func;
-	event->arg = SDRL_INCREF(arg);
-	event->env = SDRL_INCREF(env);
-	event->next = NULL;
-	return(event);
-}
-
-/**
- * Free the resources used by an sdrl_event
- */
-void sdrl_event_destroy(sdEvent *event)
-{
-	if (event) {
-		SDRL_DECREF(event->arg);
-		SDRL_DECREF(event->env);
-		free(event);
-	}
-}
 
 /**
  * Make an sdEvent and push it onto the top of a continuation stack.
  */
-int sdrl_event_push_new(sdCont *cont, sdrl_event_t func, sdValue *arg, sdEnv *env)
+int sdrl_event_push(sdCont *cont, sdrl_event_t func, sdValue *arg, sdEnv *env)
 {
-	sdEvent *event;
+	sdEvent *newstack;
 
-	if (!(event = sdrl_make_event(func, arg, env)))
-		return(-1);
-	event->next = cont->top;
-	cont->top = event;
-	return(0);
-}
-
-/**
- * Push an sdEvent onto the top of a continuation stack.
- */
-int sdrl_event_push(sdCont *cont, sdEvent *event)
-{
-	event->next = cont->top;
-	cont->top = event;
+	if (++cont->sp >= cont->size) {
+		if (!(newstack = (sdEvent *) realloc(cont->stack, sizeof(sdEvent) * (cont->size + SDRL_STACK_SIZE))))
+			return(-1);
+		cont->stack = newstack;
+		cont->size += SDRL_STACK_SIZE;
+	}
+	cont->stack[cont->sp].func = func;
+	cont->stack[cont->sp].arg = SDRL_INCREF(arg);
+	cont->stack[cont->sp].env = SDRL_INCREF(env);
 	return(0);
 }
 
 /**
  * Pop an sdrl_event off the top of a continuation stack.
  */
-sdEvent *sdrl_event_pop(sdCont *cont)
+int sdrl_event_pop(sdCont *cont)
 {
-	sdEvent *event;
-
-	if (!cont->top)
-		return(NULL);
-	event = cont->top;
-	cont->top = event->next;
-	event->next = NULL;
-	return(event);
+	if (cont->sp < 0)
+		return(-1);
+	// TODO should you resize down?
+	SDRL_DECREF(cont->stack[cont->sp].arg);
+	SDRL_DECREF(cont->stack[cont->sp].env);
+	cont->sp--;
+	return(0);
 }
 
-/**
- * Return the sdrl_event on the top of the continuation stack.
- */
-sdEvent *sdrl_event_peek(sdCont *cont)
-{
-	if (!cont->top)
-		return(NULL);
-	return(cont->top);
-}
+
 
 /*
 

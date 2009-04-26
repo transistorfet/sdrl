@@ -15,22 +15,22 @@ struct sdEvent {
 	sdrl_event_t func;
 	sdValue *arg;
 	sdEnv *env;
-	sdEvent *next;
 };
 
 struct sdCont {
-	sdEvent *top;
+	int size;
+	int sp;
+	sdEvent *stack;
 };
 
 sdCont *sdrl_make_cont(void);
 void sdrl_cont_destroy(sdCont *);
 
-sdEvent *sdrl_make_event(sdrl_event_t, sdValue *, sdEnv *);
-void sdrl_event_destroy(sdEvent *);
-int sdrl_event_push_new(sdCont *, sdrl_event_t, sdValue *, sdEnv *);
-int sdrl_event_push(sdCont *, sdEvent *);
-sdEvent *sdrl_event_pop(sdCont *);
-sdEvent *sdrl_event_peek(sdCont *);
+int sdrl_event_push(sdCont *, sdrl_event_t, sdValue *, sdEnv *);
+int sdrl_event_pop(sdCont *);
+
+#define sdrl_event_get_top(cont)	\
+	( (cont)->sp >= 0 ? &(cont)->stack[(cont)->sp] : NULL )
 
 #endif
 
