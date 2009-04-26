@@ -24,18 +24,18 @@ static int sdrl_append_return(sdMachine *, sdArray *);
 /**
  * Create a machine for executing code
  */
-sdMachine *sdrl_create_machine(void)
+sdMachine *sdrl_make_machine(void)
 {
 	sdMachine *mach;
 
 	if (!(mach = (sdMachine *) malloc(sizeof(sdMachine))))
 		return(NULL);
 	memset(mach, '\0', sizeof(sdMachine));
-	if (!(mach->heap = sdrl_create_heap()) || !(mach->cont = sdrl_create_continuation()))
+	if (!(mach->heap = sdrl_make_heap()) || !(mach->cont = sdrl_make_cont()))
 		goto FAIL;
-	if (!(mach->type_env = sdrl_make_environment(mach->heap, &sdEnvTypeDef, SDRL_BBF_CONSTANT, NULL)))
+	if (!(mach->type_env = sdrl_make_env(mach->heap, &sdEnvTypeDef, SDRL_BBF_CONSTANT, NULL)))
 		goto FAIL;
-	if (!(mach->global = sdrl_make_environment(mach->heap, &sdEnvTypeDef, 0, (sdrl_destroy_t) sdrl_destroy_value)))
+	if (!(mach->global = sdrl_make_env(mach->heap, &sdEnvTypeDef, 0, (sdrl_destroy_t) sdrl_destroy_value)))
 		goto FAIL;
 	mach->env = SDRL_INCREF(mach->global);
 	sdrl_env_add(mach->type_env, "array", &sdArrayTypeDef);
@@ -47,22 +47,22 @@ sdMachine *sdrl_create_machine(void)
 	return(mach);
 
     FAIL:
-	sdrl_destroy_machine(mach);
+	sdrl_machine_destroy(mach);
 	return(NULL);
 }
 
 /**
  * Free the resources allocated to mach
  */
-int sdrl_destroy_machine(sdMachine *mach)
+int sdrl_machine_destroy(sdMachine *mach)
 {
 	SDRL_DECREF(mach->ret);
-	sdrl_destroy_continuation(mach->cont);
+	sdrl_cont_destroy(mach->cont);
 	SDRL_DECREF(mach->env);
-	sdrl_destroy_environment(mach->global);
-	sdrl_destroy_environment(mach->type_env);
-	sdrl_destroy_error(mach->error);
-	sdrl_destroy_heap(mach->heap);
+	sdrl_env_destroy(mach->global);
+	sdrl_env_destroy(mach->type_env);
+	sdrl_error_destroy(mach->error);
+	sdrl_heap_destroy(mach->heap);
 	free(mach);
 	return(0);
 }
@@ -81,11 +81,11 @@ int sdrl_evaluate(sdMachine *mach, sdExpr *expr)
 		SDRL_DECREF(mach->env);
 		mach->env = SDRL_INCREF(event->env);
 		ret = event->func(mach, event->arg);
-		sdrl_destroy_event(event);
+		sdrl_event_destroy(event);
 		// TODO check the error and see if we should return or continue
 		if (ret)
 			return(ret);
-		event = sdrl_pop_event(mach->cont);
+		event = sdrl_event_pop(mach->cont);
 	} while (event);
 
 	return(0);
@@ -99,7 +99,7 @@ int sdrl_evaluate_expr_list(sdMachine *mach, sdExpr *expr)
 	if (!expr)
 		return(0);
 	else if (expr->next)
-		sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr->next), mach->env);
+		sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr->next), mach->env);
 	return(sdrl_evaluate_expr_value(mach, expr));
 }
 
@@ -144,14 +144,14 @@ int sdrl_evaluate_expr_value(sdMachine *mach, sdExpr *expr)
 			}
 			else {
 				sdrl_array_push(args, SDRL_INCREF(func));
-				sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
+				sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
 				sdrl_push_expr_list_events(mach, expr->data.expr->next, args);
 				SDRL_DECREF(args);
 				return(0);
 			}
 		}
 		else if (expr->data.expr->type == SDRL_ET_CALL) {
-			sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
+			sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_value, SDVALUE(args), mach->env);
 			sdrl_push_expr_list_events(mach, expr->data.expr, args);
 			SDRL_DECREF(args);
 			return(0);
@@ -210,8 +210,8 @@ static int sdrl_push_expr_list_events(sdMachine *mach, sdExpr *exprs, sdArray *a
 		return(-1);
 	if (exprs->next)
 		sdrl_push_expr_list_events(mach, exprs->next, args);
-	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_append_return, SDVALUE(args), mach->env);
-	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_value, SDVALUE(exprs), mach->env);
+	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_append_return, SDVALUE(args), mach->env);
+	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_value, SDVALUE(exprs), mach->env);
 	return(0);
 }
 

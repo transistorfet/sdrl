@@ -40,11 +40,11 @@ struct sdEnv {
 	sdEnv *parent;
 };
 
-sdEnv *sdrl_make_environment(sdHeap *, sdType *, short, sdrl_destroy_t);
+sdEnv *sdrl_make_env(sdHeap *, sdType *, short, sdrl_destroy_t);
 sdEnv *sdrl_env_create(sdMachine *, sdType *, sdArray *);
-sdEnv *sdrl_extend_environment(sdEnv *);
-sdEnv *sdrl_retract_environment(sdEnv *);
-int sdrl_destroy_environment(sdEnv *);
+sdEnv *sdrl_env_extend(sdEnv *);
+sdEnv *sdrl_env_retract(sdEnv *);
+int sdrl_env_destroy(sdEnv *);
 
 int sdrl_env_add(sdEnv *, const char *, void *);
 int sdrl_env_replace(sdEnv *, const char *, void *);

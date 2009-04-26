@@ -10,7 +10,7 @@
 
 extern sdType sdFormTypeDef;
 
-int sdrl_base_evaluate_form(sdMachine *, sdArray *);
+int sdrl_base_form_evaluate(sdMachine *, sdArray *);
 
 #endif
 

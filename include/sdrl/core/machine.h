@@ -29,8 +29,8 @@ struct sdMachine {
 	sdEnv *env;
 };
 
-sdMachine *sdrl_create_machine(void);
-int sdrl_destroy_machine(sdMachine *);
+sdMachine *sdrl_make_machine(void);
+int sdrl_machine_destroy(sdMachine *);
 
 int sdrl_evaluate(sdMachine *, sdExpr *);
 int sdrl_evaluate_expr_list(sdMachine *, sdExpr *);
@@ -49,7 +49,7 @@ int sdrl_evaluate_value(sdMachine *, sdArray *);
 /*** Generate an error and set it in the current machine. ***/
 static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const char *msg) {
 	if (mach->error)
-		sdrl_destroy_error(mach->error);
+		sdrl_error_destroy(mach->error);
 	mach->error = sdrl_make_error(mach->heap, mach->current_line, severity, err, msg);
 	return(err);
 }
@@ -57,7 +57,7 @@ static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const
 /*** Generate an out of memory error and set it in the machine. ***/
 static inline int sdrl_set_memory_error(sdMachine *mach) {
 	if (mach->error)
-		sdrl_destroy_error(mach->error);
+		sdrl_error_destroy(mach->error);
 	// TODO make this set using the static memory error
 	//mach->error = sdrl_make_error(mach->heap, mach->current_line, severity, err, msg);
 	return(0);

@@ -22,17 +22,15 @@ struct sdCont {
 	sdEvent *top;
 };
 
-sdCont *sdrl_create_continuation(void);
-int sdrl_destroy_continuation(sdCont *);
+sdCont *sdrl_make_cont(void);
+int sdrl_cont_destroy(sdCont *);
 
 sdEvent *sdrl_make_event(sdrl_event_t, sdValue *, sdEnv *);
-int sdrl_destroy_event(sdEvent *);
-int sdrl_push_new_event(sdCont *, sdrl_event_t, sdValue *, sdEnv *);
-int sdrl_push_event(sdCont *, sdEvent *);
-sdEvent *sdrl_pop_event(sdCont *);
-sdEvent *sdrl_peek_event(sdCont *);
-
-int sdrl_count_events(sdCont *);
+int sdrl_event_destroy(sdEvent *);
+int sdrl_event_push_new(sdCont *, sdrl_event_t, sdValue *, sdEnv *);
+int sdrl_event_push(sdCont *, sdEvent *);
+sdEvent *sdrl_event_pop(sdCont *);
+sdEvent *sdrl_event_peek(sdCont *);
 
 #endif
 

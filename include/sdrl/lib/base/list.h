@@ -20,7 +20,7 @@ struct sdList {
 	sdList *next;
 };
 
-sdValue *sdrl_base_create_list(sdMachine *, sdType *, sdArray *);
+sdValue *sdrl_base_list_create(sdMachine *, sdType *, sdArray *);
 
 #endif
 

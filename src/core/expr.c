@@ -16,9 +16,9 @@ sdType sdExprTypeDef = {
 	sizeof(sdExpr),
 	0,
 	NULL,
-	(sdrl_destroy_t) sdrl_destroy_expr,
-	(sdrl_duplicate_t) sdrl_duplicate_expr,
-	(sdrl_evaluate_t) sdrl_evaluate_expr
+	(sdrl_destroy_t) sdrl_expr_destroy,
+	(sdrl_duplicate_t) sdrl_expr_duplicate,
+	(sdrl_evaluate_t) sdrl_expr_evaluate
 };
 
 
@@ -82,17 +82,17 @@ sdExpr *sdrl_make_call_expr(sdType *type, int etype, linenumber_t line, sdExpr *
 /**
  * Create a duplicate of the expr.
  */
-sdExpr *sdrl_duplicate_expr(sdMachine *mach, sdExpr *expr)
+sdExpr *sdrl_expr_duplicate(sdMachine *mach, sdExpr *expr)
 {
 	// TODO modify to use mach->heap for allocation
 	if (!expr)
 		return(NULL);
 	else if (expr->type & SDRL_ED_NUMBER)
-		return(sdrl_make_number_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.num, sdrl_duplicate_expr(mach, expr->next)));
+		return(sdrl_make_number_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.num, sdrl_expr_duplicate(mach, expr->next)));
 	else if (expr->type & SDRL_ED_STRING)
-		return(sdrl_make_string_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.str, sdrl_duplicate_expr(mach, expr->next)));
+		return(sdrl_make_string_expr(SDVALUE(expr)->type, expr->type, expr->line, expr->data.str, sdrl_expr_duplicate(mach, expr->next)));
 	else if (expr->type & SDRL_ED_EXPR)
-		return(sdrl_make_call_expr(SDVALUE(expr)->type, expr->type, expr->line, sdrl_duplicate_expr(mach, expr->data.expr), sdrl_duplicate_expr(mach, expr->next)));
+		return(sdrl_make_call_expr(SDVALUE(expr)->type, expr->type, expr->line, sdrl_expr_duplicate(mach, expr->data.expr), sdrl_expr_duplicate(mach, expr->next)));
 	else
 		return(NULL);
 }
@@ -100,14 +100,14 @@ sdExpr *sdrl_duplicate_expr(sdMachine *mach, sdExpr *expr)
 /**
  * Free all memory associated with the sdrl_expr
  */
-int sdrl_destroy_expr(sdExpr *expr)
+int sdrl_expr_destroy(sdExpr *expr)
 {
 	sdExpr *tmp;
 
 	// TODO should we check/decrement the refcounter since we are re-entering this function recursively
 	while (expr) {
 		if (expr->type & SDRL_ED_EXPR)
-			sdrl_destroy_expr(expr->data.expr);
+			sdrl_expr_destroy(expr->data.expr);
 		tmp = expr->next;
 		free(expr);
 		expr = tmp;
@@ -119,13 +119,13 @@ int sdrl_destroy_expr(sdExpr *expr)
 /**
  * Use the given machine to evaluate the expression.
  */
-int sdrl_evaluate_expr(sdMachine *mach, sdArray *args)
+int sdrl_expr_evaluate(sdMachine *mach, sdArray *args)
 {
 	// TODO what do you do (if anything) with the arguments?
 	SDRL_INCREF(args);
 	if (sdrl_env_add(mach->env, "_", args))
 		sdrl_env_replace(mach->env, "_", args);
-	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, args->items[0], mach->env);
+	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, args->items[0], mach->env);
 	return(0);
 }
 

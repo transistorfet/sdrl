@@ -24,7 +24,7 @@ static void sdrl_heap_report(sdHeap *heap);
 /**
  * Create a new heap for objects of the given size using the given page size.
  */
-sdHeap *sdrl_create_heap(void)
+sdHeap *sdrl_make_heap(void)
 {
 	sdHeap *heap;
 
@@ -38,7 +38,7 @@ sdHeap *sdrl_create_heap(void)
 /**
  * Free all the memory allocated by the heap
  */
-int sdrl_destroy_heap(sdHeap *heap)
+int sdrl_heap_destroy(sdHeap *heap)
 {
 	sdHeapEntry *cur, *next;
 

@@ -31,8 +31,8 @@ struct sdError {
 };
 
 sdError *sdrl_make_error(sdHeap *, linenumber_t, short, int, const char *);
-int sdrl_destroy_error(sdError *);
-sdError *sdrl_duplicate_error(sdHeap *, sdError *);
+int sdrl_error_destroy(sdError *);
+sdError *sdrl_error_duplicate(sdHeap *, sdError *);
 
 #endif
 

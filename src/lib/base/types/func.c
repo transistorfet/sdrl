@@ -13,12 +13,12 @@ sdType sdFuncTypeDef = {
 	0,
 	NULL,
 	(sdrl_destroy_t) sdrl_heap_free,
-	(sdrl_duplicate_t) sdrl_duplicate_pointer,
-	(sdrl_evaluate_t) sdrl_base_evaluate_func
+	(sdrl_duplicate_t) sdrl_pointer_duplicate,
+	(sdrl_evaluate_t) sdrl_base_func_evaluate
 };
 
 
-int sdrl_base_evaluate_func(sdMachine *mach, sdArray *args)
+int sdrl_base_func_evaluate(sdMachine *mach, sdArray *args)
 {
 	SDRL_DECREF(mach->ret);
 	mach->ret = NULL;

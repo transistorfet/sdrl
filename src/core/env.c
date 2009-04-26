@@ -34,7 +34,7 @@ sdType sdEnvTypeDef = {
 	sizeof(sdEnv),
 	0,
 	(sdrl_create_t) sdrl_env_create,
-	(sdrl_destroy_t) sdrl_retract_environment,
+	(sdrl_destroy_t) sdrl_env_retract,
 	NULL,
 	NULL
 };
@@ -43,7 +43,7 @@ sdType sdEnvTypeDef = {
 /**
  * Allocate an environment for binding values to names.
  */
-sdEnv *sdrl_make_environment(sdHeap *heap, sdType *type, short bitflags, sdrl_destroy_t destroy)
+sdEnv *sdrl_make_env(sdHeap *heap, sdType *type, short bitflags, sdrl_destroy_t destroy)
 {
 	sdBinding **table;
 	sdEnv *env;
@@ -74,22 +74,22 @@ sdEnv *sdrl_make_environment(sdHeap *heap, sdType *type, short bitflags, sdrl_de
 sdEnv *sdrl_env_create(sdMachine *mach, sdType *type, sdArray *args)
 {
 	if (args->last < 0)
-		return(sdrl_make_environment(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
+		return(sdrl_make_env(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
 	else if (args->items[0]->type != type) {
 		sdrl_set_type_error(mach);
 		return(NULL);
 	}
-	return(sdrl_extend_environment(SDENV(args->items[0])));
+	return(sdrl_env_extend(SDENV(args->items[0])));
 }
 
 /**
  * Allocate an environment for binding values to names.
  */
-sdEnv *sdrl_extend_environment(sdEnv *parent)
+sdEnv *sdrl_env_extend(sdEnv *parent)
 {
 	sdEnv *env;
 
-	if (!(env = sdrl_make_environment(parent->heap, SDVALUE(parent)->type, parent->bitflags, parent->destroy)))
+	if (!(env = sdrl_make_env(parent->heap, SDVALUE(parent)->type, parent->bitflags, parent->destroy)))
 		return(NULL);
 	env->parent = SDRL_INCREF(parent);
 	return(env);
@@ -99,7 +99,7 @@ sdEnv *sdrl_extend_environment(sdEnv *parent)
  * Free resources allocated by the top most environment including all bindings and
  * return a pointer to the parent environment or NULL if env does not have a parent.
  */
-sdEnv *sdrl_retract_environment(sdEnv *env)
+sdEnv *sdrl_env_retract(sdEnv *env)
 {
 	unsigned int i;
 	sdBinding *cur, *next;
@@ -132,10 +132,10 @@ sdEnv *sdrl_retract_environment(sdEnv *env)
 /**
  * Free resources allocated by the environment and all of its parents.
  */
-int sdrl_destroy_environment(sdEnv *env)
+int sdrl_env_destroy(sdEnv *env)
 {
 	while (env)
-		env = sdrl_retract_environment(env);
+		env = sdrl_env_retract(env);
 	return(0);
 }
 

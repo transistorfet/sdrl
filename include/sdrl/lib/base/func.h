@@ -10,7 +10,7 @@
 
 extern sdType sdFuncTypeDef;
 
-int sdrl_base_evaluate_func(sdMachine *, sdArray *);
+int sdrl_base_func_evaluate(sdMachine *, sdArray *);
 
 #endif
 

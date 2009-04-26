@@ -28,18 +28,18 @@ int main(int argc, char **argv)
 		return(1);
 	}
 
-	if (!(mach = sdrl_create_machine()))
+	if (!(mach = sdrl_make_machine()))
 		return(-1);
 	if (sdrl_load_base(mach)
 	    || sdrl_load_string(mach)
 	    || sdrl_load_io(mach)) {
 		printf("Error initializing primatives\n");
-		sdrl_destroy_machine(mach);
+		sdrl_machine_destroy(mach);
 		return(-1);
 	}
 	if (!(code = sdrl_base_parse_file(mach, (sdrl_parser_t) sdrl_base_parse_lambda_input, infile))) {
 		printf("Cannot parse file, %s\n", infile);
-		sdrl_destroy_machine(mach);
+		sdrl_machine_destroy(mach);
 		return(-1);
 	}
 
@@ -49,8 +49,8 @@ int main(int argc, char **argv)
 	convert_ast(code);
 	print_result(mach, sdrl_evaluate(mach, code));
 
-	sdrl_destroy_machine(mach);
-	sdrl_destroy_expr(code);
+	sdrl_machine_destroy(mach);
+	sdrl_expr_destroy(code);
 
 	return(0);
 }

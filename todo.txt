@@ -18,10 +18,7 @@
 	  fewer concerns to a pointer-based type system.  Lua uses a function pointer to realloc passed to
 	  it when initialized so that you can pass it a custom allocation function to keep instances isolated
 	  if you want.
-	* lexblock, dynblock, and expr type evaluate funcs set the args to be a value in the env but the
-	  first arg is the function itself.  Should it be removed from args first?
-	* should you change all function names to be sdrl_<type>_<function> such as sdrl_expr_destroy,
-	  sdrl_env_duplicate, etc?
+	* should sdrl_destroy/duplicate_value be that or sdrl_value_destroy/duplicate?
 	* what should happen with the array manipulation functions in terms of who is responsible for
 	  creating a reference for the value being stored in the array?
 	* look at python and perl in terms of reference management and try to make reference management
@@ -33,7 +30,6 @@
 	  by subclasses of a certain type.  Make functions consistent where needed
 
 	* make basetypes all seperate files complete with support functions
-	* reduce length/verbosity of some function names (as per api.txt?)
 	* use void functions where appropriate
 	* fix make_error to set the type of the value
 	* allocate the out of memory error during initialization
@@ -44,10 +40,6 @@
 	* make functions for push, pop, shift, unshift
 	* make a duplicate environment function
 
-	* make functions (inlines) for things like sdrl_env_find that produce an error such that they
-	  can easily be used with SDRL_TRY()
-	* use SDRL_TRY everywhere you can, including the core
-	* rewrite lib functions to use the conversion/newfancy funcs
 	* should sdrl_make_call_expr really by called sdrl_make_expr_expr (despite it's strangity?)
 	* add cplusplus checks to headers that add an extern "C" { } block
 
@@ -113,11 +105,8 @@ Tests:
 
 Structural Issues:
 
-	* pthyon uses type pointer variables (possibly initialized during runtime as opposed to static
-	  although I'm not sure).  It then refers to those type variables directly instead of how I'm
-	  doing it with a type environment.  I like this method better because it's much faster to do
-	  type comparisons.
-	* should you make types constant like you have done in sdm, stutter, and such? (see notes.txt)
+	* lexblock, dynblock, and expr type evaluate funcs set the args to be a value in the env but the
+	  first arg is the function itself.  Should it be removed from args first?
 	* should you have a more robust object system with a proper "init/release" type function for each
 	  type?  It will allow for better inheritance in exchange for a slight performance loss.  There is a
 	  chance we will have problems with environment since the actual struct will first be allocated so
@@ -149,10 +138,6 @@ Structural Issues:
 	  (number, string, expr). struct sdNumberExpr { sdExpr expr; number_t num };  This would allow
 	  you to get rid of the union (not that big a deal) but also to easily make alternate expr types
 	  such as one that contains an sdValue.
-	* should it be possible somehow (perhaps it's undesirable) to directly make new "types" via the
-	  language itself, as opposed to making "types" via an environment-based object system?  Is this
-	  even useful since the benifit to types is mostly in C.  Does this also mean that it's actually
-	  better to have *fewer* C-based types since we need extra support functions for manipulating them?
 	* what do you do if a value being applied/evaluated is non-executable (does not have an evaluate
 	  function in it's type)?  Should you just return the value?  Should it be an error?  This "feature"
 	  is exploited by "if" such that it calls its params like a function but if they aren't (code ) blocks,
@@ -168,9 +153,6 @@ Structural Issues:
 	  could be to store a pointer to the env containing the entry instead.  What about though if an
 	  inbetween env creates a new entry that overrides the previous one?  Why wouldn't a reference work in
 	  this case? (maybe it will)
-	* should you make a different dedicated hash table implementation for types to speed up type
-	  discovery?  We shouldn't make types be values since we can instead make a 'type' type that is a
-	  pointer to the type and use that as the actual value
 	* how will set and setlist work with regards to the value/args? Should it duplicate the arg before
 	  assigning it, steal the reference (clobber the args) or make a reference?  The make reference
 	  method didn't seem to work in setlist because we actually need to clobber the args given the

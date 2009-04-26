@@ -14,14 +14,14 @@ sdType sdFileTypeDef = {
 	&sdValueTypeDef,
 	sizeof(sdPointer),
 	0,
-	(sdrl_create_t) sdrl_io_create_file,
-	(sdrl_destroy_t) sdrl_io_destroy_file,
+	(sdrl_create_t) sdrl_io_file_create,
+	(sdrl_destroy_t) sdrl_io_file_destroy,
 	NULL,
 	NULL
 };
 
 
-sdValue *sdrl_io_create_file(sdMachine *mach, sdType *type, sdArray *args)
+sdValue *sdrl_io_file_create(sdMachine *mach, sdType *type, sdArray *args)
 {
 	FILE *fptr;
 
@@ -34,13 +34,13 @@ sdValue *sdrl_io_create_file(sdMachine *mach, sdType *type, sdArray *args)
 		return(NULL);
 	}
 	else if (!(fptr = fopen(SDSTRING(args->items[1])->str, "r"))) {
-		sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_FAILED, "Error opening file");
+		sdrl_set_error(mach, SDRL_ES_LOW, SDRL_ERR_FAILED, "Error opening file");
 		return(NULL);
 	}
 	return(sdrl_make_pointer(mach->heap, type, fptr));
 }
 
-int sdrl_io_destroy_file(sdValue *value)
+int sdrl_io_file_destroy(sdValue *value)
 {
 	fclose((FILE *) SDPOINTER(value)->ptr);
 	return(0);

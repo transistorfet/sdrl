@@ -12,20 +12,20 @@ sdType sdDynBlockTypeDef = {
 	sizeof(sdReference),
 	0,
 	NULL,
-	(sdrl_destroy_t) sdrl_destroy_reference,
-	(sdrl_duplicate_t) sdrl_duplicate_reference,
-	(sdrl_evaluate_t) sdrl_base_evaluate_dynblock
+	(sdrl_destroy_t) sdrl_reference_destroy,
+	(sdrl_duplicate_t) sdrl_reference_duplicate,
+	(sdrl_evaluate_t) sdrl_base_dynblock_evaluate
 };
 
 
-int sdrl_base_evaluate_dynblock(sdMachine *mach, sdArray *args)
+int sdrl_base_dynblock_evaluate(sdMachine *mach, sdArray *args)
 {
 	sdEnv *env;
 
-	if (!(env = sdrl_extend_environment(mach->env)))
+	if (!(env = sdrl_env_extend(mach->env)))
 		return(sdrl_set_memory_error(mach));
 	sdrl_env_add(env, "_", SDRL_INCREF(args));
-	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDREFERENCE(args->items[0])->ref, env);
+	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDREFERENCE(args->items[0])->ref, env);
 	SDRL_DECREF(env);
 	return(0);
 }

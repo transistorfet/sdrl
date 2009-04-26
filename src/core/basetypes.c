@@ -19,7 +19,7 @@ sdType sdNumberTypeDef = {
 	0,
 	NULL,
 	(sdrl_destroy_t) sdrl_heap_free,
-	(sdrl_duplicate_t) sdrl_duplicate_number,
+	(sdrl_duplicate_t) sdrl_number_duplicate,
 	NULL
 };
 
@@ -36,7 +36,7 @@ sdValue *sdrl_make_number(sdHeap *heap, sdType *type, number_t num)
 	return(SDVALUE(value));
 }
 
-sdValue *sdrl_duplicate_number(sdMachine *mach, sdNumber *org)
+sdValue *sdrl_number_duplicate(sdMachine *mach, sdNumber *org)
 {
 	return(sdrl_make_number(mach->heap, SDVALUE(org)->type, org->num));
 }
@@ -49,7 +49,7 @@ sdType sdStringTypeDef = {
 	0,
 	NULL,
 	(sdrl_destroy_t) sdrl_heap_free,
-	(sdrl_duplicate_t) sdrl_duplicate_string,
+	(sdrl_duplicate_t) sdrl_string_duplicate,
 	NULL
 };
 
@@ -69,7 +69,7 @@ sdValue *sdrl_make_string(sdHeap *heap, sdType *type, const char *str, int len)
 	return(SDVALUE(value));
 }
 
-sdValue *sdrl_duplicate_string(sdMachine *mach, sdString *org)
+sdValue *sdrl_string_duplicate(sdMachine *mach, sdString *org)
 {
 	return(sdrl_make_string(mach->heap, SDVALUE(org)->type, org->str, org->len));
 }
@@ -87,14 +87,14 @@ sdValue *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 	return(SDVALUE(value));
 }
 
-int sdrl_destroy_reference(sdReference *value)
+int sdrl_reference_destroy(sdReference *value)
 {
 	SDRL_DECREF(value->ref);
 	sdrl_heap_free(value);
 	return(0);
 }
 
-sdValue *sdrl_duplicate_reference(sdMachine *mach, sdReference *org)
+sdValue *sdrl_reference_duplicate(sdMachine *mach, sdReference *org)
 {
 	return(sdrl_make_reference(mach->heap, SDVALUE(org)->type, org->ref));
 }
@@ -112,7 +112,7 @@ sdValue *sdrl_make_pointer(sdHeap *heap, sdType *type, void *ptr)
 	return(SDVALUE(value));
 }
 
-sdValue *sdrl_duplicate_pointer(sdMachine *mach, sdPointer *org)
+sdValue *sdrl_pointer_duplicate(sdMachine *mach, sdPointer *org)
 {
 	return(sdrl_make_pointer(mach->heap, SDVALUE(org)->type, org->ptr));
 }

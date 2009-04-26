@@ -10,7 +10,7 @@
 
 extern sdType sdDynBlockTypeDef;
 
-int sdrl_base_evaluate_dynblock(sdMachine *, sdArray *);
+int sdrl_base_dynblock_evaluate(sdMachine *, sdArray *);
 
 #endif
 

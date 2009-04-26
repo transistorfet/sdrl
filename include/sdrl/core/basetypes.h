@@ -46,17 +46,17 @@ struct sdPointer {
 };
 
 sdValue *sdrl_make_number(sdHeap *, sdType *, number_t);
-sdValue *sdrl_duplicate_number(sdMachine *, sdNumber *);
+sdValue *sdrl_number_duplicate(sdMachine *, sdNumber *);
 
 sdValue *sdrl_make_string(sdHeap *, sdType *, const char *, int);
-sdValue *sdrl_duplicate_string(sdMachine *, sdString *);
+sdValue *sdrl_string_duplicate(sdMachine *, sdString *);
 
 sdValue *sdrl_make_reference(sdHeap *, sdType *, sdValue *);
-int sdrl_destroy_reference(sdReference *);
-sdValue *sdrl_duplicate_reference(sdMachine *, sdReference *);
+int sdrl_reference_destroy(sdReference *);
+sdValue *sdrl_reference_duplicate(sdMachine *, sdReference *);
 
 sdValue *sdrl_make_pointer(sdHeap *, sdType *, void *);
-sdValue *sdrl_duplicate_pointer(sdMachine *, sdPointer *);
+sdValue *sdrl_pointer_duplicate(sdMachine *, sdPointer *);
 
 static inline int sdrl_check_args(sdMachine *mach, sdArray *args, int min, int max) {
 	if ((min != -1 && args->last < min) || (max != -1 && args->last > max))

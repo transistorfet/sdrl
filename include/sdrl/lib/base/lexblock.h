@@ -21,11 +21,10 @@ struct sdLexBlock {
 	sdEnv *env;
 };
 
-sdType *sdrl_base_make_lexblock_type(sdMachine *);
-sdValue *sdrl_base_create_lexblock(sdMachine *, sdType *, sdArray *);
-int sdrl_base_destroy_lexblock(sdLexBlock *);
-sdValue *sdrl_base_duplicate_lexblock(sdMachine *, sdLexBlock *);
-int sdrl_base_evaluate_lexblock(sdMachine *, sdArray *);
+sdValue *sdrl_base_lexblock_create(sdMachine *, sdType *, sdArray *);
+int sdrl_base_lexblock_destroy(sdLexBlock *);
+sdValue *sdrl_base_lexblock_duplicate(sdMachine *, sdLexBlock *);
+int sdrl_base_lexblock_evaluate(sdMachine *, sdArray *);
 
 #endif
 

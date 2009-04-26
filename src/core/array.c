@@ -18,8 +18,8 @@ sdType sdArrayTypeDef = {
 	sizeof(sdArray),
 	0,
 	NULL,
-	(sdrl_destroy_t) sdrl_destroy_array,
-	(sdrl_duplicate_t) sdrl_duplicate_array,
+	(sdrl_destroy_t) sdrl_array_destroy,
+	(sdrl_duplicate_t) sdrl_array_duplicate,
 	NULL
 };
 
@@ -52,7 +52,7 @@ sdArray *sdrl_make_array(sdHeap *heap, sdType *type, int size)
  * Change the array to be the new given size.  If the array size is shrunk,
  * the references of any values at those indexes are decremented.
  */
-int sdrl_resize_array(sdArray *array, int size)
+int sdrl_array_resize(sdArray *array, int size)
 {
 	int i;
 	sdValue **newitems;
@@ -78,7 +78,7 @@ int sdrl_resize_array(sdArray *array, int size)
 /**
  * Create a duplicate of the array.
  */
-sdArray *sdrl_duplicate_array(sdMachine *mach, sdArray *org)
+sdArray *sdrl_array_duplicate(sdMachine *mach, sdArray *org)
 {
 	int i;
 	sdArray *array;
@@ -95,7 +95,7 @@ sdArray *sdrl_duplicate_array(sdMachine *mach, sdArray *org)
 /**
  * Free all memory associated with the array
  */
-int sdrl_destroy_array(sdArray *array)
+int sdrl_array_destroy(sdArray *array)
 {
 	int i;
 
@@ -145,7 +145,7 @@ sdValue *sdrl_array_get(sdArray *array, int index)
 int sdrl_array_push(sdArray *array, sdValue *value)
 {
 	// Resize the array if required
-	if ((array->last + 1 >= array->size) && sdrl_resize_array(array, (array->size * 2 < SDRL_RESIZE_MAX) ? array->size * 2 : SDRL_RESIZE_MAX))
+	if ((array->last + 1 >= array->size) && sdrl_array_resize(array, (array->size * 2 < SDRL_RESIZE_MAX) ? array->size * 2 : SDRL_RESIZE_MAX))
 		return(-1);
 	array->items[++array->last] = value;
 	return(0);
@@ -194,7 +194,7 @@ int sdrl_array_unshift(sdArray *array, sdValue *value)
 	int i;
 
 	// Resize the array if required
-	if ((array->last + 1 >= array->size) && sdrl_resize_array(array, (array->size * 2 < SDRL_RESIZE_MAX) ? array->size * 2 : SDRL_RESIZE_MAX))
+	if ((array->last + 1 >= array->size) && sdrl_array_resize(array, (array->size * 2 < SDRL_RESIZE_MAX) ? array->size * 2 : SDRL_RESIZE_MAX))
 		return(-1);
 	for (i = array->last; i >= 0; i--)
 		array->items[i + 1] = array->items[i];

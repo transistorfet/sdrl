@@ -22,9 +22,10 @@ struct sdArray {
 };
 
 sdArray *sdrl_make_array(sdHeap *, sdType *, int);
-int sdrl_resize_array(sdArray *, int);
-sdArray *sdrl_duplicate_array(sdMachine *, sdArray *);
-int sdrl_destroy_array(sdArray *);
+
+int sdrl_array_resize(sdArray *, int);
+sdArray *sdrl_array_duplicate(sdMachine *, sdArray *);
+int sdrl_array_destroy(sdArray *);
 
 int sdrl_array_set(sdArray *, int, sdValue *);
 sdValue *sdrl_array_get(sdArray *, int);

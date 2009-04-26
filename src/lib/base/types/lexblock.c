@@ -11,14 +11,14 @@ sdType sdLexBlockTypeDef = {
 	&sdValueTypeDef,
 	sizeof(sdLexBlock),
 	0,
-	(sdrl_create_t) sdrl_base_create_lexblock,
-	(sdrl_destroy_t) sdrl_base_destroy_lexblock,
-	(sdrl_duplicate_t) sdrl_base_duplicate_lexblock,
-	(sdrl_evaluate_t) sdrl_base_evaluate_lexblock
+	(sdrl_create_t) sdrl_base_lexblock_create,
+	(sdrl_destroy_t) sdrl_base_lexblock_destroy,
+	(sdrl_duplicate_t) sdrl_base_lexblock_duplicate,
+	(sdrl_evaluate_t) sdrl_base_lexblock_evaluate
 };
 
 
-sdValue *sdrl_base_create_lexblock(sdMachine *mach, sdType *type, sdArray *args)
+sdValue *sdrl_base_lexblock_create(sdMachine *mach, sdType *type, sdArray *args)
 {
 	sdLexBlock *value;
 
@@ -32,7 +32,7 @@ sdValue *sdrl_base_create_lexblock(sdMachine *mach, sdType *type, sdArray *args)
 	return(SDVALUE(value));
 }
 
-int sdrl_base_destroy_lexblock(sdLexBlock *value)
+int sdrl_base_lexblock_destroy(sdLexBlock *value)
 {
 	SDRL_DECREF(value->code);
 	SDRL_DECREF(value->env);
@@ -40,7 +40,7 @@ int sdrl_base_destroy_lexblock(sdLexBlock *value)
 	return(0);
 }
 
-sdValue *sdrl_base_duplicate_lexblock(sdMachine *mach, sdLexBlock *org)
+sdValue *sdrl_base_lexblock_duplicate(sdMachine *mach, sdLexBlock *org)
 {
 	sdLexBlock *value;
 
@@ -54,16 +54,16 @@ sdValue *sdrl_base_duplicate_lexblock(sdMachine *mach, sdLexBlock *org)
 	return(SDVALUE(value));
 }
 
-int sdrl_base_evaluate_lexblock(sdMachine *mach, sdArray *args)
+int sdrl_base_lexblock_evaluate(sdMachine *mach, sdArray *args)
 {
 	sdEnv *env;
 	sdLexBlock *func;
 
 	func = SDLEXBLOCK(args->items[0]);
-	if (!(env = sdrl_extend_environment(func->env)))
+	if (!(env = sdrl_env_extend(func->env)))
 		return(sdrl_set_memory_error(mach));
 	sdrl_env_add(env, "_", SDRL_INCREF(args));
-	sdrl_push_new_event(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(func->code), env);
+	sdrl_event_push_new(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(func->code), env);
 	SDRL_DECREF(env);
 	return(0);
 }

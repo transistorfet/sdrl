@@ -18,8 +18,8 @@ sdType sdErrorTypeDef = {
 	sizeof(sdError),
 	0,
 	NULL,
-	(sdrl_destroy_t) sdrl_destroy_error,
-	(sdrl_duplicate_t) sdrl_duplicate_error,
+	(sdrl_destroy_t) sdrl_error_destroy,
+	(sdrl_duplicate_t) sdrl_error_duplicate,
 	NULL
 };
 
@@ -73,7 +73,7 @@ sdError *sdrl_make_error(sdHeap *heap, linenumber_t line, short severity, int er
 /**
  * Free the resources of an error report.
  */
-int sdrl_destroy_error(sdError *error)
+int sdrl_error_destroy(sdError *error)
 {
 	if (error && !SDRL_BF_IS_SET(error, SDRL_EBF_STATIC))
 		sdrl_heap_free(error);
@@ -83,7 +83,7 @@ int sdrl_destroy_error(sdError *error)
 /**
  * Duplicate the given error report.
  */
-sdError *sdrl_duplicate_error(sdHeap *heap, sdError *org)
+sdError *sdrl_error_duplicate(sdHeap *heap, sdError *org)
 {
 	sdError *error;
 

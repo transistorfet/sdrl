@@ -13,11 +13,11 @@ sdType sdFormTypeDef = {
 	SDRL_TBF_PASS_EXPRS,
 	NULL,
 	(sdrl_destroy_t) sdrl_heap_free,
-	(sdrl_duplicate_t) sdrl_duplicate_pointer,
-	(sdrl_evaluate_t) sdrl_base_evaluate_form
+	(sdrl_duplicate_t) sdrl_pointer_duplicate,
+	(sdrl_evaluate_t) sdrl_base_form_evaluate
 };
 
-int sdrl_base_evaluate_form(sdMachine *mach, sdArray *args)
+int sdrl_base_form_evaluate(sdMachine *mach, sdArray *args)
 {
 	SDRL_DECREF(mach->ret);
 	mach->ret = NULL;

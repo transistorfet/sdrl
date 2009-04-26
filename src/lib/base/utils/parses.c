@@ -16,14 +16,14 @@ sdExpr *sdrl_base_parse_string(sdMachine *mach, sdrl_parser_t parser, const char
 	sdExpr *expr;
 	sdInput *input;
 
-	if (!(input = sdrl_create_input()))
+	if (!(input = sdrl_make_input()))
 		return(NULL);
 	if (sdrl_add_string(input, str, size)) {
-		sdrl_destroy_input(input);
+		sdrl_input_destroy(input);
 		return(NULL);
 	}
 	expr = parser(mach, input);
-	sdrl_destroy_input(input);
+	sdrl_input_destroy(input);
 	return(expr);
 }
 

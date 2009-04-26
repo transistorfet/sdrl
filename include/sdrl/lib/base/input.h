@@ -33,8 +33,8 @@ struct sdInput {
 	sdSource *stack;	
 };
 
-sdInput *sdrl_create_input(void);
-int sdrl_destroy_input(sdInput *);
+sdInput *sdrl_make_input(void);
+int sdrl_input_destroy(sdInput *);
 int sdrl_add_file(sdInput *, const char *);
 int sdrl_add_string(sdInput *, const char *, int);
 

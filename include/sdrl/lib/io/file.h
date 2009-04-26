@@ -19,8 +19,8 @@ struct sdFile {
 	// TODO finish
 };
 
-sdValue *sdrl_io_create_file(sdMachine *, sdType *, sdArray *);
-int sdrl_io_destroy_file(sdValue *);
+sdValue *sdrl_io_file_create(sdMachine *, sdType *, sdArray *);
+int sdrl_io_file_destroy(sdValue *);
 
 #endif
 

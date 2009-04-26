@@ -12,14 +12,14 @@ sdType sdListTypeDef = {
 	&sdValueTypeDef,
 	sizeof(sdList),
 	0,
-	(sdrl_create_t) sdrl_base_create_list,
+	(sdrl_create_t) sdrl_base_list_create,
 	(sdrl_destroy_t) sdrl_heap_free,
-	(sdrl_duplicate_t) sdrl_duplicate_reference,
+	(sdrl_duplicate_t) sdrl_reference_duplicate,
 	NULL
 };
 
 
-sdValue *sdrl_base_create_list(sdMachine *mach, sdType *type, sdArray *args)
+sdValue *sdrl_base_list_create(sdMachine *mach, sdType *type, sdArray *args)
 {
 	if (args->last != 0)
 		return(NULL);
