@@ -68,10 +68,14 @@ int sdrl_array_resize(sdArray *array, int size)
 	}
 	if (!(newitems = (sdValue **) realloc(array->items, sizeof(sdValue *) * size)))
 		return(-1);
+	array->items = newitems;
+	// Zero all new elements
+	for (i = array->size; i < size; i++)
+		array->items[i] = NULL;
+	// Update information
 	if (array->last >= size)
 		array->last = size - 1;
 	array->size = size;
-	array->items = newitems;
 	return(0);
 }
 
