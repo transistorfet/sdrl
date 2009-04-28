@@ -13,13 +13,11 @@
  */
 int sdrl_base_tail(sdMachine *mach, sdArray *args)
 {
-	// TODO deal with this when you know abotu lists
-	/*
-	if (args && args->next)
-		mach->ret = SDRL_INCREF(args->next);
-	else
-		mach->ret = NULL;
-	*/
+	if (args->last != 1)
+		return(sdrl_set_args_error(mach));
+	if (!sdrl_value_isa(args->items[1], &sdListTypeDef))
+		return(sdrl_set_type_error(mach));
+	mach->ret = SDVALUE(SDRL_INCREF(SDLIST(args->items[1])->next));
 	return(0);
 }
 

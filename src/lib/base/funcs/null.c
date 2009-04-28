@@ -13,8 +13,7 @@
  */
 int sdrl_base_null(sdMachine *mach, sdArray *args)
 {
-	// TODO this is really really weird, maybe you should make a nil/undef type?
-	if (args->last < 1)
+	if (args->last < 1 || sdrl_value_isa(args->items[1], &sdUndefTypeDef))
 		mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, -1);
 	else
 		mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, 0);

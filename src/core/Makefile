@@ -70,8 +70,8 @@ events.o: events.c ../../include/sdrl/core/events.h \
 
 expr.o: expr.c ../../include/sdrl/core/expr.h \
   ../../include/sdrl/core/value.h ../../include/sdrl/globals.h \
-  ../../include/sdrl/core/machine.h ../../include/sdrl/core/env.h \
-  ../../include/sdrl/core/heap.h ../../include/sdrl/core/array.h \
+  ../../include/sdrl/core/heap.h ../../include/sdrl/core/machine.h \
+  ../../include/sdrl/core/env.h ../../include/sdrl/core/array.h \
   ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h
 
 heap.o: heap.c ../../include/sdrl/core/heap.h \

@@ -13,13 +13,13 @@
  */
 int sdrl_base_list(sdMachine *mach, sdArray *args)
 {
-	sdType *type;
+	sdValue *value;
 
-	// TODO come back to this when you know more about create
-	/*
+	// Remove the function value
+	value = sdrl_array_shift(args);
+	SDRL_DECREF(value);
 	if (sdListTypeDef.create)
 		mach->ret = sdListTypeDef.create(mach, &sdListTypeDef, args);
-	*/
 	return(0);
 }
 

@@ -55,7 +55,6 @@ int sdrl_base_set(sdMachine *, sdArray *);
 int sdrl_base_setlist(sdMachine *, sdArray *);
 int sdrl_base_subtract(sdMachine *, sdArray *);
 int sdrl_base_tail(sdMachine *, sdArray *);
-int sdrl_base_unlist(sdMachine *, sdArray *);
 
 /*** Utilities ***/
 int sdrl_base_display_error(sdError *);

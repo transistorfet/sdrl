@@ -32,7 +32,6 @@ int sdrl_load_base(sdMachine *mach)
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "%", sdrl_base_lookup);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "@", sdrl_base_array);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "list", sdrl_base_list);
-	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "unlist", sdrl_base_unlist);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "head", sdrl_base_head);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "tail", sdrl_base_tail);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "null", sdrl_base_null);
