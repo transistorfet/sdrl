@@ -1,4 +1,8 @@
 
+	* you can pass the machine pointer to the make functions and further pass it to macros that then
+	  call the alloc functions (sdrl_alloc(mach, size), etc).  You can then do whatever you want for
+	  the actual allocation (heap, realloc function pointer, etc).  THIS HAS A MAJOR PROBLEM!!!
+	  You have to pass the machine to every function that deallocates including DECREF and from env
 	* if you did the realloc system, you could make seperate modules external to the core that handled
 	  various memory models such as just using realloc, using a garbage collection library of some kind,
 	  using a memory tracker, etc.  Similar to lua 5.1.  If you do this, use macros for the funcs so that
@@ -10,17 +14,28 @@
 	  creating a reference for the value being stored in the array?
 	* look at python and perl in terms of reference management and try to make reference management
 	  (who creates and destroys references) easier to follow such that you avoid reference-based bugs
+	* you kinda need the ability to make a value constant.  It could be in the value itself or maybe
+	  in the binding(env).  For sdIRC, you have an array of servers and an array of windows that you
+	  want accessible to the program but don't necessarily want to be changed.
 	* should we delete utils.c since it's not really used now
 	* you *have* to look into how things will work with librarys loaded dynamically with respect to
 	  having access to type variables.  You may want to have both type systems at once
+	* i *think* push and unshift work but they are pretty much useless the way things are atm because you
+	  can't operate on an actual array (doing an resolve returns a duplicate array so your changes are lost)
+
+	* add a function that does an env add-or-replace (so you don't have to call both functions)
+	* add a function pointer to sdMachine to the parser and the macro-rewriting system (such that the
+	  macro definition things can be shared between machines)
+	* make a macro that takes a string of code and compiles and evaluates it using the machine parser
+	  and macro pointers and such
+	* make sdrl_env_extend take a type pointer so that it can be inherited
+	* make it possible/easy (via macro) to call a function inside a machine
 
 	* use sdrl_make_value and all other types of constructors in all make and create functions
 	* make basetypes all seperate files complete with support functions
 	* make some of the #defines "redefinable"
 
-	* make a new list type sdList { sdValue value, sdValue *ref, sdList *next }
 	* add the pop/unshift realloc downsizing code (if at all)
-	* make functions for push, pop, shift, unshift
 	* make a duplicate environment function
 
 	* add cplusplus checks to headers that add an extern "C" { } block

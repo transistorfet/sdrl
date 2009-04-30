@@ -33,11 +33,15 @@ OBJS =	load.o	\
 	funcs/not.o	\
 	funcs/null.o	\
 	funcs/or.o	\
+	funcs/pop.o	\
+	funcs/push.o	\
 	funcs/resolve.o	\
 	funcs/set.o	\
 	funcs/setlist.o	\
+	funcs/shift.o	\
 	funcs/subtract.o	\
 	funcs/tail.o	\
+	funcs/unshift.o	\
 	parsers/lambda.o	\
 	parsers/lispy.o	\
 	types/dynblock.o	\
@@ -423,6 +427,34 @@ funcs/or.o: funcs/or.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/dynblock.h \
   ../../../include/sdrl/lib/base/lexblock.h
 
+funcs/pop.o: funcs/pop.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
+  ../../../include/sdrl/lib/base/form.h \
+  ../../../include/sdrl/lib/base/func.h \
+  ../../../include/sdrl/lib/base/list.h \
+  ../../../include/sdrl/lib/base/dynblock.h \
+  ../../../include/sdrl/lib/base/lexblock.h
+
+funcs/push.o: funcs/push.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
+  ../../../include/sdrl/lib/base/form.h \
+  ../../../include/sdrl/lib/base/func.h \
+  ../../../include/sdrl/lib/base/list.h \
+  ../../../include/sdrl/lib/base/dynblock.h \
+  ../../../include/sdrl/lib/base/lexblock.h
+
 funcs/resolve.o: funcs/resolve.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
@@ -465,6 +497,20 @@ funcs/setlist.o: funcs/setlist.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/dynblock.h \
   ../../../include/sdrl/lib/base/lexblock.h
 
+funcs/shift.o: funcs/shift.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
+  ../../../include/sdrl/lib/base/form.h \
+  ../../../include/sdrl/lib/base/func.h \
+  ../../../include/sdrl/lib/base/list.h \
+  ../../../include/sdrl/lib/base/dynblock.h \
+  ../../../include/sdrl/lib/base/lexblock.h
+
 funcs/subtract.o: funcs/subtract.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
@@ -480,6 +526,20 @@ funcs/subtract.o: funcs/subtract.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/lexblock.h
 
 funcs/tail.o: funcs/tail.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
+  ../../../include/sdrl/lib/base/form.h \
+  ../../../include/sdrl/lib/base/func.h \
+  ../../../include/sdrl/lib/base/list.h \
+  ../../../include/sdrl/lib/base/dynblock.h \
+  ../../../include/sdrl/lib/base/lexblock.h
+
+funcs/unshift.o: funcs/unshift.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \

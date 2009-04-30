@@ -50,11 +50,15 @@ int sdrl_base_not_equals(sdMachine *, sdArray *);
 int sdrl_base_null(sdMachine *, sdArray *);
 int sdrl_base_or(sdMachine *, sdArray *);
 int sdrl_base_print(sdMachine *, sdArray *);
+int sdrl_base_pop(sdMachine *, sdArray *);
+int sdrl_base_push(sdMachine *, sdArray *);
 int sdrl_base_resolve(sdMachine *, sdArray *);
 int sdrl_base_set(sdMachine *, sdArray *);
 int sdrl_base_setlist(sdMachine *, sdArray *);
+int sdrl_base_shift(sdMachine *, sdArray *);
 int sdrl_base_subtract(sdMachine *, sdArray *);
 int sdrl_base_tail(sdMachine *, sdArray *);
+int sdrl_base_unshift(sdMachine *, sdArray *);
 
 /*** Utilities ***/
 int sdrl_base_display_error(sdError *);

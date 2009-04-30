@@ -35,6 +35,10 @@ int sdrl_load_base(sdMachine *mach)
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "head", sdrl_base_head);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "tail", sdrl_base_tail);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "null", sdrl_base_null);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "push", sdrl_base_push);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "pop", sdrl_base_pop);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "shift", sdrl_base_shift);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "unshift", sdrl_base_unshift);
 
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "+", sdrl_base_add);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "-", sdrl_base_subtract);
