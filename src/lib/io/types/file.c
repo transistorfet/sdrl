@@ -37,7 +37,7 @@ sdValue *sdrl_io_file_create(sdMachine *mach, sdType *type, sdArray *args)
 		sdrl_set_error(mach, SDRL_ES_LOW, SDRL_ERR_FAILED, "Error opening file");
 		return(NULL);
 	}
-	return(sdrl_make_pointer(mach->heap, type, fptr));
+	return(SDVALUE(sdrl_make_pointer(mach->heap, type, fptr)));
 }
 
 void sdrl_io_file_destroy(sdValue *value)

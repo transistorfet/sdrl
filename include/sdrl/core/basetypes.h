@@ -45,18 +45,18 @@ struct sdPointer {
 	void *ptr;
 };
 
-sdValue *sdrl_make_number(sdHeap *, sdType *, number_t);
-sdValue *sdrl_number_duplicate(sdMachine *, sdNumber *);
+sdNumber *sdrl_make_number(sdHeap *, sdType *, number_t);
+sdNumber *sdrl_number_duplicate(sdMachine *, sdNumber *);
 
-sdValue *sdrl_make_string(sdHeap *, sdType *, const char *, int);
-sdValue *sdrl_string_duplicate(sdMachine *, sdString *);
+sdString *sdrl_make_string(sdHeap *, sdType *, const char *, int);
+sdString *sdrl_string_duplicate(sdMachine *, sdString *);
 
-sdValue *sdrl_make_reference(sdHeap *, sdType *, sdValue *);
+sdReference *sdrl_make_reference(sdHeap *, sdType *, sdValue *);
 void sdrl_reference_destroy(sdReference *);
-sdValue *sdrl_reference_duplicate(sdMachine *, sdReference *);
+sdReference *sdrl_reference_duplicate(sdMachine *, sdReference *);
 
-sdValue *sdrl_make_pointer(sdHeap *, sdType *, void *);
-sdValue *sdrl_pointer_duplicate(sdMachine *, sdPointer *);
+sdPointer *sdrl_make_pointer(sdHeap *, sdType *, void *);
+sdPointer *sdrl_pointer_duplicate(sdMachine *, sdPointer *);
 
 static inline int sdrl_check_args(sdMachine *mach, sdArray *args, int min, int max) {
 	if ((min != -1 && args->last < min) || (max != -1 && args->last > max))

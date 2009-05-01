@@ -23,7 +23,7 @@ int sdrl_base_subtract(sdMachine *mach, sdArray *args)
 		SDRL_TRY(sdrl_check_type(mach, args->items[i], &sdNumberTypeDef));
 		result -= SDNUMBER(args->items[i])->num;
 	}
-	mach->ret = sdrl_make_number(mach->heap, args->items[1]->type, result);
+	mach->ret = SDVALUE(sdrl_make_number(mach->heap, args->items[1]->type, result));
 	return(0);
 
     FAIL:

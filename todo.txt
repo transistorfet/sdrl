@@ -23,8 +23,12 @@
 	* i *think* push and unshift work but they are pretty much useless the way things are atm because you
 	  can't operate on an actual array (doing an resolve returns a duplicate array so your changes are lost)
 
+	* add a name to type structs (primarily for making error messages)
+	* should push and unshift return a reference to the array?
+
+	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
-	* add a function pointer to sdMachine to the parser and the macro-rewriting system (such that the
+	* add pointers to sdMachine for a parser and a macro-rewriting system (such that the parser and
 	  macro definition things can be shared between machines)
 	* make a macro that takes a string of code and compiles and evaluates it using the machine parser
 	  and macro pointers and such
@@ -32,6 +36,7 @@
 	* make it possible/easy (via macro) to call a function inside a machine
 
 	* use sdrl_make_value and all other types of constructors in all make and create functions
+	* make sure every 'make' function does a memset on the allocated data
 	* make basetypes all seperate files complete with support functions
 	* make some of the #defines "redefinable"
 

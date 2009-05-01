@@ -127,9 +127,9 @@ int sdrl_evaluate_expr_value(sdMachine *mach, sdExpr *expr)
 
 	mach->current_line = expr->line;
 	if (expr->type == SDRL_ET_NUMBER)
-		mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, expr->data.num);
+		mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, expr->data.num));
 	else if (expr->type == SDRL_ET_STRING || expr->type == SDRL_ET_IDENTIFIER)
-		mach->ret = sdrl_make_string(mach->heap, &sdStringTypeDef, expr->data.str, strlen(expr->data.str));
+		mach->ret = SDVALUE(sdrl_make_string(mach->heap, &sdStringTypeDef, expr->data.str, strlen(expr->data.str)));
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));

@@ -25,7 +25,7 @@ int sdrl_base_divide(sdMachine *mach, sdArray *args)
 			return(sdrl_set_error(mach, SDRL_ES_LOW, SDRL_ERR_DIVIDE_BY_ZERO, NULL));
 		result /= SDNUMBER(args->items[i])->num;
 	}
-	mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, result);
+	mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, result));
 	return(0);
 
     FAIL:

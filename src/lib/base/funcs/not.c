@@ -20,7 +20,7 @@ int sdrl_base_not(sdMachine *mach, sdArray *args)
 	else if (!sdrl_value_isa(args->items[1], &sdNumberTypeDef))
 		return(sdrl_set_type_error(mach));
 	result = (SDNUMBER(args->items[1])->num == 0);
-	mach->ret = sdrl_make_number(mach->heap, &sdNumberTypeDef, result);
+	mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, result));
 	return(0);
 }
 

@@ -24,7 +24,7 @@ sdType sdNumberTypeDef = {
 };
 
 
-sdValue *sdrl_make_number(sdHeap *heap, sdType *type, number_t num)
+sdNumber *sdrl_make_number(sdHeap *heap, sdType *type, number_t num)
 {
 	sdNumber *value;
 
@@ -34,10 +34,10 @@ sdValue *sdrl_make_number(sdHeap *heap, sdType *type, number_t num)
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
 	value->num = num;
-	return(SDVALUE(value));
+	return(value);
 }
 
-sdValue *sdrl_number_duplicate(sdMachine *mach, sdNumber *org)
+sdNumber *sdrl_number_duplicate(sdMachine *mach, sdNumber *org)
 {
 	return(sdrl_make_number(mach->heap, SDVALUE(org)->type, org->num));
 }
@@ -55,7 +55,7 @@ sdType sdStringTypeDef = {
 };
 
 
-sdValue *sdrl_make_string(sdHeap *heap, sdType *type, const char *str, int len)
+sdString *sdrl_make_string(sdHeap *heap, sdType *type, const char *str, int len)
 {
 	sdString *value;
 
@@ -68,16 +68,16 @@ sdValue *sdrl_make_string(sdHeap *heap, sdType *type, const char *str, int len)
 	value->str = (char *) (((char *) value) + type->size);
 	memcpy(value->str, str, len);
 	value->str[len] = '\0';		/** Just in case someone uses unbounded cstring functions */
-	return(SDVALUE(value));
+	return(value);
 }
 
-sdValue *sdrl_string_duplicate(sdMachine *mach, sdString *org)
+sdString *sdrl_string_duplicate(sdMachine *mach, sdString *org)
 {
 	return(sdrl_make_string(mach->heap, SDVALUE(org)->type, org->str, org->len));
 }
 
 
-sdValue *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
+sdReference *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 {
 	sdReference *value;
 
@@ -87,7 +87,7 @@ sdValue *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
 	value->ref = SDRL_INCREF(ref);
-	return(SDVALUE(value));
+	return(value);
 }
 
 void sdrl_reference_destroy(sdReference *value)
@@ -96,13 +96,13 @@ void sdrl_reference_destroy(sdReference *value)
 	sdrl_heap_free(value);
 }
 
-sdValue *sdrl_reference_duplicate(sdMachine *mach, sdReference *org)
+sdReference *sdrl_reference_duplicate(sdMachine *mach, sdReference *org)
 {
 	return(sdrl_make_reference(mach->heap, SDVALUE(org)->type, org->ref));
 }
 
 
-sdValue *sdrl_make_pointer(sdHeap *heap, sdType *type, void *ptr)
+sdPointer *sdrl_make_pointer(sdHeap *heap, sdType *type, void *ptr)
 {
 	sdPointer *value;
 
@@ -112,10 +112,10 @@ sdValue *sdrl_make_pointer(sdHeap *heap, sdType *type, void *ptr)
 	SDVALUE(value)->refs = 1;
 	SDVALUE(value)->type = type;
 	value->ptr = ptr;
-	return(SDVALUE(value));
+	return(value);
 }
 
-sdValue *sdrl_pointer_duplicate(sdMachine *mach, sdPointer *org)
+sdPointer *sdrl_pointer_duplicate(sdMachine *mach, sdPointer *org)
 {
 	return(sdrl_make_pointer(mach->heap, SDVALUE(org)->type, org->ptr));
 }
