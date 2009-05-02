@@ -52,8 +52,9 @@ OBJS =	load.o	\
 	utils/disperr.o	\
 	utils/dispexpr.o	\
 	utils/input.o	\
-	utils/parsef.o	\
-	utils/parses.o
+	utils/macros.o	\
+	utils/parsefile.o	\
+	utils/parsestr.o
 
 include $(ROOT)/config.mk
 
@@ -679,7 +680,23 @@ utils/dispexpr.o: utils/dispexpr.c ../../../include/sdrl/sdrl.h \
 utils/input.o: utils/input.c ../../../include/sdrl/globals.h \
   ../../../include/sdrl/lib/base/input.h
 
-utils/parsef.o: utils/parsef.c ../../../include/sdrl/sdrl.h \
+utils/macros.o: utils/macros.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/io.h \
+  ../../../include/sdrl/lib/io/file.h ../../../include/sdrl/lib/base.h \
+  ../../../include/sdrl/lib/base/form.h \
+  ../../../include/sdrl/lib/base/func.h \
+  ../../../include/sdrl/lib/base/list.h \
+  ../../../include/sdrl/lib/base/dynblock.h \
+  ../../../include/sdrl/lib/base/lexblock.h \
+  ../../../include/sdrl/lib/string.h
+
+utils/parsefile.o: utils/parsefile.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
@@ -694,7 +711,7 @@ utils/parsef.o: utils/parsef.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/lexblock.h \
   ../../../include/sdrl/lib/base/input.h
 
-utils/parses.o: utils/parses.c ../../../include/sdrl/sdrl.h \
+utils/parsestr.o: utils/parsestr.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
