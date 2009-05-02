@@ -127,7 +127,7 @@ void sdrl_array_clear(sdArray *array)
 
 /**
  * Set the item at the given index in the array to the given value.  The
- * ownership of the reference to the value given is taken.
+ * ownership of the reference to the given value is taken.
  */
 int sdrl_array_set(sdArray *array, int index, sdValue *value)
 {
@@ -158,7 +158,8 @@ sdValue *sdrl_array_get(sdArray *array, int index)
 }
 
 /**
- * Add the given value onto the end of the array growing it by one.
+ * Add the given value onto the end of the array growing it by one.  The
+ * ownership of the reference to the given value is taken.
  */
 int sdrl_array_push(sdArray *array, sdValue *value)
 {
@@ -205,7 +206,8 @@ sdValue *sdrl_array_shift(sdArray *array)
 
 /**
  * Add the given value onto the start of the array growing it by one and
- * shifting all elements up one.
+ * shifting all elements up one.  The ownership of the reference to the given
+ * value is taken.
  */
 int sdrl_array_unshift(sdArray *array, sdValue *value)
 {

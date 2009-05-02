@@ -28,8 +28,8 @@
 	  a heap pointer in the machine for passing to the realloc func (or even passing the whole mach)?
 
 	* should sdrl_destroy/duplicate_value be that or sdrl_value_destroy/duplicate?
-	* what should happen with the array manipulation functions in terms of who is responsible for
-	  creating a reference for the value being stored in the array?
+	* should make functions be sdrl_<type>_make?
+	* update (and re-eval) function behaviour with respect to references (steal/borrow/etc)
 	* look at python and perl in terms of reference management and try to make reference management
 	  (who creates and destroys references) easier to follow such that you avoid reference-based bugs
 	* you kinda need the ability to make a value constant.  It could be in the value itself or maybe
@@ -41,7 +41,7 @@
 	* i *think* push and unshift work but they are pretty much useless the way things are atm because you
 	  can't operate on an actual array (doing an resolve returns a duplicate array so your changes are lost)
 
-	* should push and unshift return a reference to the array?
+	* should push and unshift return a reference to the array they operated on? or maybe the array size?
 
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
