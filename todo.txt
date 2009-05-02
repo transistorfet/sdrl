@@ -44,7 +44,6 @@
 	* should push and unshift return a reference to the array?
 
 	* add preprocessor function type and pointer in machine
-	* add array clear function
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
 	* add pointers to sdMachine for a parser and a macro-rewriting system (such that the parser and
@@ -62,6 +61,10 @@
 
 	* add the pop/unshift realloc downsizing code (if at all)
 	* make a duplicate environment function
+	* fix error line numbering such that the machine's current line number is the actual expr being
+	  evaluated.  Right now, it's set to, basically, the last arg in a function call to have been eval'd.
+	  It might be possible to use events to record what the linenumber should be set to before the code
+	  is eval'd.
 
 	* add cplusplus checks to headers that add an extern "C" { } block
 

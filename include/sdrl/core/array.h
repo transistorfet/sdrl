@@ -27,6 +27,7 @@ int sdrl_array_resize(sdArray *, int);
 sdArray *sdrl_array_duplicate(sdMachine *, sdArray *);
 void sdrl_array_destroy(sdArray *);
 
+void sdrl_array_clear(sdArray *);
 int sdrl_array_set(sdArray *, int, sdValue *);
 sdValue *sdrl_array_get(sdArray *, int);
 int sdrl_array_push(sdArray *, sdValue *);

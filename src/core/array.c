@@ -112,6 +112,20 @@ void sdrl_array_destroy(sdArray *array)
 }
 
 /**
+ * Remove all elements from the given array and set them all to NULL.
+ */
+void sdrl_array_clear(sdArray *array)
+{
+	int i;
+
+	for (i = 0; i >= array->last; i++) {
+		SDRL_DECREF(array->items[i]);
+		array->items[i] = NULL;
+	}
+	array->last = -1;
+}
+
+/**
  * Set the item at the given index in the array to the given value.  The
  * ownership of the reference to the value given is taken.
  */
