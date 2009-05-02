@@ -53,13 +53,13 @@ basetypes.o: basetypes.c ../../include/sdrl/core/heap.h \
   ../../include/sdrl/core/machine.h ../../include/sdrl/core/env.h \
   ../../include/sdrl/core/expr.h ../../include/sdrl/core/array.h \
   ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h \
-  ../../include/sdrl/core/basetypes.h
+  ../../include/sdrl/core/basetypes.h ../../include/sdrl/core/utils.h
 
 env.o: env.c ../../include/sdrl/core/env.h ../../include/sdrl/core/heap.h \
   ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
-  ../../include/sdrl/core/array.h ../../include/sdrl/core/machine.h \
+  ../../include/sdrl/core/array.h ../../include/sdrl/core/utils.h \
   ../../include/sdrl/core/expr.h ../../include/sdrl/core/error.h \
-  ../../include/sdrl/core/events.h
+  ../../include/sdrl/core/events.h ../../include/sdrl/core/machine.h
 
 error.o: error.c ../../include/sdrl/core/heap.h \
   ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
@@ -82,7 +82,8 @@ machine.o: machine.c ../../include/sdrl/core/machine.h \
   ../../include/sdrl/globals.h ../../include/sdrl/core/value.h \
   ../../include/sdrl/core/expr.h ../../include/sdrl/core/array.h \
   ../../include/sdrl/core/error.h ../../include/sdrl/core/events.h \
-  ../../include/sdrl/core/undef.h ../../include/sdrl/core/basetypes.h
+  ../../include/sdrl/core/undef.h ../../include/sdrl/core/utils.h \
+  ../../include/sdrl/core/basetypes.h
 
 undef.o: undef.c ../../include/sdrl/core/undef.h \
   ../../include/sdrl/core/value.h ../../include/sdrl/globals.h \

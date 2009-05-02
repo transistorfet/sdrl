@@ -15,6 +15,7 @@
 #include <sdrl/core/array.h>
 #include <sdrl/core/error.h>
 #include <sdrl/core/value.h>
+#include <sdrl/core/utils.h>
 #include <sdrl/core/events.h>
 #include <sdrl/core/basetypes.h>
 #include <sdrl/globals.h>

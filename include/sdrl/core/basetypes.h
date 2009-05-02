@@ -8,7 +8,7 @@
 #define _SDRL_CORE_BASETYPES_H
 
 #include <sdrl/core/heap.h>
-#include <sdrl/core/machine.h>
+#include <sdrl/core/utils.h>
 #include <sdrl/globals.h>
 
 #define SDNUMBER(ptr)		( (sdNumber *) (ptr) )
@@ -58,17 +58,6 @@ sdReference *sdrl_reference_duplicate(sdMachine *, sdReference *);
 sdPointer *sdrl_make_pointer(sdHeap *, sdType *, void *);
 sdPointer *sdrl_pointer_duplicate(sdMachine *, sdPointer *);
 
-static inline int sdrl_check_args(sdMachine *mach, sdArray *args, int min, int max) {
-	if ((min != -1 && args->last < min) || (max != -1 && args->last > max))
-		return(sdrl_set_args_error(mach));
-	return(0);
-}
-
-static inline int sdrl_check_type(sdMachine *mach, sdValue *cur, sdType *type) {
-	if (!sdrl_value_isa(cur, type))
-		return(sdrl_set_type_error(mach, type, cur->type));
-	return(0);
-}
 
 static inline number_t sdrl_check_number(sdMachine *mach, sdValue *cur, sdType *type) {
 	if (!cur) {
