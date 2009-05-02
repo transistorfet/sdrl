@@ -45,10 +45,6 @@
 
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
-	* make a macro that takes a string of code and compiles and evaluates it using the machine parser
-	  and macro pointers and such.  Should this actually be in libbase utils like parse_string().  Just
-	  modify it to use sdMachine pointers to the parser
-	* make sdrl_env_extend take a type pointer so that it can be inherited
 	* make it possible/easy (via macro) to call a function inside a machine
 
 	* use sdrl_make_value and all other types of constructors in all make and create functions
@@ -132,6 +128,8 @@ Tests:
 
 Structural Issues:
 
+	* should there be a place in sdMachine for a pointer to something used by the preprocessor, like a
+	  list of defined macros that it uses to rewrite the AST?
 	* lexblock, dynblock, and expr type evaluate funcs set the args to be a value in the env but the
 	  first arg is the function itself.  Should it be removed from args first?
 	* should you have a more robust object system with a proper "init/release" type function for each

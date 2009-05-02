@@ -23,7 +23,7 @@ int sdrl_base_dynblock_evaluate(sdMachine *mach, sdArray *args)
 {
 	sdEnv *env;
 
-	if (!(env = sdrl_env_extend(mach->env)))
+	if (!(env = sdrl_env_extend(mach->env, &sdEnvTypeDef)))
 		return(sdrl_set_memory_error(mach));
 	sdrl_env_add(env, "_", SDRL_INCREF(args));
 	sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDREFERENCE(args->items[0])->ref, env);

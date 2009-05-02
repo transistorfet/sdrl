@@ -77,21 +77,21 @@ sdEnv *sdrl_env_create(sdMachine *mach, sdType *type, sdArray *args)
 {
 	if (args->last < 0)
 		return(sdrl_make_env(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
-	else if (args->items[0]->type != type) {
+	else if (!sdrl_value_isa(args->items[0], &sdEnvTypeDef)) {
 		sdrl_set_type_error(mach, type, args->items[0]->type);
 		return(NULL);
 	}
-	return(sdrl_env_extend(SDENV(args->items[0])));
+	return(sdrl_env_extend(SDENV(args->items[0]), type));
 }
 
 /**
  * Allocate an environment for binding values to names.
  */
-sdEnv *sdrl_env_extend(sdEnv *parent)
+sdEnv *sdrl_env_extend(sdEnv *parent, sdType *type)
 {
 	sdEnv *env;
 
-	if (!(env = sdrl_make_env(parent->heap, SDVALUE(parent)->type, parent->bitflags, parent->destroy)))
+	if (!(env = sdrl_make_env(parent->heap, type, parent->bitflags, parent->destroy)))
 		return(NULL);
 	env->parent = SDRL_INCREF(parent);
 	return(env);
