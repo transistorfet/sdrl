@@ -24,6 +24,7 @@ sub main {
 	$file = "recipe.cfg" unless ($file);
 
 	return(-1) if parse_config($file);
+	print "Generating Makefiles...\n";
 	foreach my $config (@{ $makefiles }) {
 		generate_makefile($config);
 	}
