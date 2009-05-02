@@ -1,4 +1,22 @@
 
+	* you could have some kind of "invoke method on object" function, possibly % or . or even just 'get'
+	  that takes a string like object.subobj.thing.  First consider (% object.thing args) or
+	  (% object thing args):  It looks up object to get a value that inherits from sdEnv.  It then finds
+	  thing in the environment and calls it like a function given [ object, args ] as the args.  Since
+	  environments search their parents, it automatically provides inheritence.  You can then have a
+	  special function that can be in any environment that is automatically used when looking up values
+	  within objects (if resolving the value of object.subobj.thing, it somehow/somewhy first gets object,
+	  then does a lookup on object for '.' or 'get'.  Then calls that function to do the lookup on object
+	  to get 'subobj', and then repeats.  This is however a very cumbersome and slow process.  It does
+	  however allow in-language reassigning of the resolution operator.  This also allows embedded
+	  objects to hijack the lookup and instead use fixed values instead of what's available in the env
+	  as well as providing access control which is otherwise not available in the langugage itself.  The
+	  other way to do this would be to have a function pointer inside the type struct specially dedicated
+	  to resolution which would make builtin stuff go faster but would make it more difficult (or require
+	  an extra layer) to do in-lang reassignment.
+	* you can make a library for object oriented specific language stuff (so long as it's not too much of
+	  a tack-on like that)
+
 	* you can pass the machine pointer to the make functions and further pass it to macros that then
 	  call the alloc functions (sdrl_alloc(mach, size), etc).  You can then do whatever you want for
 	  the actual allocation (heap, realloc function pointer, etc).  THIS HAS A MAJOR PROBLEM!!!
@@ -23,15 +41,17 @@
 	* i *think* push and unshift work but they are pretty much useless the way things are atm because you
 	  can't operate on an actual array (doing an resolve returns a duplicate array so your changes are lost)
 
-	* add a name to type structs (primarily for making error messages)
 	* should push and unshift return a reference to the array?
 
+	* add preprocessor function type and pointer in machine
+	* add array clear function
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
 	* add pointers to sdMachine for a parser and a macro-rewriting system (such that the parser and
 	  macro definition things can be shared between machines)
 	* make a macro that takes a string of code and compiles and evaluates it using the machine parser
-	  and macro pointers and such
+	  and macro pointers and such.  Should this actually be in libbase utils like parse_string().  Just
+	  modify it to use sdMachine pointers to the parser
 	* make sdrl_env_extend take a type pointer so that it can be inherited
 	* make it possible/easy (via macro) to call a function inside a machine
 

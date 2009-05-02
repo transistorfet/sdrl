@@ -27,7 +27,7 @@ struct sdError {
 	short bitflags;
 	short severity;
 	int err;
-	const char *msg;
+	char *msg;
 };
 
 extern sdError sdMemoryError;

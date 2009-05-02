@@ -66,7 +66,7 @@ static inline int sdrl_check_args(sdMachine *mach, sdArray *args, int min, int m
 
 static inline int sdrl_check_type(sdMachine *mach, sdValue *cur, sdType *type) {
 	if (!sdrl_value_isa(cur, type))
-		return(sdrl_set_type_error(mach));
+		return(sdrl_set_type_error(mach, type, cur->type));
 	return(0);
 }
 
@@ -76,7 +76,7 @@ static inline number_t sdrl_check_number(sdMachine *mach, sdValue *cur, sdType *
 		return(0);
 	}
 	if ((type && cur->type != type) || (!type && cur->type != &sdNumberTypeDef)) {
-		sdrl_set_type_error(mach);
+		sdrl_set_type_error(mach, type ? type : &sdNumberTypeDef, cur->type);
 		return(0);
 	}
 	return(SDNUMBER(cur)->num);
@@ -88,7 +88,7 @@ static inline const char *sdrl_check_string(sdMachine *mach, sdValue *cur, sdTyp
 		return(NULL);
 	}
 	if ((type && cur->type != type) || (!type && cur->type != &sdStringTypeDef)) {
-		sdrl_set_type_error(mach);
+		sdrl_set_type_error(mach, type ? type : &sdStringTypeDef, cur->type);
 		return(NULL);
 	}
 	return(SDSTRING(cur)->str);
@@ -100,7 +100,7 @@ static inline void *sdrl_check_pointer(sdMachine *mach, sdValue *cur, sdType *ty
 		return(NULL);
 	}
 	if (cur->type != type) {
-		sdrl_set_type_error(mach);
+		sdrl_set_type_error(mach, type, cur->type);
 		return(NULL);
 	}
 	return(SDPOINTER(cur)->ptr);

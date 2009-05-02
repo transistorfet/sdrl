@@ -13,6 +13,7 @@
 
 struct sdType {
 	sdType *parent;
+	char *name;
 	int size;
 	int bitflags;
 	sdrl_create_t create;

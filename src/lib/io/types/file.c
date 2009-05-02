@@ -12,6 +12,7 @@
 
 sdType sdFileTypeDef = {
 	&sdValueTypeDef,
+	"file",
 	sizeof(sdPointer),
 	0,
 	(sdrl_create_t) sdrl_io_file_create,
@@ -30,7 +31,7 @@ sdValue *sdrl_io_file_create(sdMachine *mach, sdType *type, sdArray *args)
 		return(NULL);
 	}
 	else if (!sdrl_value_isa(args->items[1], &sdStringTypeDef)) {
-		sdrl_set_type_error(mach);
+		sdrl_set_type_error(mach, &sdStringTypeDef, args->items[1]->type);
 		return(NULL);
 	}
 	else if (!(fptr = fopen(SDSTRING(args->items[1])->str, "r"))) {

@@ -14,6 +14,7 @@
 
 sdType sdExprTypeDef = {
 	&sdValueTypeDef,
+	"expr",
 	sizeof(sdExpr),
 	0,
 	NULL,

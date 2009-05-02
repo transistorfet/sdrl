@@ -9,6 +9,7 @@
 
 sdType sdListTypeDef = {
 	&sdValueTypeDef,
+	"list",
 	sizeof(sdList),
 	0,
 	(sdrl_create_t) sdrl_base_list_create,

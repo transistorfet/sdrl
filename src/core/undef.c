@@ -13,6 +13,7 @@
 
 sdType sdUndefTypeDef = {
 	&sdValueTypeDef,
+	"undef",
 	sizeof(sdValue),
 	0,
 	NULL,

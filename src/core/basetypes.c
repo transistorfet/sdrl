@@ -15,6 +15,7 @@
 
 sdType sdNumberTypeDef = {
 	&sdValueTypeDef,
+	"number",
 	sizeof(sdNumber),
 	0,
 	NULL,
@@ -46,6 +47,7 @@ sdNumber *sdrl_number_duplicate(sdMachine *mach, sdNumber *org)
 
 sdType sdStringTypeDef = {
 	&sdValueTypeDef,
+	"string",
 	sizeof(sdString),
 	0,
 	NULL,

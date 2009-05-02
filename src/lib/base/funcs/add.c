@@ -18,7 +18,7 @@ int sdrl_base_add(sdMachine *mach, sdArray *args)
 
 	for (i = 1; i <= args->last; i++) {
 		if (!sdrl_value_isa(args->items[i], &sdNumberTypeDef))
-			return(sdrl_set_type_error(mach));
+			return(sdrl_set_type_error(mach, &sdNumberTypeDef, args->items[i]->type));
 		result += SDNUMBER(args->items[i])->num;
 	}
 	mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, result));

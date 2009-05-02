@@ -9,6 +9,7 @@
 
 sdType sdFuncTypeDef = {
 	&sdValueTypeDef,
+	"func",
 	sizeof(sdPointer),
 	0,
 	NULL,

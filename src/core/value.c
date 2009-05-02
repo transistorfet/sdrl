@@ -12,6 +12,7 @@
 
 sdType sdValueTypeDef = {
 	NULL,
+	"value",
 	sizeof(sdValue),
 	0,
 	NULL,

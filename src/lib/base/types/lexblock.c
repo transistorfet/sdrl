@@ -9,6 +9,7 @@
 
 sdType sdLexBlockTypeDef = {
 	&sdValueTypeDef,
+	"lexblock",
 	sizeof(sdLexBlock),
 	0,
 	(sdrl_create_t) sdrl_base_lexblock_create,

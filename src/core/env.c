@@ -31,6 +31,7 @@ static inline unsigned int sdrl_hash(const char *);
 
 sdType sdEnvTypeDef = {
 	&sdValueTypeDef,
+	"env",
 	sizeof(sdEnv),
 	0,
 	(sdrl_create_t) sdrl_env_create,
@@ -76,7 +77,7 @@ sdEnv *sdrl_env_create(sdMachine *mach, sdType *type, sdArray *args)
 	if (args->last < 0)
 		return(sdrl_make_env(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
 	else if (args->items[0]->type != type) {
-		sdrl_set_type_error(mach);
+		sdrl_set_type_error(mach, type, args->items[0]->type);
 		return(NULL);
 	}
 	return(sdrl_env_extend(SDENV(args->items[0])));

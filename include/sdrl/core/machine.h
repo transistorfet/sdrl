@@ -61,8 +61,13 @@ static inline int sdrl_set_memory_error(sdMachine *mach) {
 }
 
 /*** Generate an invalid type error and set it in the machine. ***/
-#define sdrl_set_type_error(mach) \
-	sdrl_set_error(mach, SDRL_ES_FATAL, SDRL_ERR_INVALID_TYPE, NULL)
+static inline int sdrl_set_type_error(sdMachine *mach, sdType *expected, sdType *received) {
+	SDRL_DECREF(mach->error);
+	mach->error = sdrl_make_error(mach->heap, &sdErrorTypeDef, mach->current_line,
+		SDRL_ES_FATAL, SDRL_ERR_INVALID_TYPE,
+		"Invalid type. Expected %s, got %s.", expected ? expected->name : "(unknown)", received ? received->name : "(unknown)");
+	return(mach->error->err);
+}
 
 /*** Generate an invalid args error and set it in the machine. ***/
 #define sdrl_set_args_error(mach) \

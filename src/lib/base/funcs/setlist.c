@@ -23,7 +23,7 @@ int sdrl_base_setlist(sdMachine *mach, sdArray *args)
 	values = SDARRAY(args->items[2]);
 	for (i = 0; i <= labels->last && i <= values->last; i++) {
 		if (!sdrl_value_isa(labels->items[i], &sdStringTypeDef))
-			return(sdrl_set_type_error(mach));
+			return(sdrl_set_type_error(mach, &sdStringTypeDef, labels->items[i]->type));
 		SDRL_INCREF(values->items[i]);
 		if (sdrl_env_replace(mach->env, SDSTRING(labels->items[i])->str, values->items[i])) {
 			if (sdrl_env_add(mach->env, SDSTRING(labels->items[i])->str, values->items[i]))

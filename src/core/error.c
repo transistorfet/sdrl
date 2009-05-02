@@ -18,6 +18,7 @@
 
 sdType sdErrorTypeDef = {
 	&sdValueTypeDef,
+	"error",
 	sizeof(sdError),
 	0,
 	NULL,
@@ -26,7 +27,7 @@ sdType sdErrorTypeDef = {
 	NULL
 };
 
-static const char *error_msgs[] = {
+static char *error_msgs[] = {
 	"General error",
 	"Out of memory",
 	"Parse Error",
@@ -53,7 +54,9 @@ sdError sdMemoryError = {
 };
 
 /**
- * Allocate and initialize an error report.
+ * Allocate and initialize an error report.  This function is guarenteed to
+ * return a pointer to an error message.  If the function fails, a pointer to
+ * the static memory error will be returned.
  */
 sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short severity, int err, const char *msg, ...)
 {

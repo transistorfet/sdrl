@@ -15,6 +15,7 @@
 
 sdType sdArrayTypeDef = {
 	&sdValueTypeDef,
+	"array",
 	sizeof(sdArray),
 	0,
 	NULL,

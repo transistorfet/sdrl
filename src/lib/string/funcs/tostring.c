@@ -27,7 +27,7 @@ int sdrl_string_tostring(sdMachine *mach, sdArray *args)
 			j += SDSTRING(args->items[i])->len;
 		}
 		else
-			return(sdrl_set_type_error(mach));
+			return(sdrl_set_type_error(mach, NULL, args->items[i]->type));
 		if (j >= SDRL_STRING_SIZE - 1)
 			break;
 	}

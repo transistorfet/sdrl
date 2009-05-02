@@ -9,6 +9,7 @@
 
 sdType sdFormTypeDef = {
 	&sdValueTypeDef,
+	"form",
 	sizeof(sdPointer),
 	SDRL_TBF_PASS_EXPRS,
 	NULL,

@@ -27,7 +27,7 @@ int sdrl_base_lookup(sdMachine *mach, sdArray *args)
 	else if (sdrl_check_type(mach, args->items[1], &sdEnvTypeDef))
 		env = SDENV(args->items[1]);
 	else
-		return(sdrl_set_type_error(mach));
+		return(sdrl_set_type_error(mach, &sdStringTypeDef, args->items[1]->type));
 
 	if (!(bind = sdrl_env_find(env, SDSTRING(args->items[2])->str)))
 		return(sdrl_set_not_found_error(mach));

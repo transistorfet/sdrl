@@ -18,7 +18,7 @@ int sdrl_base_set(sdMachine *mach, sdArray *args)
 	if (args->last != 2)
 		return(sdrl_set_args_error(mach));
 	if (!sdrl_value_isa(args->items[1], &sdStringTypeDef))
-		return(sdrl_set_type_error(mach));
+		return(sdrl_set_type_error(mach, &sdStringTypeDef, args->items[1]->type));
 	// TODO should this instead clobber the args stripping off the value to be assigned?
 	value = SDRL_INCREF(args->items[2]);
 	if (sdrl_env_replace(mach->env, SDSTRING(args->items[1])->str, value)) {

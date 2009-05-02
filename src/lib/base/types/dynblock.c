@@ -9,6 +9,7 @@
 
 sdType sdDynBlockTypeDef = {
 	&sdValueTypeDef,
+	"dynblock",
 	sizeof(sdReference),
 	0,
 	NULL,
