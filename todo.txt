@@ -30,17 +30,15 @@
 	* should sdrl_destroy/duplicate_value be that or sdrl_value_destroy/duplicate?
 	* should make functions be sdrl_<type>_make?
 	* update (and re-eval) function behaviour with respect to references (steal/borrow/etc)
-	* look at python and perl in terms of reference management and try to make reference management
-	  (who creates and destroys references) easier to follow such that you avoid reference-based bugs
 	* you kinda need the ability to make a value constant.  It could be in the value itself or maybe
 	  in the binding(env).  For sdIRC, you have an array of servers and an array of windows that you
 	  want accessible to the program but don't necessarily want to be changed.
 	* should we delete utils.c since it's not really used now
 	* you *have* to look into how things will work with librarys loaded dynamically with respect to
 	  having access to type variables.  You may want to have both type systems at once
+
 	* i *think* push and unshift work but they are pretty much useless the way things are atm because you
 	  can't operate on an actual array (doing an resolve returns a duplicate array so your changes are lost)
-
 	* should push and unshift return a reference to the array they operated on? or maybe the array size?
 
 	* add splice array function
@@ -74,12 +72,12 @@
 	  format (verbose).  This prevents the need for a special parser but still has a lot of benifits
 	  and is much more configurable, even though it probably would be slower (a custom parser would be
 	  for speed and for complex syntax)
-	* add a basic object oriented system using environments
+	* add a basic object oriented system using environments (possibly as a seperate lib)
 
-	* improve the error handling so that you can more easily debug programs.  Make the linenumber more
-	  accurate.  Can/should you make the error messages more accurate/informational?
+	* make error generation macros create more descriptive messages like how type_error does now
 	* add the ability to catch errors and handle them like exceptions
 	* add a reasonably detailed exception printing function so that you can trace errors
+	* make error somehow store the continuation or something so that it's easy to restart it
 
 	* add flags to the machine or something such that a program can change certain (what might be compiled
 	  in atm) options, such as treating "namespace.name" type names as special (causing a recursive lookup)
@@ -107,7 +105,6 @@
 
 	* machine value type with a pointer to a machine structure (for calling a function in another machine)
 	* optimize the hash function
-	* add the ability to make a reference constant
 
 	* get an autodoc creator setup
 
@@ -178,10 +175,6 @@ Structural Issues:
 	  could be to store a pointer to the env containing the entry instead.  What about though if an
 	  inbetween env creates a new entry that overrides the previous one?  Why wouldn't a reference work in
 	  this case? (maybe it will)
-	* how will set and setlist work with regards to the value/args? Should it duplicate the arg before
-	  assigning it, steal the reference (clobber the args) or make a reference?  The make reference
-	  method didn't seem to work in setlist because we actually need to clobber the args given the
-	  way we use the next field =(
 
 Features:
 
