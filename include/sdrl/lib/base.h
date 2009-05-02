@@ -63,8 +63,8 @@ int sdrl_base_unshift(sdMachine *, sdArray *);
 /*** Utilities ***/
 int sdrl_base_display_error(sdError *);
 int sdrl_base_display_expr(sdExpr *);
-sdExpr *sdrl_base_parse_file(sdMachine *, sdrl_parser_t, const char *);
-sdExpr *sdrl_base_parse_string(sdMachine *, sdrl_parser_t, const char *, int);
+sdExpr *sdrl_base_parse_file(sdMachine *, const char *);
+sdExpr *sdrl_base_parse_string(sdMachine *, const char *, int);
 
 #endif
 

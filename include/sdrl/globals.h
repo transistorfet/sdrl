@@ -64,8 +64,20 @@ typedef sdValue *(*sdrl_duplicate_t)(sdMachine *mach, sdValue *value);
 typedef int (*sdrl_evaluate_t)(sdMachine *mach, sdArray *args);
 
 // TODO should that sdInput be there???
+/**
+ * This function is called to process raw input into AST.  The resulting AST
+ * will be passed to the preprocessor before being evaluated if one was set.
+ * If an error occurs during parsing, NULL will be returned.
+ */
 typedef sdExpr *(*sdrl_parser_t)(sdMachine *, sdInput *);
+
 // TODO should this take an additonal parameter for internal use by the preprocessor?
+/**
+ * This function is called to process the AST before it is evaluated.  The AST
+ * to be evaluated is returned (usually the same pointer as is passed to the
+ * function).  If an error occurs, this function must properly DECREF the expr
+ * if it is going to return a NULL value instead of a pointer to expr.
+ */
 typedef sdExpr *(*sdrl_preprocessor_t)(sdMachine *, sdExpr *);
 
 typedef int (*sdrl_func_t)(sdMachine *, sdArray *);

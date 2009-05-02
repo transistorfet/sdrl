@@ -37,7 +37,8 @@ int main(int argc, char **argv)
 		sdrl_machine_destroy(mach);
 		return(-1);
 	}
-	if (!(code = sdrl_base_parse_file(mach, (sdrl_parser_t) sdrl_base_parse_lambda_input, infile))) {
+	sdrl_set_parser(mach, sdrl_base_parse_lambda_input);
+	if (!(code = sdrl_base_parse_file(mach, infile))) {
 		printf("Cannot parse file, %s\n", infile);
 		sdrl_machine_destroy(mach);
 		return(-1);
