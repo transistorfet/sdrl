@@ -3,7 +3,9 @@
  * Description:	Error Generating and Reporting Functions
  */
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 
 #include <sdrl/core/heap.h>
@@ -11,7 +13,8 @@
 #include <sdrl/core/error.h>
 #include <sdrl/globals.h>
 
-#define NUM_ERRORS	14
+#define NUM_ERRORS		14
+#define ERROR_STRING_SIZE	1024
 
 sdType sdErrorTypeDef = {
 	&sdValueTypeDef,
@@ -52,13 +55,19 @@ sdError sdMemoryError = {
 /**
  * Allocate and initialize an error report.
  */
-sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short severity, int err, const char *msg)
+sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short severity, int err, const char *msg, ...)
 {
+	va_list va;
+	int len = -1;
 	sdError *error;
+	char buffer[ERROR_STRING_SIZE];
 
 	if (err == SDRL_ERR_OUT_OF_MEMORY)
 		return(&sdMemoryError);
-	if (!(error = (sdError *) sdrl_heap_alloc(heap, type->size)))
+	va_start(va, msg);
+	if (msg && (len = vsnprintf(buffer, ERROR_STRING_SIZE, msg, va)) >= ERROR_STRING_SIZE)
+		return(&sdMemoryError);
+	if (!(error = (sdError *) sdrl_heap_alloc(heap, type->size + len + 1)))
 		return(&sdMemoryError);
 	SDVALUE(error)->refs = 1;
 	SDVALUE(error)->type = type;
@@ -67,8 +76,10 @@ sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short se
 	error->severity = severity;
 	error->err = err;
 
-	if (msg)
-		error->msg = msg;
+	if (msg) {
+		error->msg = (char *) (error + 1);
+		strcpy(error->msg, buffer);
+	}
 	else if ((err < 0) && (err > (-1 * NUM_ERRORS)))
 		error->msg = error_msgs[ (err * -1) - 1 ];
 	else
