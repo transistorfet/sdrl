@@ -43,11 +43,8 @@
 
 	* should push and unshift return a reference to the array?
 
-	* add preprocessor function type and pointer in machine
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
-	* add pointers to sdMachine for a parser and a macro-rewriting system (such that the parser and
-	  macro definition things can be shared between machines)
 	* make a macro that takes a string of code and compiles and evaluates it using the machine parser
 	  and macro pointers and such.  Should this actually be in libbase utils like parse_string().  Just
 	  modify it to use sdMachine pointers to the parser
@@ -65,6 +62,7 @@
 	  evaluated.  Right now, it's set to, basically, the last arg in a function call to have been eval'd.
 	  It might be possible to use events to record what the linenumber should be set to before the code
 	  is eval'd.
+	* make a machine-clone function that makes a new machine that uses the same env, heap, parser, etc
 
 	* add cplusplus checks to headers that add an extern "C" { } block
 

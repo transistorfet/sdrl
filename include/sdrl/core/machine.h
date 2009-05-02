@@ -19,6 +19,8 @@
 #define SDRL_DEFAULT_ARGS	4
 
 struct sdMachine {
+	sdrl_parser_t parser;
+	sdrl_preprocessor_t preproc;
 	linenumber_t current_line;
 	sdHeap *heap;
 	sdValue *ret;
@@ -36,6 +38,14 @@ int sdrl_evaluate(sdMachine *, sdExpr *);
 int sdrl_evaluate_expr_list(sdMachine *, sdExpr *);
 int sdrl_evaluate_expr_value(sdMachine *, sdExpr *);
 int sdrl_evaluate_value(sdMachine *, sdArray *);
+
+/*** Set the parser function in the given machine */
+#define sdrl_set_parser(mach, func)	\
+	( (mach)->parser = (sdrl_parser_t) (func) )
+
+/*** Set the preprocessor function in the given machine */
+#define sdrl_set_preprocessor(mach, func)	\
+	( (mach)->preproc= (sdrl_preprocessor_t) (func) )
 
 
 /*** Try a piece of code and jump to a failure point if it produces an error.  This assumes that

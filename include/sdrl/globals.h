@@ -65,6 +65,8 @@ typedef int (*sdrl_evaluate_t)(sdMachine *mach, sdArray *args);
 
 // TODO should that sdInput be there???
 typedef sdExpr *(*sdrl_parser_t)(sdMachine *, sdInput *);
+// TODO should this take an additonal parameter for internal use by the preprocessor?
+typedef sdExpr *(*sdrl_preprocessor_t)(sdMachine *, sdExpr *);
 
 typedef int (*sdrl_func_t)(sdMachine *, sdArray *);
 
