@@ -6,6 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 
 #include <sdrl/core/machine.h>
 #include <sdrl/core/env.h>
@@ -73,16 +74,60 @@ void sdrl_machine_destroy(sdMachine *mach)
 /**
  * Evaluate all the exprs in the list, expr.
  */
-int sdrl_evaluate(sdMachine *mach, sdExpr *expr)
+int sdrl_eval(sdMachine *mach, sdExpr *expr)
 {
-	int ret = 0;
-	sdEvent *event;
-	sdValue *arg;
-	sdrl_event_t func;
-
+	// TODO should we create a new cont first? such that every eval is it's own fresh cont?
 	// TODO do you have to incref the expr first?
 	sdrl_event_push(mach->cont, (sdrl_event_t) sdrl_evaluate_expr_list, SDVALUE(expr), mach->env);
-	while ((event = sdrl_event_get_top(mach->cont))) {
+	return(sdrl_run(mach, -1));
+}
+
+/**
+ * Call a function within a machine.
+ */
+int sdrl_call(sdMachine *mach, sdValue *func_value, int num_args, ...)
+{
+	int i;
+	int ret;
+	va_list va;
+	sdArray *args;
+	sdValue *value;
+
+	// TODO this whole function is just a quick hack for now.
+	SDRL_DECREF(mach->ret);
+	mach->ret = NULL;
+
+	// Build up an array of the function and arguments
+	va_start(va, num_args);
+	if (!(args = sdrl_make_array(mach->heap, &sdArrayTypeDef, num_args + 1)))
+		return(sdrl_set_memory_error(mach));
+	sdrl_array_set(args, 0, SDRL_INCREF(func_value));
+	for (i = 1; i <= num_args; i++) {
+		value = va_arg(va, sdValue *);
+		sdrl_array_set(args, i, SDRL_INCREF(value));
+	}
+
+	i = sdrl_event_level(mach->cont);
+	if ((ret = sdrl_evaluate_value(mach, args)))
+		return(ret);
+	return(sdrl_run(mach, i));
+}
+
+/**
+ * Run the machine evaluating all events on the current continuation until
+ * the stack pointer reaches the given level.  If the level given is -1, then
+ * the machine runs until no events remain.
+ */
+int sdrl_run(sdMachine *mach, int level)
+{
+	int ret = 0;
+	sdValue *arg;
+	sdEvent *event;
+	sdrl_event_t func;
+
+	while (sdrl_event_level(mach->cont) > level) {
+		// TODO can we do this nicer, without using an event ptr?
+		event = sdrl_event_get_top(mach->cont);
 		SDRL_DECREF(mach->env);
 		mach->env = SDRL_INCREF(event->env);
 		arg = SDRL_INCREF(event->arg);

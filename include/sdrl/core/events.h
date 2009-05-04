@@ -32,5 +32,8 @@ int sdrl_event_pop(sdCont *);
 #define sdrl_event_get_top(cont)	\
 	( (cont)->sp >= 0 ? &(cont)->stack[(cont)->sp] : NULL )
 
+#define sdrl_event_level(cont)	\
+	( (cont)->sp )
+
 #endif
 

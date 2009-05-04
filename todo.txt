@@ -40,11 +40,16 @@
 	* i *think* push and unshift work but they are pretty much useless the way things are atm because you
 	  can't operate on an actual array (doing an resolve returns a duplicate array so your changes are lost)
 	* should push and unshift return a reference to the array they operated on? or maybe the array size?
+	* make a full generic 'reference' type with (ref <value>) creator and some kind of dereferencer
 
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
-	* make it possible/easy (via macro) to call a function inside a machine
 
+	* make INCREF and DECREF reference the args only once
+	* rename sdrl_evaluate to sdrl_eval and put the loop in another function (or inline)
+	* fix sdrl_call to take stackframe into account and possibly factor out the actual event loop itself
+	* make a second sdrl_call function that takes a text name for the function and does the lookup
+	* make all 'make' functions take a machine instead of a heap
 	* use sdrl_make_value and all other types of constructors in all make and create functions
 	* make sure every 'make' function does a memset on the allocated data
 	* make basetypes all seperate files complete with support functions
@@ -125,6 +130,12 @@ Tests:
 
 Structural Issues:
 
+	* you can have chaining continuations much like environments chain together.  Each event stack would
+	  be a stack frame.  There might not be a stack frame for each function call but there might be a new
+	  one each time sdrl_call is called.  The machine would then run until the end of the current stack
+	  frame and return while at the same time, if an error occurs, a record of where the call was made
+	  on the stack is still kept.  With the current method of saving the current sp on the C stack, that
+	  information is not available to any other function.
 	* should there be a place in sdMachine for a pointer to something used by the preprocessor, like a
 	  list of defined macros that it uses to rewrite the AST?
 	* lexblock, dynblock, and expr type evaluate funcs set the args to be a value in the env but the
