@@ -78,6 +78,18 @@ sdString *sdrl_string_duplicate(sdMachine *mach, sdString *org)
 	return(sdrl_make_string(mach->heap, SDVALUE(org)->type, org->str, org->len));
 }
 
+/*** Reference Type ***/
+
+sdType sdReferenceTypeDef = {
+	&sdValueTypeDef,
+	"reference",
+	sizeof(sdReference),
+	0,
+	NULL,
+	(sdrl_destroy_t) sdrl_reference_destroy,
+	(sdrl_duplicate_t) sdrl_reference_duplicate,
+	NULL
+};
 
 sdReference *sdrl_make_reference(sdHeap *heap, sdType *type, sdValue *ref)
 {

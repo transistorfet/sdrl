@@ -59,6 +59,8 @@ int sdrl_load_base(sdMachine *mach)
 
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "new", sdrl_base_new);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "defenv", sdrl_base_defenv);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "ref", sdrl_base_ref);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "deref", sdrl_base_deref);
 
 	return(0);
 }

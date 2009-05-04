@@ -29,7 +29,7 @@
 
 	* should sdrl_destroy/duplicate_value be that or sdrl_value_destroy/duplicate?
 	* should make functions be sdrl_<type>_make?
-	* update (and re-eval) function behaviour with respect to references (steal/borrow/etc)
+	* update docs (and re-eval) function behaviour with respect to references (steal/borrow/etc)
 	* you kinda need the ability to make a value constant.  It could be in the value itself or maybe
 	  in the binding(env).  For sdIRC, you have an array of servers and an array of windows that you
 	  want accessible to the program but don't necessarily want to be changed.
@@ -40,20 +40,21 @@
 	* i *think* push and unshift work but they are pretty much useless the way things are atm because you
 	  can't operate on an actual array (doing an resolve returns a duplicate array so your changes are lost)
 	* should push and unshift return a reference to the array they operated on? or maybe the array size?
-	* make a full generic 'reference' type with (ref <value>) creator and some kind of dereferencer
+	* for some values, it would be helpful to return a reference on 'resolve' (arrays, envs, etc) while
+	  others would be better to duplicate (strings, numbers).  Should there be 2 kinds of resolve? should
+	  there be a virtfunc in type for resolving?  You could use a bitflag in the type struct.
 
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
 
 	* make INCREF and DECREF reference the args only once
-	* rename sdrl_evaluate to sdrl_eval and put the loop in another function (or inline)
-	* fix sdrl_call to take stackframe into account and possibly factor out the actual event loop itself
 	* make a second sdrl_call function that takes a text name for the function and does the lookup
 	* make all 'make' functions take a machine instead of a heap
 	* use sdrl_make_value and all other types of constructors in all make and create functions
 	* make sure every 'make' function does a memset on the allocated data
 	* make basetypes all seperate files complete with support functions
 	* make some of the #defines "redefinable"
+	* add function/macro in base that parses a string and then evals it in one step
 
 	* add the pop/unshift realloc downsizing code (if at all)
 	* make a duplicate environment function
@@ -89,7 +90,6 @@
 	  (or should this be handled through an AST rewriter/macro system?)
 	* should it be possible to set the parser on the command line or somethnig?
 	* make regression tests to test all aspects of the base library extensively
-	* make (if there isn't one already) a function that takes a string and evaluates it as code
 
 	* make a hash string value (type?) and modify bindings to take a precalculated hash and then
 	  use those functions as often as possible and make language bindings to support it so you can use
@@ -115,6 +115,7 @@
 
 Refactoring:
 
+	* should all the libs have custom mangles (sdrl_base_parse_string vs just sdrl_parse_string)
 	* should retract_environment replace destroy_environment (in name) (???)
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
 	* rename sdrl_load_<lib> to sdrl_load_canonical_<lib>

@@ -18,6 +18,7 @@
 
 extern sdType sdNumberTypeDef;
 extern sdType sdStringTypeDef;
+extern sdType sdReferenceTypeDef;
 
 typedef struct sdNumber sdNumber;
 typedef struct sdString sdString;
