@@ -36,17 +36,32 @@
 	* should we delete utils.c since it's not really used now
 	* you *have* to look into how things will work with librarys loaded dynamically with respect to
 	  having access to type variables.  You may want to have both type systems at once
-
-	* i *think* push and unshift work but they are pretty much useless the way things are atm because you
-	  can't operate on an actual array (doing an resolve returns a duplicate array so your changes are lost)
 	* should push and unshift return a reference to the array they operated on? or maybe the array size?
+
 	* for some values, it would be helpful to return a reference on 'resolve' (arrays, envs, etc) while
 	  others would be better to duplicate (strings, numbers).  Should there be 2 kinds of resolve? should
 	  there be a virtfunc in type for resolving?  You could use a bitflag in the type struct.
+	* do you need/should you have a generic mechanism (virtfunc in type) for getting/setting values
+	  within a value (array, env, maybe list, etc)?
+	* should you have a tostring virtfunc?
+	* should array functions be in a seperate lib like string funcs? what about other groups of funcs?
 
+	* how should resolution be done on envs?  Parser or preprocessor convert to using %?  Use a special
+	  function that converts foo.bar style names?  Make resolve ($) use foo.bar style names?
+	* make the library loading functions take an sdEnv * as an argument where it loads the bindings.
+	  Perhaps if NULL is given, it will create it's own env under mach->global and load itself there
+	* make libraries namespacable by having them add funcs to a named env within the global env
+	* make a method/func/something for importing names from a namespace (env) into the global env
+	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2))).
+	  It will lookup the named namespace as an env in the global namespace (creating on if it's not found)
+	  and make that the current env while the expr executes and then restore the previous env (or rather
+	  this should happen automagically (or should it be forced to avoid accidents))
+
+	* add function to get size (or last) element of an array
+	* make an array index function to get (and another to set) an element in an array
+	* make string functions: strcmp, uppercase, lowercase, sprint
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
-
 	* make INCREF and DECREF reference the args only once
 	* make a second sdrl_call function that takes a text name for the function and does the lookup
 	* make all 'make' functions take a machine instead of a heap
@@ -68,6 +83,8 @@
 
 ------------
 
+    New Features:
+
 	* make a "profile" system where a certain profile can be loaded into a machine configuring that
 	  machine for a particular 'sublanguage'.  You can load a lisp profile for example and get all the
 	  functions named and working as you'd expect in lisp.  It would/could be a matter of defining
@@ -78,7 +95,13 @@
 	  format (verbose).  This prevents the need for a special parser but still has a lot of benifits
 	  and is much more configurable, even though it probably would be slower (a custom parser would be
 	  for speed and for complex syntax)
+
 	* add a basic object oriented system using environments (possibly as a seperate lib)
+	* add a 'load' command that (somehow) calls the library loading function that adds all the library
+	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
+	  that each library behaves in an expected way.  Doing it like python might be good
+
+    General:
 
 	* make error generation macros create more descriptive messages like how type_error does now
 	* add the ability to catch errors and handle them like exceptions
@@ -96,13 +119,6 @@
 	  the values directly in order to speed up accesses when you know the hash will not otherwise be
 	  preserved (note: as long as you defer the hash modulo to the end, the hash will always be the
 	  same so you don't have to adjust when the size of the table changes) (is it really worth it?)
-
-	* make string functions: strcmp, uppercase, lowercase
-	* make libraries namespacable
-	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2)))
-	* add a 'load' command that (somehow) calls the library loading function that adds all the library
-	  bindings to the environment.  I don't know how, sematically, this will work with namespaces such
-	  that each library behaves in an expected way.  Doing it like python might be good
 
 	* make the output of dispexpr.c more readable
 	* make parser catch errors during a parse

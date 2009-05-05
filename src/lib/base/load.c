@@ -25,11 +25,12 @@ int sdrl_load_base(sdMachine *mach)
 
 	/** Bind functions */
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "set", sdrl_base_set);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "setenv", sdrl_base_setenv);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "setlist", sdrl_base_setlist);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "if", sdrl_base_if);
 
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "$", sdrl_base_resolve);
-	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "%", sdrl_base_lookup);
+	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "%", sdrl_base_getenv);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "@", sdrl_base_array);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "list", sdrl_base_list);
 	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "head", sdrl_base_head);
