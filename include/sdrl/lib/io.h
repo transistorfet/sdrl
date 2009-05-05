@@ -11,7 +11,7 @@
 
 #include <sdrl/lib/io/file.h>
 
-int sdrl_load_io(sdMachine *);
+int sdrl_load_io(sdMachine *, sdEnv *);
 
 /*** Functions ***/
 int sdrl_io_print(sdMachine *, sdArray *);

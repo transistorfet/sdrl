@@ -85,8 +85,8 @@ static inline int sdrl_check_type(sdMachine *mach, sdValue *cur, sdType *type) {
  * Bind a C function to the given name and type in the current environment of
  * the given machine.
  */
-#define SDRL_BIND_FUNCTION(mach, type, name, func) \
-	sdrl_env_add(mach->env, name, sdrl_make_pointer(mach->heap, type, func))
+#define SDRL_BIND_FUNCTION(mach, env, type, name, func) \
+	( sdrl_env_add((env), (name), sdrl_make_pointer((mach)->heap, (type), (func))) )
 
 /**
  * Find the item with the given name in the given environment and if an item

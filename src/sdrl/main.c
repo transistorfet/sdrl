@@ -28,9 +28,9 @@ int main(int argc, char **argv)
 
 	if (!(mach = sdrl_make_machine()))
 		return(-1);
-	if (sdrl_load_base(mach)
-	    || sdrl_load_string(mach)
-	    || sdrl_load_io(mach)) {
+	if (sdrl_load_base(mach, mach->global)
+	    || sdrl_load_string(mach, mach->global)
+	    || sdrl_load_io(mach, mach->global)) {
 		printf("Error initializing primatives\n");
 		sdrl_machine_destroy(mach);
 		return(-1);

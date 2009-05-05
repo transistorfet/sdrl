@@ -11,7 +11,7 @@
 
 #define SDRL_STRING_SIZE		1024
 
-int sdrl_load_string(sdMachine *);
+int sdrl_load_string(sdMachine *, sdEnv *);
 
 /*** Functions ***/
 int sdrl_string_char(sdMachine *, sdArray *);

@@ -48,9 +48,7 @@
 
 	* how should resolution be done on envs?  Parser or preprocessor convert to using %?  Use a special
 	  function that converts foo.bar style names?  Make resolve ($) use foo.bar style names?
-	* make the library loading functions take an sdEnv * as an argument where it loads the bindings.
-	  Perhaps if NULL is given, it will create it's own env under mach->global and load itself there
-	* make libraries namespacable by having them add funcs to a named env within the global env
+	* fill in the lib load functions to create the namespace if the env given is NULL
 	* make a method/func/something for importing names from a namespace (env) into the global env
 	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2))).
 	  It will lookup the named namespace as an env in the global namespace (creating on if it's not found)

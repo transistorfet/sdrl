@@ -11,13 +11,16 @@
 /**
  * Load all of the forms, funcs and types into the given machine.
  */
-int sdrl_load_string(sdMachine *mach)
+int sdrl_load_string(sdMachine *mach, sdEnv *namespace)
 {
+	if (!namespace) {
+		// TODO create namespace
+	}
 
-	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "char", sdrl_string_char);
-	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "length", sdrl_string_length);
-	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "substr", sdrl_string_substr);
-	SDRL_BIND_FUNCTION(mach, &sdFuncTypeDef, "tostring", sdrl_string_tostring);
+	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "char", sdrl_string_char);
+	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "length", sdrl_string_length);
+	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "substr", sdrl_string_substr);
+	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "tostring", sdrl_string_tostring);
 
 	return(0);
 }

@@ -15,7 +15,7 @@
 #include <sdrl/lib/base/dynblock.h>
 #include <sdrl/lib/base/lexblock.h>
 
-int sdrl_load_base(sdMachine *);
+int sdrl_load_base(sdMachine *, sdEnv *);
 
 /*** Parsers ***/
 sdExpr *sdrl_base_parse_lambda_input(sdMachine *, sdInput *);
