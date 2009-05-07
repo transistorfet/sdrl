@@ -12,11 +12,11 @@
 #define LAMBDA_MAX_NUMBER		128
 #define LAMBDA_MAX_STRING		1024
 
-static sdExpr *lambda_parse_input(sdHeap *, sdType *, sdInput *);
-static sdExpr *lambda_parse_expr(sdHeap *, sdType *, sdInput *);
-static sdExpr *lambda_parse_number(sdHeap *, sdType *, sdInput *, char, linenumber_t);
-static sdExpr *lambda_parse_string(sdHeap *, sdType *, sdInput *, char, linenumber_t);
-static sdExpr *lambda_parse_identifier(sdHeap *, sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lambda_parse_input(sdMachine *, sdType *, sdInput *);
+static sdExpr *lambda_parse_expr(sdMachine *, sdType *, sdInput *);
+static sdExpr *lambda_parse_number(sdMachine *, sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lambda_parse_string(sdMachine *, sdType *, sdInput *, char, linenumber_t);
+static sdExpr *lambda_parse_identifier(sdMachine *, sdType *, sdInput *, char, linenumber_t);
 static int lambda_get_next_char(sdInput *);
 static inline int lambda_is_identifier(char);
 static inline int lambda_is_digit(char);
@@ -29,7 +29,7 @@ static inline char lambda_escape_char(char);
  */
 sdExpr *sdrl_base_parse_lambda_input(sdMachine *mach, sdInput *input)
 {
-	return(lambda_parse_input(mach->heap, &sdExprTypeDef, input));
+	return(lambda_parse_input(mach, &sdExprTypeDef, input));
 }
 
 /*** Local Functions ***/
@@ -37,13 +37,13 @@ sdExpr *sdrl_base_parse_lambda_input(sdMachine *mach, sdInput *input)
 /**
  * Parse input stream.
  */
-sdExpr *lambda_parse_input(sdHeap *heap, sdType *type, sdInput *input)
+sdExpr *lambda_parse_input(sdMachine *mach, sdType *type, sdInput *input)
 {
 	sdExpr *head, *cur;
 
-	head = cur = lambda_parse_expr(heap, type, input);
+	head = cur = lambda_parse_expr(mach, type, input);
 	while (cur) {
-		cur->next = lambda_parse_expr(heap, type, input);
+		cur->next = lambda_parse_expr(mach, type, input);
 		cur = cur->next;
 	}
 	return(head);
@@ -52,7 +52,7 @@ sdExpr *lambda_parse_input(sdHeap *heap, sdType *type, sdInput *input)
 /**
  * Parse a single expression.
  */
-static sdExpr *lambda_parse_expr(sdHeap *heap, sdType *type, sdInput *input)
+static sdExpr *lambda_parse_expr(sdMachine *mach, sdType *type, sdInput *input)
 {
 	char ch;
 	linenumber_t line;
@@ -66,26 +66,26 @@ static sdExpr *lambda_parse_expr(sdHeap *heap, sdType *type, sdInput *input)
 	else if (ch == ')')
 		return(NULL);
 	else if (lambda_is_digit(ch) || ((ch == '-') && lambda_is_digit(sdrl_peek_char(input)))) {
-		if (!(expr = lambda_parse_number(heap, type, input, ch, line)))
+		if (!(expr = lambda_parse_number(mach, type, input, ch, line)))
 			return(NULL);
 	}
 	else if ((ch == '\"') || (ch == '\'')) {
-		if (!(expr = lambda_parse_string(heap, type, input, ch, line)))
+		if (!(expr = lambda_parse_string(mach, type, input, ch, line)))
 			return(NULL);
 	}
 	else if (ch == '(') {
-		if(!(expr = lambda_parse_input(heap, type, input)))
+		if(!(expr = lambda_parse_input(mach, type, input)))
 			return(NULL);
-		expr = sdrl_make_expr_expr(heap, type, SDRL_ET_CALL, line, expr, NULL);
+		expr = sdrl_make_expr_expr(mach, type, SDRL_ET_CALL, line, expr, NULL);
 	}
 	else {
-		if (!(expr = lambda_parse_identifier(heap, type, input, ch, line)))
+		if (!(expr = lambda_parse_identifier(mach, type, input, ch, line)))
 			return(NULL);
 	}
 	return(expr);
 }
 
-static sdExpr *lambda_parse_number(sdHeap *heap, sdType *type, sdInput *input, char first, linenumber_t line)
+static sdExpr *lambda_parse_number(sdMachine *mach, sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i = 0;
 	char buffer[LAMBDA_MAX_NUMBER];
@@ -99,10 +99,10 @@ static sdExpr *lambda_parse_number(sdHeap *heap, sdType *type, sdInput *input, c
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_number_expr(heap, type, SDRL_ET_NUMBER, line, strtod(buffer, NULL), NULL));
+	return(sdrl_make_number_expr(mach, type, SDRL_ET_NUMBER, line, strtod(buffer, NULL), NULL));
 }
 
-static sdExpr *lambda_parse_string(sdHeap *heap, sdType *type, sdInput *input, char first, linenumber_t line)
+static sdExpr *lambda_parse_string(sdMachine *mach, sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i;
 	char ch;
@@ -118,10 +118,10 @@ static sdExpr *lambda_parse_string(sdHeap *heap, sdType *type, sdInput *input, c
 			break;
 	}
 	buffer[i] = '\0';
-	return(sdrl_make_string_expr(heap, type, SDRL_ET_STRING, line, buffer, NULL));
+	return(sdrl_make_string_expr(mach, type, SDRL_ET_STRING, line, buffer, NULL));
 }
 
-static sdExpr *lambda_parse_identifier(sdHeap *heap, sdType *type, sdInput *input, char first, linenumber_t line)
+static sdExpr *lambda_parse_identifier(sdMachine *mach, sdType *type, sdInput *input, char first, linenumber_t line)
 {
 	int i;
 	char buffer[LAMBDA_MAX_STRING];
@@ -134,7 +134,7 @@ static sdExpr *lambda_parse_identifier(sdHeap *heap, sdType *type, sdInput *inpu
 	if (buffer[i] == ')')
 		sdrl_unget_char(input, ')');
 	buffer[i] = '\0';
-	return(sdrl_make_string_expr(heap, type, SDRL_ET_IDENTIFIER, line, buffer, NULL));
+	return(sdrl_make_string_expr(mach, type, SDRL_ET_IDENTIFIER, line, buffer, NULL));
 }
 
 static int lambda_get_next_char(sdInput *input)

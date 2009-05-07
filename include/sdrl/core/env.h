@@ -32,7 +32,7 @@ struct sdBinding {
 struct sdEnv {
 	sdValue value;
 	int bitflags;
-	sdHeap *heap;
+	sdMachine *mach;
 	sdrl_destroy_t destroy;
 	int size;
 	int entries;
@@ -40,7 +40,7 @@ struct sdEnv {
 	sdEnv *parent;
 };
 
-sdEnv *sdrl_make_env(sdHeap *, sdType *, short, sdrl_destroy_t);
+sdEnv *sdrl_make_env(sdMachine *, sdType *, short, sdrl_destroy_t);
 sdEnv *sdrl_env_create(sdMachine *, sdType *, sdArray *);
 sdEnv *sdrl_env_extend(sdEnv *, sdType *);
 sdEnv *sdrl_env_retract(sdEnv *);

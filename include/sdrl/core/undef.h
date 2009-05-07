@@ -19,7 +19,7 @@ extern sdValue sdUndefValue;
 #define sdrl_is_undef(value)	\
 	( SDVALUE(value) == &sdUndefValue )
 
-sdValue *sdrl_make_undef(sdHeap *, sdType *);
+sdValue *sdrl_make_undef(sdMachine *, sdType *);
 void sdrl_undef_destroy(sdValue *);
 
 #endif

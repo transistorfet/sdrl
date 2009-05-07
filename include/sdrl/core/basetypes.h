@@ -46,17 +46,17 @@ struct sdPointer {
 	void *ptr;
 };
 
-sdNumber *sdrl_make_number(sdHeap *, sdType *, number_t);
+sdNumber *sdrl_make_number(sdMachine *, sdType *, number_t);
 sdNumber *sdrl_number_duplicate(sdMachine *, sdNumber *);
 
-sdString *sdrl_make_string(sdHeap *, sdType *, const char *, int);
+sdString *sdrl_make_string(sdMachine *, sdType *, const char *, int);
 sdString *sdrl_string_duplicate(sdMachine *, sdString *);
 
-sdReference *sdrl_make_reference(sdHeap *, sdType *, sdValue *);
+sdReference *sdrl_make_reference(sdMachine *, sdType *, sdValue *);
 void sdrl_reference_destroy(sdReference *);
 sdReference *sdrl_reference_duplicate(sdMachine *, sdReference *);
 
-sdPointer *sdrl_make_pointer(sdHeap *, sdType *, void *);
+sdPointer *sdrl_make_pointer(sdMachine *, sdType *, void *);
 sdPointer *sdrl_pointer_duplicate(sdMachine *, sdPointer *);
 
 

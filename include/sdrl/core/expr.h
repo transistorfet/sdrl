@@ -35,9 +35,9 @@ struct sdExpr {
 	sdExpr *next;
 };
 
-sdExpr *sdrl_make_number_expr(sdHeap *, sdType *, int, linenumber_t, number_t, sdExpr *);
-sdExpr *sdrl_make_string_expr(sdHeap *, sdType *, int, linenumber_t, const char *, sdExpr *);
-sdExpr *sdrl_make_expr_expr(sdHeap *, sdType *, int, linenumber_t, sdExpr *, sdExpr *);
+sdExpr *sdrl_make_number_expr(sdMachine *, sdType *, int, linenumber_t, number_t, sdExpr *);
+sdExpr *sdrl_make_string_expr(sdMachine *, sdType *, int, linenumber_t, const char *, sdExpr *);
+sdExpr *sdrl_make_expr_expr(sdMachine *, sdType *, int, linenumber_t, sdExpr *, sdExpr *);
 sdExpr *sdrl_expr_duplicate(sdMachine *, sdExpr *);
 void sdrl_expr_destroy(sdExpr *);
 int sdrl_expr_evaluate(sdMachine *, sdArray *);

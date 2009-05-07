@@ -36,9 +36,9 @@ sdMachine *sdrl_make_machine(void)
 	memset(mach, '\0', sizeof(sdMachine));
 	if (!(mach->heap = sdrl_make_heap()) || !(mach->cont = sdrl_make_cont()))
 		goto FAIL;
-	if (!(mach->type_env = sdrl_make_env(mach->heap, &sdEnvTypeDef, SDRL_BBF_CONSTANT, NULL)))
+	if (!(mach->type_env = sdrl_make_env(mach, &sdEnvTypeDef, SDRL_BBF_CONSTANT, NULL)))
 		goto FAIL;
-	if (!(mach->global = sdrl_make_env(mach->heap, &sdEnvTypeDef, 0, (sdrl_destroy_t) sdrl_destroy_value)))
+	if (!(mach->global = sdrl_make_env(mach, &sdEnvTypeDef, 0, (sdrl_destroy_t) sdrl_destroy_value)))
 		goto FAIL;
 	mach->env = SDRL_INCREF(mach->global);
 	sdrl_env_add(mach->type_env, "array", &sdArrayTypeDef);
@@ -99,7 +99,7 @@ int sdrl_call(sdMachine *mach, sdValue *func_value, int num_args, ...)
 
 	// Build up an array of the function and arguments
 	va_start(va, num_args);
-	if (!(args = sdrl_make_array(mach->heap, &sdArrayTypeDef, num_args + 1)))
+	if (!(args = sdrl_make_array(mach, &sdArrayTypeDef, num_args + 1)))
 		return(sdrl_set_memory_error(mach));
 	sdrl_array_set(args, 0, SDRL_INCREF(func_value));
 	for (i = 1; i <= num_args; i++) {
@@ -173,13 +173,13 @@ int sdrl_evaluate_expr_value(sdMachine *mach, sdExpr *expr)
 
 	mach->current_line = expr->line;
 	if (expr->type == SDRL_ET_NUMBER)
-		mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, expr->data.num));
+		mach->ret = SDVALUE(sdrl_make_number(mach, &sdNumberTypeDef, expr->data.num));
 	else if (expr->type == SDRL_ET_STRING || expr->type == SDRL_ET_IDENTIFIER)
-		mach->ret = SDVALUE(sdrl_make_string(mach->heap, &sdStringTypeDef, expr->data.str, strlen(expr->data.str)));
+		mach->ret = SDVALUE(sdrl_make_string(mach, &sdStringTypeDef, expr->data.str, strlen(expr->data.str)));
 	else if (expr->type == SDRL_ET_CALL) {
 		if (!expr->data.expr)
 			return(sdrl_set_error(mach, SDRL_ES_HIGH, SDRL_ERR_INVALID_FUNCTION, NULL));
-		if (!(args = sdrl_make_array(mach->heap, &sdArrayTypeDef, SDRL_DEFAULT_ARGS)))
+		if (!(args = sdrl_make_array(mach, &sdArrayTypeDef, SDRL_DEFAULT_ARGS)))
 			return(sdrl_set_memory_error(mach));
 		mach->current_line = expr->data.expr->line;
 		if (expr->data.expr->type == SDRL_ET_STRING || expr->data.expr->type == SDRL_ET_IDENTIFIER) {

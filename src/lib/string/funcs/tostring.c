@@ -34,7 +34,7 @@ int sdrl_string_tostring(sdMachine *mach, sdArray *args)
 	if (j >= SDRL_STRING_SIZE)
 		j = SDRL_STRING_SIZE - 1;
 	buffer[j] = '\0';
-	mach->ret = SDVALUE(sdrl_make_string(mach->heap, &sdStringTypeDef, buffer, j));
+	mach->ret = SDVALUE(sdrl_make_string(mach, &sdStringTypeDef, buffer, j));
 	return(0);
 }
 

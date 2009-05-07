@@ -17,7 +17,7 @@ int sdrl_base_if(sdMachine *mach, sdArray *args)
 
 	SDRL_TRY(sdrl_check_args(mach, args, 2, 3));
 	SDRL_TRY(sdrl_check_type(mach, args->items[1], &sdNumberTypeDef));
-	if (!(block = sdrl_make_array(mach->heap, &sdArrayTypeDef, 1)))
+	if (!(block = sdrl_make_array(mach, &sdArrayTypeDef, 1)))
 		return(sdrl_set_memory_error(mach));
 	// TODO convert this to to more than just number comparison
 	else if (SDNUMBER(args->items[1])->num)

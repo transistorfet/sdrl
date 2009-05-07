@@ -30,9 +30,9 @@ sdValue sdUndefValue = {
 /**
  * Return a newly allocated undef value
  */
-sdValue *sdrl_make_undef(sdHeap *heap, sdType *type)
+sdValue *sdrl_make_undef(sdMachine *mach, sdType *type)
 {
-	return(sdrl_make_value(heap, type, 0));
+	return(sdrl_make_value(mach, type, 0));
 }
 
 /**

@@ -21,7 +21,7 @@ struct sdArray {
 	sdValue **items;
 };
 
-sdArray *sdrl_make_array(sdHeap *, sdType *, int);
+sdArray *sdrl_make_array(sdMachine *, sdType *, int);
 
 int sdrl_array_resize(sdArray *, int);
 sdArray *sdrl_array_duplicate(sdMachine *, sdArray *);

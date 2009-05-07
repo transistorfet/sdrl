@@ -37,7 +37,7 @@ int sdrl_string_substr(sdMachine *mach, sdArray *args)
 	for (;(i < SDRL_STRING_SIZE) && (j < len);i++, j++)
 		buffer[i] = SDSTRING(args->items[1])->str[j];
 	buffer[i] = '\0';
-	mach->ret = SDVALUE(sdrl_make_string(mach->heap, &sdStringTypeDef, buffer, i));
+	mach->ret = SDVALUE(sdrl_make_string(mach, &sdStringTypeDef, buffer, i));
 	return(0);
 }
 

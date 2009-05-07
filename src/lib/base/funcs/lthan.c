@@ -25,7 +25,7 @@ int sdrl_base_less_than(sdMachine *mach, sdArray *args)
 			break;
 		}
 	}
-	mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, result));
+	mach->ret = SDVALUE(sdrl_make_number(mach, &sdNumberTypeDef, result));
 	return(0);
 
     FAIL:

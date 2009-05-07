@@ -45,21 +45,21 @@ sdType sdEnvTypeDef = {
 /**
  * Allocate an environment for binding values to names.
  */
-sdEnv *sdrl_make_env(sdHeap *heap, sdType *type, short bitflags, sdrl_destroy_t destroy)
+sdEnv *sdrl_make_env(sdMachine *mach, sdType *type, short bitflags, sdrl_destroy_t destroy)
 {
 	sdBinding **table;
 	sdEnv *env;
 
 	if (!(table = (sdBinding **) malloc(SDRL_ENV_INIT_SIZE * sizeof(sdBinding *))))
 		return(NULL);
-	if (!(env = (sdEnv *) sdrl_heap_alloc(heap, type->size))) {
+	if (!(env = (sdEnv *) sdrl_heap_alloc(mach->heap, type->size))) {
 		free(table);
 		return(NULL);
 	}
 	SDVALUE(env)->refs = 1;
 	SDVALUE(env)->type = type;
 	env->bitflags = bitflags;
-	env->heap = heap;
+	env->mach = mach;
 	env->destroy = destroy;
 	env->size = SDRL_ENV_INIT_SIZE;
 	env->entries = 0;
@@ -76,7 +76,7 @@ sdEnv *sdrl_make_env(sdHeap *heap, sdType *type, short bitflags, sdrl_destroy_t 
 sdEnv *sdrl_env_create(sdMachine *mach, sdType *type, sdArray *args)
 {
 	if (args->last < 0)
-		return(sdrl_make_env(mach->heap, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
+		return(sdrl_make_env(mach, type, 0, (sdrl_destroy_t) sdrl_destroy_value));
 	else if (!sdrl_value_isa(args->items[0], &sdEnvTypeDef)) {
 		sdrl_set_type_error(mach, type, args->items[0]->type);
 		return(NULL);
@@ -91,7 +91,7 @@ sdEnv *sdrl_env_extend(sdEnv *parent, sdType *type)
 {
 	sdEnv *env;
 
-	if (!(env = sdrl_make_env(parent->heap, type, parent->bitflags, parent->destroy)))
+	if (!(env = sdrl_make_env(parent->mach, type, parent->bitflags, parent->destroy)))
 		return(NULL);
 	env->parent = SDRL_INCREF(parent);
 	return(env);

@@ -27,7 +27,7 @@
 /*** Generate an error and set it in the current machine. ***/
 static inline int sdrl_set_error(sdMachine *mach, short severity, int err, const char *msg) {
 	SDRL_DECREF(mach->error);
-	mach->error = sdrl_make_error(mach->heap, &sdErrorTypeDef, mach->current_line, severity, err, msg);
+	mach->error = sdrl_make_error(mach, &sdErrorTypeDef, mach->current_line, severity, err, msg);
 	return(err);
 }
 
@@ -41,7 +41,7 @@ static inline int sdrl_set_memory_error(sdMachine *mach) {
 /*** Generate an invalid type error and set it in the machine. ***/
 static inline int sdrl_set_type_error(sdMachine *mach, sdType *expected, sdType *received) {
 	SDRL_DECREF(mach->error);
-	mach->error = sdrl_make_error(mach->heap, &sdErrorTypeDef, mach->current_line,
+	mach->error = sdrl_make_error(mach, &sdErrorTypeDef, mach->current_line,
 		SDRL_ES_FATAL, SDRL_ERR_INVALID_TYPE,
 		"Invalid type. Expected %s, got %s.", expected ? expected->name : "(unknown)", received ? received->name : "(unknown)");
 	return(mach->error->err);
@@ -86,7 +86,7 @@ static inline int sdrl_check_type(sdMachine *mach, sdValue *cur, sdType *type) {
  * the given machine.
  */
 #define SDRL_BIND_FUNCTION(mach, env, type, name, func) \
-	( sdrl_env_add((env), (name), sdrl_make_pointer((mach)->heap, (type), (func))) )
+	( sdrl_env_add((env), (name), sdrl_make_pointer((mach), (type), (func))) )
 
 /**
  * Find the item with the given name in the given environment and if an item

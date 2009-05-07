@@ -15,7 +15,7 @@ int sdrl_base_ref(sdMachine *mach, sdArray *args)
 {
 	if (args->last != 1)
 		return(sdrl_set_args_error(mach));
-	mach->ret = SDVALUE(sdrl_make_reference(mach->heap, &sdReferenceTypeDef, args->items[1]));
+	mach->ret = SDVALUE(sdrl_make_reference(mach, &sdReferenceTypeDef, args->items[1]));
 	return(0);
 }
 

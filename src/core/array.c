@@ -28,13 +28,13 @@ sdType sdArrayTypeDef = {
 /**
  * Return a newly allocated array of the given size
  */
-sdArray *sdrl_make_array(sdHeap *heap, sdType *type, int size)
+sdArray *sdrl_make_array(sdMachine *mach, sdType *type, int size)
 {
 	sdArray *array;
 
 	if (size <= 0)
 		return(NULL);
-	if (!(array = (sdArray *) sdrl_heap_alloc(heap, type->size)))
+	if (!(array = (sdArray *) sdrl_heap_alloc(mach->heap, type->size)))
 		return(NULL);
 	array->items = NULL;
 	if (size && !(array->items = (sdValue **) malloc(sizeof(sdValue *) * size))) {
@@ -88,7 +88,7 @@ sdArray *sdrl_array_duplicate(sdMachine *mach, sdArray *org)
 	int i;
 	sdArray *array;
 
-	if (!(array = sdrl_make_array(mach->heap, SDVALUE(org)->type, org->size)))
+	if (!(array = sdrl_make_array(mach, SDVALUE(org)->type, org->size)))
 		return(NULL);
 	// TODO do you make a reference to each value or duplicate each value?
 	for (i = 0; i < org->size; i++)

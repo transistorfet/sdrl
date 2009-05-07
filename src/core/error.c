@@ -10,6 +10,7 @@
 
 #include <sdrl/core/heap.h>
 #include <sdrl/core/value.h>
+#include <sdrl/core/machine.h>
 #include <sdrl/core/error.h>
 #include <sdrl/globals.h>
 
@@ -58,7 +59,7 @@ sdError sdMemoryError = {
  * return a pointer to an error message.  If the function fails, a pointer to
  * the static memory error will be returned.
  */
-sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short severity, int err, const char *msg, ...)
+sdError *sdrl_make_error(sdMachine *mach, sdType *type, linenumber_t line, short severity, int err, const char *msg, ...)
 {
 	va_list va;
 	int len = -1;
@@ -70,7 +71,7 @@ sdError *sdrl_make_error(sdHeap *heap, sdType *type, linenumber_t line, short se
 	va_start(va, msg);
 	if (msg && (len = vsnprintf(buffer, ERROR_STRING_SIZE, msg, va)) >= ERROR_STRING_SIZE)
 		return(&sdMemoryError);
-	if (!(error = (sdError *) sdrl_heap_alloc(heap, type->size + len + 1)))
+	if (!(error = (sdError *) sdrl_heap_alloc(mach->heap, type->size + len + 1)))
 		return(&sdMemoryError);
 	SDVALUE(error)->refs = 1;
 	SDVALUE(error)->type = type;
@@ -106,11 +107,11 @@ void sdrl_error_destroy(sdError *error)
 /**
  * Duplicate the given error report.
  */
-sdError *sdrl_error_duplicate(sdHeap *heap, sdError *org)
+sdError *sdrl_error_duplicate(sdMachine *mach, sdError *org)
 {
 	sdError *error;
 
-	if (!(error = (sdError *) sdrl_heap_alloc(heap, SDVALUE(org)->type->size)))
+	if (!(error = (sdError *) sdrl_heap_alloc(mach->heap, SDVALUE(org)->type->size)))
 		return(&sdMemoryError);
 	SDVALUE(error)->refs = 1;
 	SDVALUE(error)->type = SDVALUE(org)->type;

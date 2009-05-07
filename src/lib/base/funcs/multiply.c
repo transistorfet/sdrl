@@ -21,7 +21,7 @@ int sdrl_base_multiply(sdMachine *mach, sdArray *args)
 			return(sdrl_set_type_error(mach, &sdNumberTypeDef, args->items[i]->type));
 		result *= SDNUMBER(args->items[i])->num;
 	}
-	mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, result));
+	mach->ret = SDVALUE(sdrl_make_number(mach, &sdNumberTypeDef, result));
 	return(0);
 }
 

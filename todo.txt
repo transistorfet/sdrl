@@ -17,15 +17,13 @@
 	* you can make a library for object oriented specific language stuff (so long as it's not too much of
 	  a tack-on like that)
 
-	* you can pass the machine pointer to the make functions and further pass it to macros that then
-	  call the alloc functions (sdrl_alloc(mach, size), etc).  You can then do whatever you want for
-	  the actual allocation (heap, realloc function pointer, etc).  THIS HAS A MAJOR PROBLEM!!!
-	  You have to pass the machine to every function that deallocates including DECREF and from env
 	* if you did the realloc system, you could make seperate modules external to the core that handled
 	  various memory models such as just using realloc, using a garbage collection library of some kind,
-	  using a memory tracker, etc.  Similar to lua 5.1.  If you do this, use macros for the funcs so that
-	  they can easily be redefined to directly use realloc for ultimate speed.  Should there still be
-	  a heap pointer in the machine for passing to the realloc func (or even passing the whole mach)?
+	  using a memory tracker, etc.  If you do this, use macros for the actual funcs so that they can
+	  easily be redefined.  Should there still be a heap pointer in the machine for passing to the
+	  realloc func (or even passing the whole mach)?  THIS HAS A MAJOR PROBLEM!!!  Since you need the
+	  machine to get the funcpointer for the free() func, you have to pass the machine to every function
+	  that deallocates including DECREF and from env's stored destroy func.
 
 	* should sdrl_destroy/duplicate_value be that or sdrl_value_destroy/duplicate?
 	* should make functions be sdrl_<type>_make?
@@ -34,8 +32,6 @@
 	  in the binding(env).  For sdIRC, you have an array of servers and an array of windows that you
 	  want accessible to the program but don't necessarily want to be changed.
 	* should we delete utils.c since it's not really used now
-	* you *have* to look into how things will work with librarys loaded dynamically with respect to
-	  having access to type variables.  You may want to have both type systems at once
 	* should push and unshift return a reference to the array they operated on? or maybe the array size?
 
 	* for some values, it would be helpful to return a reference on 'resolve' (arrays, envs, etc) while
@@ -81,6 +77,13 @@
 
 ------------
 
+    Error Handling:
+
+	* make error generation macros create more descriptive messages like how type_error does now
+	* add the ability to catch errors and handle them like exceptions
+	* add a reasonably detailed exception printing function so that you can trace errors
+	* make error somehow store the continuation or something so that it's easy to restart it
+
     New Features:
 
 	* make a "profile" system where a certain profile can be loaded into a machine configuring that
@@ -100,11 +103,6 @@
 	  that each library behaves in an expected way.  Doing it like python might be good
 
     General:
-
-	* make error generation macros create more descriptive messages like how type_error does now
-	* add the ability to catch errors and handle them like exceptions
-	* add a reasonably detailed exception printing function so that you can trace errors
-	* make error somehow store the continuation or something so that it's easy to restart it
 
 	* add flags to the machine or something such that a program can change certain (what might be compiled
 	  in atm) options, such as treating "namespace.name" type names as special (causing a recursive lookup)

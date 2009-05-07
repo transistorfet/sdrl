@@ -14,9 +14,9 @@
 int sdrl_base_null(sdMachine *mach, sdArray *args)
 {
 	if (args->last < 1 || sdrl_value_isa(args->items[1], &sdUndefTypeDef))
-		mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, -1));
+		mach->ret = SDVALUE(sdrl_make_number(mach, &sdNumberTypeDef, -1));
 	else
-		mach->ret = SDVALUE(sdrl_make_number(mach->heap, &sdNumberTypeDef, 0));
+		mach->ret = SDVALUE(sdrl_make_number(mach, &sdNumberTypeDef, 0));
 	return(0);
 }
 
