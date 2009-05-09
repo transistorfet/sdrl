@@ -199,6 +199,8 @@ static inline char lambda_escape_char(char ch)
 	switch (ch) {
 		case 't':
 			return('\x09');
+		case 'r':
+			return('\x0d');
 		case 'n':
 			return('\x0a');
 		default:
