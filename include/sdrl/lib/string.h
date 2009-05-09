@@ -15,6 +15,7 @@ int sdrl_load_string(sdMachine *, sdEnv *);
 
 /*** Functions ***/
 int sdrl_string_char(sdMachine *, sdArray *);
+int sdrl_string_compare(sdMachine *, sdArray *);
 int sdrl_string_length(sdMachine *, sdArray *);
 int sdrl_string_substr(sdMachine *, sdArray *);
 int sdrl_string_tostring(sdMachine *, sdArray *);

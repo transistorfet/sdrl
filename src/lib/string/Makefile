@@ -10,6 +10,7 @@ LIB_TARGET = ../../../lib/libstring.a
 
 OBJS =	load.o	\
 	funcs/char.o	\
+	funcs/compare.o	\
 	funcs/length.o	\
 	funcs/substr.o	\
 	funcs/tostring.o
@@ -52,6 +53,16 @@ load.o: load.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/string.h
 
 funcs/char.o: funcs/char.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h \
+  ../../../include/sdrl/lib/string.h
+
+funcs/compare.o: funcs/compare.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \

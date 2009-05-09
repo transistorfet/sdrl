@@ -18,6 +18,7 @@ int sdrl_load_string(sdMachine *mach, sdEnv *namespace)
 	}
 
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "char", sdrl_string_char);
+	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "compare", sdrl_string_compare);
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "length", sdrl_string_length);
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "substr", sdrl_string_substr);
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "tostring", sdrl_string_tostring);

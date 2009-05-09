@@ -53,14 +53,13 @@
 
 	* add function to get size (or last) element of an array
 	* make an array index function to get (and another to set) an element in an array
-	* make string functions: strcmp, uppercase, lowercase, sprint
+	* make string functions: uppercase, lowercase, sprint
 	* add splice array function
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
 	* make INCREF and DECREF reference the args only once
 	* make a second sdrl_call function that takes a text name for the function and does the lookup
 	* make all 'make' functions take a machine instead of a heap
 	* use sdrl_make_value and all other types of constructors in all make and create functions
-	* make sure every 'make' function does a memset on the allocated data
 	* make basetypes all seperate files complete with support functions
 	* make some of the #defines "redefinable"
 	* add function/macro in base that parses a string and then evals it in one step
