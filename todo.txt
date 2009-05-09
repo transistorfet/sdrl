@@ -37,6 +37,13 @@
 	* for some values, it would be helpful to return a reference on 'resolve' (arrays, envs, etc) while
 	  others would be better to duplicate (strings, numbers).  Should there be 2 kinds of resolve? should
 	  there be a virtfunc in type for resolving?  You could use a bitflag in the type struct.
+	* sdrl_duplicate_value returns NULL if the given value's type has no duplicate function.  Should it
+	  return a ref in that case?  Should it return NULL and have "resolve" check for NULL and INCREF if
+	  so?  How will this behaviour relate to the bitflags?
+	* you could have a type function for resolving and one for duplicating such that a type can set the
+	  duplicate function but by not setting the resolve func or setting it to a func that INCREFs rather
+	  than duplicate, it can control the behaviour for it's type.  This would effectively do the same as
+	  a duplicate/ref bitflag but also allow for more complex behaviours possibly (if that's any use)
 	* do you need/should you have a generic mechanism (virtfunc in type) for getting/setting values
 	  within a value (array, env, maybe list, etc)?
 	* should you have a tostring virtfunc?

@@ -21,6 +21,8 @@ int sdrl_base_resolve(sdMachine *mach, sdArray *args)
 		return(sdrl_set_not_found_error(mach));
 	// TODO what should the "default" behaviour be?
 	mach->ret = sdrl_duplicate_value(mach, bind);
+	if (!mach->ret)
+		mach->ret = SDRL_INCREF(bind);
 	return(0);
 }
 
