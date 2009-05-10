@@ -1,5 +1,5 @@
 /*
- * Function Name:	setenv.c
+ * Function Name:	envset.c
  * Module Requirements:	string type ; env type
  * Description:		Environment Type Assignment Expression
  */
@@ -12,7 +12,7 @@
  * Description:	Binds the value to the given name in the environment.  The
  *		environment can be passed as a string or env type.
  */
-int sdrl_base_setenv(sdMachine *mach, sdArray *args)
+int sdrl_base_envset(sdMachine *mach, sdArray *args)
 {
 	sdEnv *env;
 	sdValue *value;

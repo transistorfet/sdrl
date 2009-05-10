@@ -1,5 +1,5 @@
 /*
- * Function Name:	getenv.c
+ * Function Name:	envget.c
  * Module Requirements:	string type ; env type
  * Description:		Environment Type Binding Resolution Expression
  */
@@ -12,7 +12,7 @@
  * Description:	Returns a copy of the value bound to the given name that is
  *		found by looking in the given environment.
  */
-int sdrl_base_getenv(sdMachine *mach, sdArray *args)
+int sdrl_base_envget(sdMachine *mach, sdArray *args)
 {
 	sdEnv *env;
 	sdValue *bind;
@@ -32,6 +32,8 @@ int sdrl_base_getenv(sdMachine *mach, sdArray *args)
 	SDRL_TRY(bind = sdrl_find(mach, env, SDSTRING(args->items[2])->str));
 	// TODO should this duplicate, incref, or use a type bitflag to base it's action on?
 	mach->ret = sdrl_duplicate_value(mach, bind);
+	if (!mach->ret)
+		mach->ret = SDRL_INCREF(bind);
 	return(0);
 
     FAIL:
