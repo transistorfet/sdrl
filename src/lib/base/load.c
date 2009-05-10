@@ -29,12 +29,12 @@ int sdrl_load_base(sdMachine *mach, sdEnv *namespace)
 
 	/** Bind functions */
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "set", sdrl_base_set);
-	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "setenv", sdrl_base_setenv);
+	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "envset", sdrl_base_envset);
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "setlist", sdrl_base_setlist);
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "if", sdrl_base_if);
 
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "$", sdrl_base_resolve);
-	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "%", sdrl_base_getenv);
+	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "%", sdrl_base_envget);
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "@", sdrl_base_array);
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "list", sdrl_base_list);
 	SDRL_BIND_FUNCTION(mach, namespace, &sdFuncTypeDef, "head", sdrl_base_head);

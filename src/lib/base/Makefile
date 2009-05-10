@@ -18,8 +18,9 @@ OBJS =	load.o	\
 	funcs/defenv.o	\
 	funcs/deref.o	\
 	funcs/divide.o	\
+	funcs/envget.o	\
+	funcs/envset.o	\
 	funcs/equals.o	\
-	funcs/getenv.o	\
 	funcs/gethan.o	\
 	funcs/gthan.o	\
 	funcs/head.o	\
@@ -39,7 +40,6 @@ OBJS =	load.o	\
 	funcs/ref.o	\
 	funcs/resolve.o	\
 	funcs/set.o	\
-	funcs/setenv.o	\
 	funcs/setlist.o	\
 	funcs/shift.o	\
 	funcs/subtract.o	\
@@ -221,7 +221,7 @@ funcs/divide.o: funcs/divide.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/dynblock.h \
   ../../../include/sdrl/lib/base/lexblock.h
 
-funcs/equals.o: funcs/equals.c ../../../include/sdrl/sdrl.h \
+funcs/envget.o: funcs/envget.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
@@ -235,7 +235,21 @@ funcs/equals.o: funcs/equals.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/dynblock.h \
   ../../../include/sdrl/lib/base/lexblock.h
 
-funcs/getenv.o: funcs/getenv.c ../../../include/sdrl/sdrl.h \
+funcs/envset.o: funcs/envset.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
+  ../../../include/sdrl/lib/base/form.h \
+  ../../../include/sdrl/lib/base/func.h \
+  ../../../include/sdrl/lib/base/list.h \
+  ../../../include/sdrl/lib/base/dynblock.h \
+  ../../../include/sdrl/lib/base/lexblock.h
+
+funcs/equals.o: funcs/equals.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
@@ -502,20 +516,6 @@ funcs/resolve.o: funcs/resolve.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/lexblock.h
 
 funcs/set.o: funcs/set.c ../../../include/sdrl/sdrl.h \
-  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
-  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
-  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
-  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
-  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
-  ../../../include/sdrl/core/machine.h \
-  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
-  ../../../include/sdrl/lib/base/form.h \
-  ../../../include/sdrl/lib/base/func.h \
-  ../../../include/sdrl/lib/base/list.h \
-  ../../../include/sdrl/lib/base/dynblock.h \
-  ../../../include/sdrl/lib/base/lexblock.h
-
-funcs/setenv.o: funcs/setenv.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
