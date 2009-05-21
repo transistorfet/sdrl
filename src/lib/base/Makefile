@@ -30,6 +30,7 @@ OBJS =	load.o	\
 	funcs/lthan.o	\
 	funcs/modulo.o	\
 	funcs/multiply.o	\
+	funcs/namespace.o	\
 	funcs/nequals.o	\
 	funcs/new.o	\
 	funcs/not.o	\
@@ -376,6 +377,20 @@ funcs/modulo.o: funcs/modulo.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/lib/base/lexblock.h
 
 funcs/multiply.o: funcs/multiply.c ../../../include/sdrl/sdrl.h \
+  ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
+  ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
+  ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \
+  ../../../include/sdrl/core/array.h ../../../include/sdrl/core/error.h \
+  ../../../include/sdrl/core/utils.h ../../../include/sdrl/core/events.h \
+  ../../../include/sdrl/core/machine.h \
+  ../../../include/sdrl/core/basetypes.h ../../../include/sdrl/lib/base.h \
+  ../../../include/sdrl/lib/base/form.h \
+  ../../../include/sdrl/lib/base/func.h \
+  ../../../include/sdrl/lib/base/list.h \
+  ../../../include/sdrl/lib/base/dynblock.h \
+  ../../../include/sdrl/lib/base/lexblock.h
+
+funcs/namespace.o: funcs/namespace.c ../../../include/sdrl/sdrl.h \
   ../../../include/sdrl/core/env.h ../../../include/sdrl/core/heap.h \
   ../../../include/sdrl/globals.h ../../../include/sdrl/core/value.h \
   ../../../include/sdrl/core/expr.h ../../../include/sdrl/core/undef.h \

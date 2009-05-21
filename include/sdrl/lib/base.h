@@ -46,6 +46,7 @@ int sdrl_base_less_than_equals(sdMachine *, sdArray *);
 int sdrl_base_list(sdMachine *, sdArray *);
 int sdrl_base_modulo(sdMachine *, sdArray *);
 int sdrl_base_multiply(sdMachine *, sdArray *);
+int sdrl_base_namespace(sdMachine *, sdArray *);
 int sdrl_base_new(sdMachine *, sdArray *);
 int sdrl_base_not(sdMachine *, sdArray *);
 int sdrl_base_not_equals(sdMachine *, sdArray *);

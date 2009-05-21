@@ -17,6 +17,10 @@
 	* you can make a library for object oriented specific language stuff (so long as it's not too much of
 	  a tack-on like that)
 
+	* clean up and organize the bison parser code so that you can easily tie the lib into sdrl
+	* change sdInput and the parser func prototype to more easily work with bison/flex.  You basically
+	  need to be able to pass something that flex can read.
+
 	* if you did the realloc system, you could make seperate modules external to the core that handled
 	  various memory models such as just using realloc, using a garbage collection library of some kind,
 	  using a memory tracker, etc.  If you do this, use macros for the actual funcs so that they can
@@ -31,7 +35,6 @@
 	* you kinda need the ability to make a value constant.  It could be in the value itself or maybe
 	  in the binding(env).  For sdIRC, you have an array of servers and an array of windows that you
 	  want accessible to the program but don't necessarily want to be changed.
-	* should we delete utils.c since it's not really used now
 	* should push and unshift return a reference to the array they operated on? or maybe the array size?
 
 	* for some values, it would be helpful to return a reference on 'resolve' (arrays, envs, etc) while
@@ -65,7 +68,6 @@
 	* add a function that does an env add-or-replace (so you don't have to call both functions)
 	* make INCREF and DECREF reference the args only once
 	* make a second sdrl_call function that takes a text name for the function and does the lookup
-	* make all 'make' functions take a machine instead of a heap
 	* use sdrl_make_value and all other types of constructors in all make and create functions
 	* make basetypes all seperate files complete with support functions
 	* make some of the #defines "redefinable"
@@ -133,6 +135,7 @@
 
 Refactoring:
 
+	* should we delete utils.c since it's not really used now
 	* should all the libs have custom mangles (sdrl_base_parse_string vs just sdrl_parse_string)
 	* should retract_environment replace destroy_environment (in name) (???)
 	* should we rename "ret" in sdrl_machine to something more appropriate such as acc or accumulator
