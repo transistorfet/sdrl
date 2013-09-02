@@ -1,4 +1,7 @@
 
+	* change input.c to either read in a whole file at a time and process it like a string, or else read
+	  the file in large blocks of a few kb at least. Should speed things up a bunch.
+
 	* you could have some kind of "invoke method on object" function, possibly % or . or even just 'get'
 	  that takes a string like object.subobj.thing.  First consider (% object.thing args) or
 	  (% object thing args):  It looks up object to get a value that inherits from sdEnv.  It then finds
@@ -56,10 +59,6 @@
 	  function that converts foo.bar style names?  Make resolve ($) use foo.bar style names?
 	* fill in the lib load functions to create the namespace if the env given is NULL
 	* make a method/func/something for importing names from a namespace (env) into the global env
-	* add a namespace command.  Should it be a form or a function? (namespace foo (code (set num 2))).
-	  It will lookup the named namespace as an env in the global namespace (creating on if it's not found)
-	  and make that the current env while the expr executes and then restore the previous env (or rather
-	  this should happen automagically (or should it be forced to avoid accidents))
 
 	* add function to get size (or last) element of an array
 	* make an array index function to get (and another to set) an element in an array
